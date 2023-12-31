@@ -1,0 +1,8 @@
+{
+    "uuid": "p3-clock@torchipeppo",
+    "name": "Persona 3 Date and Time",
+    "description": "A simple desklet that shows the current date, time and...",
+    "comments": "Best placed in the top right corner on the screen. Based on the UI of the video game Persona 3.",
+    "author": "torchipeppo",
+    "prevent-decorations": true
+}
