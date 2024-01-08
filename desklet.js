@@ -34,14 +34,15 @@ P3Desklet.prototype = {
 
 
         // background image
+        let bgName = "p3corner-wario-time.svg"
         let width, height, fileInfo;
-        [fileInfo, width, height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/p3corner.svg");
+        [fileInfo, width, height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
 
         let scale = 400.0 / height;
         let scaledWidth = scale * width;
         let scaledHeight = scale * height;
         
-        let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/p3corner.svg", scaledWidth, scaledHeight);
+        let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/" + bgName, scaledWidth, scaledHeight);
         let image = new Clutter.Image();
         image.set_data(
             pixBuf.get_pixels(),
@@ -61,8 +62,10 @@ P3Desklet.prototype = {
         this._time_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
         this._time_label.set_position(0, 0);
         this._time_label.set_text("After School");
-        // TODO NEXT: trovare dimemsione testo, usando la "r" e la "h" di "After School" come riferimento
-        //            ALZARE FONT WEIGHT!!
+        // TODO NEXT: scalare testo insieme con la scale
+        //            oppure... magari si riesce a renderizzarlo su raster https://stackoverflow.com/questions/24979367/how-to-render-text-on-a-gdkpixbuf-pixbuf
+        //            ...ma questo vuol dire che poi con l'orologio vero devo rirenderizzare ogni minuto :(
+        // TODO NEXT NEXT: drop shadow?
 
         this._clock_actor.add_actor(this._time_label);
     }

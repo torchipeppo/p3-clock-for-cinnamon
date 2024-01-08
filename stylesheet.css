@@ -1,8 +1,10 @@
+/* px measures are relative to a bg height of 400px */
 .time-label {
     color: red;
     font-size: 70px;
     font-family: "Instrument Sans";
     text-align: right;
-    padding-top: 68px;
-    padding-right: 35px;
+    padding-top: 63px;
+    padding-right: 45px;
+    font-weight: 500;
 }
