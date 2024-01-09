@@ -35,12 +35,22 @@ P3Desklet.prototype = {
 
         // background image
         let bgName = "p3corner-wario-time.svg"
-        let width, height, fileInfo;
-        [fileInfo, width, height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
+        let orig_width, orig_height, fileInfo;
+        [fileInfo, orig_width, orig_height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
 
-        let scale = 400.0 / height;
-        let scaledWidth = scale * width;
-        let scaledHeight = scale * height;
+        const CANON_HEIGHT = 387.0;
+        const CANON_WIDTH = orig_width * CANON_HEIGHT / orig_height;
+
+        let scale = 1;
+        let scaledWidth = scale * CANON_WIDTH;
+        let scaledHeight = scale * CANON_HEIGHT;
+
+        let h_offset = 6;
+        let v_offset = 0;
+        this._clock_actor.set_style(
+            "margin-left:" + h_offset + "px;" +
+            "margin-top:" + v_offset + "px;"
+        );
         
         let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/" + bgName, scaledWidth, scaledHeight);
         let image = new Clutter.Image();
@@ -62,10 +72,12 @@ P3Desklet.prototype = {
         this._time_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
         this._time_label.set_position(0, 0);
         this._time_label.set_text("After School");
-        // TODO NEXT: scalare testo insieme con la scale
-        //            oppure... magari si riesce a renderizzarlo su raster https://stackoverflow.com/questions/24979367/how-to-render-text-on-a-gdkpixbuf-pixbuf
-        //            ...ma questo vuol dire che poi con l'orologio vero devo rirenderizzare ogni minuto :(
-        // TODO NEXT NEXT: drop shadow?
+        this._time_label.set_style(
+            "font-size: " + scale*70 + "px; " +
+            "padding-top: " + scale*62 + "px; " +
+            "padding-right: " + scale*31 + "px;"
+        );
+        // TODO NEXT: drop shadow?
 
         this._clock_actor.add_actor(this._time_label);
     }
