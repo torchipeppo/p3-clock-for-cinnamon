@@ -1,6 +1,6 @@
-/* px measures are relative to a the CANON_HEIGHT */
+/* px measures are relative to the CANON_HEIGHT */
 .time-label {
-    color: red;
+    color: white;
     font-size: 70px;
     font-family: "Instrument Sans";
     text-align: right;

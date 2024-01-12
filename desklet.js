@@ -69,17 +69,32 @@ P3Desklet.prototype = {
 
 
         // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
+        let time_text = "After School";
         this._time_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
         this._time_label.set_position(0, 0);
-        this._time_label.set_text("After School");
+        this._time_label.set_text(time_text);
         this._time_label.set_style(
             "font-size: " + scale*70 + "px; " +
             "padding-top: " + scale*62 + "px; " +
             "padding-right: " + scale*31 + "px;"
         );
-        // TODO NEXT: drop shadow?
+        // drop shadow
+        this._time_shadow_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
+        this._time_shadow_label.set_position(0, 0);
+        this._time_shadow_label.set_text(time_text);
+        this._time_shadow_label.set_style(
+            "font-size: " + scale*70 + "px; " +
+            "padding-top: " + scale*70 + "px; " +
+            "padding-right: " + scale*23 + "px;" +
+            "color: #447fab;"
+        );
 
+        // order is relevant: stuff added later comes up in front
+        this._clock_actor.add_actor(this._time_shadow_label);
         this._clock_actor.add_actor(this._time_label);
+
+
+        // TODO NEXT: label per la data (i.e. altre ore su google font) (magari il font finder ci funziona meglio con questo)
     }
 }
 
