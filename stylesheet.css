@@ -8,3 +8,19 @@
     padding-right: 31px;
     font-weight: 500;
 }
+
+/* px measures are relative to the CANON_HEIGHT */
+.date-label {
+    color: white;
+    font-family: "MADE Outer Sans";
+    text-align: right;
+    font-weight: 500;
+}
+
+/* px measures are relative to the CANON_HEIGHT */
+.weekday-label {
+    color: white;
+    font-family: "MADE Outer Sans";
+    text-align: center;
+    font-weight: 0;
+}

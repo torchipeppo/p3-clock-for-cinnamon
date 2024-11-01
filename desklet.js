@@ -94,7 +94,38 @@ P3Desklet.prototype = {
         this._clock_actor.add_actor(this._time_label);
 
 
-        // TODO NEXT: label per la data (i.e. altre ore su google font) (magari il font finder ci funziona meglio con questo)
+        let date_text = "1 / 20";
+        this._date_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
+        this._date_label.set_position(0, 0);
+        this._date_label.set_text(date_text);
+        this._date_label.set_style(
+            "font-size: " + scale*52 + "px; " +
+            "padding-top: " + scale*17 + "px; " +
+            "padding-right: " + scale*140 + "px;"
+        );
+        let dot_text = ".";
+        this._dot_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
+        this._dot_label.set_position(scale*(-101), scale*(-23));
+        this._dot_label.set_text(dot_text);
+        this._dot_label.set_style(
+            "font-size: " + scale*81 + "px; "
+        );
+        let weekday_text = "Wed";  // TODO qua non seguiamo il gioco, ma lasciamo al locale (strftime %a)
+        this._weekday_label = new St.Label({style_class:"weekday-label", width: scaledWidth, height: scaledHeight});
+        this._weekday_label.set_position(255, 0);
+        this._weekday_label.set_text(weekday_text);
+        this._weekday_label.set_style(
+            "font-size: " + scale*35 + "px; " +
+            "padding-top: " + scale*28 + "px; " +
+            "padding-right: " + scale*0 + "px;"
+        );
+
+        this._clock_actor.add_actor(this._date_label);
+        this._clock_actor.add_actor(this._dot_label);
+        this._clock_actor.add_actor(this._weekday_label);
+
+
+        // TODO NEXT: Luna (label next, label numero, emoji luna)
     }
 }
 
