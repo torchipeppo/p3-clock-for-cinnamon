@@ -1,0 +1,14 @@
+{
+    "wapi-key": {
+        "type": "entry",
+        "default": "",
+        "description": "WeatherAPI Key",
+        "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather and moon phase display."
+    },
+    "wapi-query": {
+        "type": "entry",
+        "default": "auto:ip",
+        "description": "Weather Location",
+        "tooltip": "Enter your location name (e.g. \"Tokyo\"), your coordinates (e.g. \"123.45,98.765\"), or \"auto:ip\" for automatic lookup based on your IP address."
+    }
+}

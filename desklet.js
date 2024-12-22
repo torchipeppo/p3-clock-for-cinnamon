@@ -1,9 +1,12 @@
 const Desklet = imports.ui.desklet;
+const Settings = imports.ui.settings;
 const St = imports.gi.St;
 const GdkPixbuf = imports.gi.GdkPixbuf;
 const Clutter = imports.gi.Clutter;
 const Cogl = imports.gi.Cogl;
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
+const Soup = imports.gi.Soup;
+const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -11,7 +14,28 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 /*
     TODO
     - Ci sono un sacco di cose hardcodate che andranno trasformate in impostazioni nella finale
+    - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
+        all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
+        non abbiamo un messaggio d'errore inutile a schermo
+    - Il countdown della luna piena ce lo teniamo per il postgame.
+        Richiederemo all'utente di avere un calendario lunare in un certo formato
+        in una certa posizione, perché moon-api richiede una carta di credito
+        per pagare l'overage.
+        Tanto un tale calendario lunare va aggiornato solo una volta l'anno.
+        (Anche meno, se ti porti avanti, ma non so se poi rischia di non essere accurato.)
+        Possibile pagina dove recuperarlo: https://www.timeanddate.com/moon/phases/
+        Recupera setup attori Clutter e classi CSS da questo commit:
+        538a95a8325166306607c6ebbeefa5594e4f1e24
 */
+
+// REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
+let _httpSession;
+if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
+    _httpSession = new Soup.SessionAsync();
+    Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
+} else { //version 3
+    _httpSession = new Soup.Session();
+}
 
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
@@ -34,73 +58,43 @@ function hour_to_p3time(hour) {
     }
 }
 
+const MOON_PHASES = "🌑🌒🌓🌔🌕🌖🌗🌘";
+const MOON_PHASES_BY_WEATHERAPI_NAME = {
+    "New Moon": "🌑",
+    "Waxing Crescent": "🌒",
+    "First Quarter": "🌓",
+    "Waxing Gibbous": "🌔",
+    "Full Moon": "🌕",
+    "Waning Gibbous": "🌖",
+    "Last Quarter": "🌗",
+    "Waning Crescent": "🌘",
+}
+
 class P3Desklet extends Desklet.Desklet {
-    // constructor(metadata, desklet_id) {
-    //     super(metadata, desklet_id);
-    //     this._date = new St.Label({style_class: "time-label"});
-    //     this._date.set_text("lol")
-    //     this.setContent(this._date);
-    //     this.setHeader(_("Clock"));
-
-    //     this.wallclock = new CinnamonDesktop.WallClock();
-    //     this.clock_notify_id = 0;
-    // }
-
-    // _clockNotify(obj, pspec, data) {
-    //     this._updateClock();
-    // }
-
-    // on_desklet_added_to_desktop() {
-    //     this.COUNTER = 0;
-
-    //     if (this.clock_notify_id == 0) {
-    //         this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
-    //     }
-    // }
-
-    // on_desklet_removed() {  // ok
-    //     if (this.clock_notify_id > 0) {
-    //         this.wallclock.disconnect(this.clock_notify_id);
-    //         this.clock_notify_id = 0;
-    //     }
-    // }
-
-    // _updateClock() {
-    //     this._date.set_text(this.COUNTER.toString());
-    //     this.COUNTER++;
-    //     global.log("BABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABY")
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     constructor(metadata, desklet_id) {
         super(metadata, desklet_id);
         this.setupUI();
+
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
+
+        this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
+        this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
+        this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
+    }
+
+    _onSettingsChanged() {
+        this._updateClock();
+    }
+
+    _onWAPISettingsChanged() {
+        this.next_weather_update_is_fast = true;
+        this._onSettingsChanged();
     }
 
     on_desklet_added_to_desktop(userEnabled) {
-        this._updateClock();
+        this.time_of_last_weather_update = new Date(0);  // eopch means "never updated before"
+        this._onWAPISettingsChanged();
 
         if (this.clock_notify_id == 0) {
             this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
@@ -119,7 +113,7 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     _updateClock() {
-        global.log("BABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABY");
+        // global.log("BABYBABYBABYBABYBABY");
 
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
         this._time_label.set_text(p3time);
@@ -132,6 +126,37 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_text(date_text);
 
         this._weekday_label.set_text(this.wallclock.get_clock_for_format("%a"));
+
+        if (this.wapi_key === "") {  // disable
+            this._moon_label.set_text("");
+            this._phase_label.set_text("");
+        }
+        else {
+            let now = new Date();
+            const ONE_HOUR_MS = 60*60*1000;  // 1 hour in milliseconds
+            const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
+            let cooldown = this.next_weather_update_is_fast ? FAST_WAIT_TIME : ONE_HOUR_MS;
+            if (now - this.time_of_last_weather_update > cooldown) {
+                // global.log("YEEEEEEEEEEEEEEEEEAAAAAAH");
+                this.time_of_last_weather_update = now;
+                this.next_weather_update_is_fast = false;
+                this._getWeather(
+                    "http://api.weatherapi.com/v1/forecast.json?key="+this.wapi_key+"&q="+this.wapi_query,
+                    (response) => {
+                        if (response) {
+                            let resp_json = JSON.parse(response);
+                            let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
+                            this._moon_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
+                            this._phase_label.set_text(moon_phase_name.replace(" ", "\n"));
+                        }
+                        else {
+                            this._moon_label.set_text("⚠️");
+                            this._phase_label.set_text("Error: see log\nSuper + L");
+                        }
+                    }
+                )
+            }
+        }
     }
 
     setupUI() {
@@ -148,7 +173,6 @@ class P3Desklet extends Desklet.Desklet {
 
         const CANON_HEIGHT = 387.0;
         const CANON_WIDTH = orig_width * CANON_HEIGHT / orig_height;
-        const MOON_PHASES = "🌕🌖🌗🌘🌑🌒🌓🌔";
 
         let scale = 1;
         let scaledWidth = scale * CANON_WIDTH;
@@ -234,33 +258,6 @@ class P3Desklet extends Desklet.Desklet {
         this._clock_actor.add_actor(this._weekday_label);
 
 
-        let next_text = "Next:";
-        this._next_label = new St.Label({style_class:"next-label", width: scaledWidth, height: scaledHeight});
-        this._next_label.set_position(0, 0);
-        this._next_label.set_text(next_text);
-        this._next_label.set_style(
-            "font-size: " + scale*40 + "px; " +
-            "padding-top: " + scale*150 + "px; " +
-            "padding-right: " + scale*170 + "px;"
-        );
-        let countdown_text = "? ?";  // TODO per i giorni a cifra singola, mettere prefisso di 2 spazi
-        this._countdown_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
-        this._countdown_label.set_position(0, 0);
-        this._countdown_label.set_text(countdown_text);
-        this._countdown_label.set_style(
-            "font-size: " + scale*51 + "px; " +
-            "padding-top: " + scale*197 + "px; " +
-            "padding-left: " + scale*170 + "px;"
-        );
-        let slash_text = "/";
-        this._slash_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
-        this._slash_label.set_position(0, 0);
-        this._slash_label.set_text(slash_text);
-        this._slash_label.set_style(
-            "font-size: " + scale*51 + "px; " +
-            "padding-top: " + scale*197 + "px; " +
-            "padding-left: " + scale*310 + "px;"
-        );
         let moon_text = "⚠️";
         this._moon_label = new St.Label({style_class:"moon-label", width: scaledWidth, height: scaledHeight});
         this._moon_label.set_position(0, 0);
@@ -270,29 +267,63 @@ class P3Desklet extends Desklet.Desklet {
             "padding-top: " + scale*191 + "px; " +
             "padding-right: " + scale*15 + "px;"
         );
-        let phase_text = "Full";
+        let phase_text = "";
         this._phase_label = new St.Label({style_class:"phase-label", width: scaledWidth, height: scaledHeight});
         this._phase_label.set_position(0, 0);
         this._phase_label.set_text(phase_text);
         this._phase_label.set_style(
-            "font-size: " + scale*46 + "px; " +
+            "font-size: " + scale*34 + "px; " +
             "padding-top: " + scale*184 + "px; " +
             "padding-right: " + scale*124 + "px;"
         );
 
-        if (false) {  // TODO dire tipo "if today is full moon, new moon, or half moon"
-            this._clock_actor.add_actor(this._phase_label);
-        }
-        else {
-            this._clock_actor.add_actor(this._next_label);
-            this._clock_actor.add_actor(this._countdown_label);
-            this._clock_actor.add_actor(this._slash_label);
-            this._clock_actor.add_actor(this._moon_label);
-        }
+        this._clock_actor.add_actor(this._phase_label);
+        this._clock_actor.add_actor(this._moon_label);
     }
 
     // TODO NEXT two parallel paths now: make this dynamic,
     //           and make this more useful / less P3 accurate
+
+    _getWeather(url, callback) {
+        var here = this;
+        let message = Soup.Message.new('GET', url);
+        if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
+            _httpSession.timeout = 10;
+            _httpSession.idle_timeout = 10;
+            _httpSession.queue_message(message, function (session, message) {
+                if( message.status_code == 200) {
+                    try {
+                        callback.call(here,message.response_body.data.toString());
+                    } catch(e) {
+                        global.logError(e)
+                        callback.call(here,false);
+                    }
+                } else {
+                    global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
+                    here.data.status.lasterror = message.status_code;
+                    callback.call(here,false);
+                }
+            });
+        } else { //version 3
+            _httpSession.timeout = 10;
+            _httpSession.idle_timeout = 10;
+            _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
+                if( message.get_status() === 200) {
+                    try {
+                        const bytes = _httpSession.send_and_read_finish(result);
+                        callback.call(here,ByteArray.toString(bytes.get_data()));
+                    } catch(e) {
+                        global.logError(e)
+                        callback.call(here,false);
+                    }
+                } else {
+                    global.logWarning("Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
+                    here.data.status.lasterror = message.get_status();
+                    callback.call(here,false);
+                }
+            });
+        }
+    }
 }
 
 function main(metadata, desklet_id) {
