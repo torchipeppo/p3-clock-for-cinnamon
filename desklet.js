@@ -34,7 +34,7 @@ P3Desklet.prototype = {
 
 
         // background image
-        let bgName = "p3corner-wario-time.svg"
+        let bgName = "p3corner.svg"
         let orig_width, orig_height, fileInfo;
         [fileInfo, orig_width, orig_height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
 
@@ -135,7 +135,7 @@ P3Desklet.prototype = {
             "padding-top: " + scale*150 + "px; " +
             "padding-right: " + scale*170 + "px;"
         );
-        let countdown_text = "1 1";
+        let countdown_text = "1 1";  // TODO per i giorni a cifra singola, mettere prefisso di 2 spazi
         this._countdown_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
         this._countdown_label.set_position(0, 0);
         this._countdown_label.set_text(countdown_text);
@@ -168,6 +168,9 @@ P3Desklet.prototype = {
         this._clock_actor.add_actor(this._slash_label);
         this._clock_actor.add_actor(this._moon_label);
     }
+
+    // TODO NEXT two parallel paths now: make this dynamic,
+    //           and make this more useful / less P3 accurate
 }
 
 function main(metadata, desklet_id) {
