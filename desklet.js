@@ -160,13 +160,27 @@ P3Desklet.prototype = {
         this._moon_label.set_style(
             "font-size: " + scale*70 + "px; " +
             "padding-top: " + scale*191 + "px; " +
-            "padding-right: " + scale*14 + "px;"
+            "padding-right: " + scale*15 + "px;"
+        );
+        let phase_text = "Half";
+        this._phase_label = new St.Label({style_class:"phase-label", width: scaledWidth, height: scaledHeight});
+        this._phase_label.set_position(0, 0);
+        this._phase_label.set_text(phase_text);
+        this._phase_label.set_style(
+            "font-size: " + scale*46 + "px; " +
+            "padding-top: " + scale*184 + "px; " +
+            "padding-right: " + scale*124 + "px;"
         );
 
-        this._clock_actor.add_actor(this._next_label);
-        this._clock_actor.add_actor(this._countdown_label);
-        this._clock_actor.add_actor(this._slash_label);
-        this._clock_actor.add_actor(this._moon_label);
+        if (false) {  // TODO dire tipo "if today is full moon, new moon, or half moon"
+            this._clock_actor.add_actor(this._phase_label);
+        }
+        else {
+            this._clock_actor.add_actor(this._next_label);
+            this._clock_actor.add_actor(this._countdown_label);
+            this._clock_actor.add_actor(this._slash_label);
+            this._clock_actor.add_actor(this._moon_label);
+        }
     }
 
     // TODO NEXT two parallel paths now: make this dynamic,

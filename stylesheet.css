@@ -41,6 +41,13 @@
     text-align: center;
 }
 
+/* px measures are relative to the CANON_HEIGHT */
+.phase-label {
+    color: aliceblue;
+    font-family: "MADE Outer Sans";  /* TODO trovare un apposito font "wide" */
+    text-align: right;
+}
+
 
 
 /* px measures are relative to the CANON_HEIGHT */
