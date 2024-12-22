@@ -10,6 +10,16 @@
 }
 
 /* px measures are relative to the CANON_HEIGHT */
+.next-label {
+    color: aliceblue;
+    font-family: "Instrument Sans";
+    text-align: right;
+    font-weight: 700;
+}
+
+
+
+/* px measures are relative to the CANON_HEIGHT */
 .date-label {
     color: white;
     font-family: "MADE Outer Sans";
@@ -22,4 +32,19 @@
     color: white;
     font-family: "MADE Outer Sans";
     text-align: center;
+}
+
+/* px measures are relative to the CANON_HEIGHT */
+.countdown-label {
+    color: aliceblue;
+    font-family: "MADE Outer Sans";
+    text-align: center;
+}
+
+
+
+/* px measures are relative to the CANON_HEIGHT */
+.moon-label {
+    color: white;
+    text-align: right;
 }

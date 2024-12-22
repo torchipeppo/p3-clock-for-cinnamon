@@ -40,6 +40,7 @@ P3Desklet.prototype = {
 
         const CANON_HEIGHT = 387.0;
         const CANON_WIDTH = orig_width * CANON_HEIGHT / orig_height;
+        const MOON_PHASES = "🌕🌖🌗🌘🌑🌒🌓🌔";
 
         let scale = 1;
         let scaledWidth = scale * CANON_WIDTH;
@@ -125,7 +126,47 @@ P3Desklet.prototype = {
         this._clock_actor.add_actor(this._weekday_label);
 
 
-        // TODO NEXT: Luna (label next, label numero, emoji luna)
+        let next_text = "Next:";
+        this._next_label = new St.Label({style_class:"next-label", width: scaledWidth, height: scaledHeight});
+        this._next_label.set_position(0, 0);
+        this._next_label.set_text(next_text);
+        this._next_label.set_style(
+            "font-size: " + scale*40 + "px; " +
+            "padding-top: " + scale*150 + "px; " +
+            "padding-right: " + scale*170 + "px;"
+        );
+        let countdown_text = "1 1";
+        this._countdown_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
+        this._countdown_label.set_position(0, 0);
+        this._countdown_label.set_text(countdown_text);
+        this._countdown_label.set_style(
+            "font-size: " + scale*51 + "px; " +
+            "padding-top: " + scale*197 + "px; " +
+            "padding-left: " + scale*170 + "px;"
+        );
+        let slash_text = "/";
+        this._slash_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
+        this._slash_label.set_position(0, 0);
+        this._slash_label.set_text(slash_text);
+        this._slash_label.set_style(
+            "font-size: " + scale*51 + "px; " +
+            "padding-top: " + scale*197 + "px; " +
+            "padding-left: " + scale*310 + "px;"
+        );
+        let moon_text = "🌒";
+        this._moon_label = new St.Label({style_class:"moon-label", width: scaledWidth, height: scaledHeight});
+        this._moon_label.set_position(0, 0);
+        this._moon_label.set_text(moon_text);
+        this._moon_label.set_style(
+            "font-size: " + scale*70 + "px; " +
+            "padding-top: " + scale*191 + "px; " +
+            "padding-right: " + scale*14 + "px;"
+        );
+
+        this._clock_actor.add_actor(this._next_label);
+        this._clock_actor.add_actor(this._countdown_label);
+        this._clock_actor.add_actor(this._slash_label);
+        this._clock_actor.add_actor(this._moon_label);
     }
 }
 
