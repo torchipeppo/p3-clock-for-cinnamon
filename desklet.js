@@ -105,19 +105,19 @@ P3Desklet.prototype = {
         );
         let dot_text = ".";
         this._dot_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
-        this._dot_label.set_position(scale*(-101), scale*(-23));
+        this._dot_label.set_position(scale*(-101), scale*(-23));  // necessary, can't be at 0,0 b/c it's an ordinary dot
         this._dot_label.set_text(dot_text);
         this._dot_label.set_style(
             "font-size: " + scale*81 + "px; "
         );
         let weekday_text = "Wed";  // TODO qua non seguiamo il gioco, ma lasciamo al locale (strftime %a)
         this._weekday_label = new St.Label({style_class:"weekday-label", width: scaledWidth, height: scaledHeight});
-        this._weekday_label.set_position(255, 0);
+        this._date_label.set_position(0, 0);
         this._weekday_label.set_text(weekday_text);
         this._weekday_label.set_style(
             "font-size: " + scale*35 + "px; " +
             "padding-top: " + scale*28 + "px; " +
-            "padding-right: " + scale*0 + "px;"
+            "padding-left: " + scale*510 + "px;"
         );
 
         this._clock_actor.add_actor(this._date_label);
