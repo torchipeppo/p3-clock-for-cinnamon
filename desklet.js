@@ -3,6 +3,7 @@ const St = imports.gi.St;
 const GdkPixbuf = imports.gi.GdkPixbuf;
 const Clutter = imports.gi.Clutter;
 const Cogl = imports.gi.Cogl;
+const CinnamonDesktop = imports.gi.CinnamonDesktop;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -12,25 +13,132 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
     - Ci sono un sacco di cose hardcodate che andranno trasformate in impostazioni nella finale
 */
 
-function P3Desklet(metadata, desklet_id) {
-    this._init(metadata, desklet_id);
+function hour_to_p3time(hour) {
+    if (0<=hour && hour<5) {
+        return "Late Night";
+    }
+    else if (5<=hour && hour<7) {
+        return "Early Morning";
+    }
+    else if (7<=hour && hour<10) {
+        return "Morning";
+    }
+    else if (10<=hour && hour<15) {
+        return "Daytime";
+    }
+    else if (15<=hour && hour<19) {
+        return "Afternoon";
+    }
+    else if (19<=hour && hour<24) {
+        return "Evening";
+    }
 }
 
-P3Desklet.prototype = {
-    __proto__: Desklet.Desklet.prototype,
+class P3Desklet extends Desklet.Desklet {
+    // constructor(metadata, desklet_id) {
+    //     super(metadata, desklet_id);
+    //     this._date = new St.Label({style_class: "time-label"});
+    //     this._date.set_text("lol")
+    //     this.setContent(this._date);
+    //     this.setHeader(_("Clock"));
 
-    _init: function(metadata, desklet_id) {
-        Desklet.Desklet.prototype._init.call(this, metadata, desklet_id);
-    },
+    //     this.wallclock = new CinnamonDesktop.WallClock();
+    //     this.clock_notify_id = 0;
+    // }
 
-    on_desklet_added_to_desktop: function(userEnabled) {
+    // _clockNotify(obj, pspec, data) {
+    //     this._updateClock();
+    // }
+
+    // on_desklet_added_to_desktop() {
+    //     this.COUNTER = 0;
+
+    //     if (this.clock_notify_id == 0) {
+    //         this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
+    //     }
+    // }
+
+    // on_desklet_removed() {  // ok
+    //     if (this.clock_notify_id > 0) {
+    //         this.wallclock.disconnect(this.clock_notify_id);
+    //         this.clock_notify_id = 0;
+    //     }
+    // }
+
+    // _updateClock() {
+    //     this._date.set_text(this.COUNTER.toString());
+    //     this.COUNTER++;
+    //     global.log("BABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABY")
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    constructor(metadata, desklet_id) {
+        super(metadata, desklet_id);
         this.setupUI();
-    },
+        this.wallclock = new CinnamonDesktop.WallClock();
+        this.clock_notify_id = 0;
+    }
 
-    setupUI: function() {
+    on_desklet_added_to_desktop(userEnabled) {
+        this._updateClock();
+
+        if (this.clock_notify_id == 0) {
+            this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
+        }
+    }
+
+    on_desklet_removed() {
+        if (this.clock_notify_id > 0) {
+            this.wallclock.disconnect(this.clock_notify_id);
+            this.clock_notify_id = 0;
+        }
+    }
+
+    _clockNotify(obj, pspec, data) {
+        this._updateClock();
+    }
+
+    _updateClock() {
+        global.log("BABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABYBABY");
+
+        let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
+        this._time_label.set_text(p3time);
+        this._time_shadow_label.set_text(p3time);
+
+        let date_text = this.wallclock.get_clock_for_format("%m / %e");
+        if (date_text[0] == "0") {
+            date_text = date_text.substr(1);
+        }
+        this._date_label.set_text(date_text);
+
+        this._weekday_label.set_text(this.wallclock.get_clock_for_format("%a"));
+    }
+
+    setupUI() {
         // main container for the desklet
         this._clock_actor = new St.Widget();
         this.setContent(this._clock_actor);
+        // TODO this.setHeader
 
 
         // background image
@@ -70,7 +178,7 @@ P3Desklet.prototype = {
 
 
         // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
-        let time_text = "After School";
+        let time_text = "Unknown";
         this._time_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
         this._time_label.set_position(0, 0);
         this._time_label.set_text(time_text);
@@ -95,7 +203,7 @@ P3Desklet.prototype = {
         this._clock_actor.add_actor(this._time_label);
 
 
-        let date_text = "1 / 20";
+        let date_text = "?? / ??";
         this._date_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
         this._date_label.set_position(0, 0);
         this._date_label.set_text(date_text);
@@ -111,9 +219,9 @@ P3Desklet.prototype = {
         this._dot_label.set_style(
             "font-size: " + scale*81 + "px; "
         );
-        let weekday_text = "Wed";  // TODO qua non seguiamo il gioco, ma lasciamo al locale (strftime %a)
+        let weekday_text = "???";  // TODO qua non seguiamo il gioco, ma lasciamo al locale (strftime %a)
         this._weekday_label = new St.Label({style_class:"weekday-label", width: scaledWidth, height: scaledHeight});
-        this._date_label.set_position(0, 0);
+        this._weekday_label.set_position(0, 0);
         this._weekday_label.set_text(weekday_text);
         this._weekday_label.set_style(
             "font-size: " + scale*35 + "px; " +
@@ -135,7 +243,7 @@ P3Desklet.prototype = {
             "padding-top: " + scale*150 + "px; " +
             "padding-right: " + scale*170 + "px;"
         );
-        let countdown_text = "1 1";  // TODO per i giorni a cifra singola, mettere prefisso di 2 spazi
+        let countdown_text = "? ?";  // TODO per i giorni a cifra singola, mettere prefisso di 2 spazi
         this._countdown_label = new St.Label({style_class:"countdown-label", width: scaledWidth, height: scaledHeight});
         this._countdown_label.set_position(0, 0);
         this._countdown_label.set_text(countdown_text);
@@ -153,7 +261,7 @@ P3Desklet.prototype = {
             "padding-top: " + scale*197 + "px; " +
             "padding-left: " + scale*310 + "px;"
         );
-        let moon_text = "🌒";
+        let moon_text = "⚠️";
         this._moon_label = new St.Label({style_class:"moon-label", width: scaledWidth, height: scaledHeight});
         this._moon_label.set_position(0, 0);
         this._moon_label.set_text(moon_text);
@@ -162,7 +270,7 @@ P3Desklet.prototype = {
             "padding-top: " + scale*191 + "px; " +
             "padding-right: " + scale*15 + "px;"
         );
-        let phase_text = "Half";
+        let phase_text = "Full";
         this._phase_label = new St.Label({style_class:"phase-label", width: scaledWidth, height: scaledHeight});
         this._phase_label.set_position(0, 0);
         this._phase_label.set_text(phase_text);
