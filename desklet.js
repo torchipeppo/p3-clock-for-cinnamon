@@ -146,6 +146,8 @@ class P3Desklet extends Desklet.Desklet {
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
+        this.settings.bind("middle-shadow", "time_shadow_enabled", this._onUISettingsChanged);
+        this.settings.bind("middle-shadow-offset", "time_shadow_offset", this._onUISettingsChanged);
         this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
         this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
 
@@ -222,7 +224,7 @@ class P3Desklet extends Desklet.Desklet {
         let actual_time_format = this.time_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
         let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
         this._time_label.set_text(formatted_time);
-        this._time_shadow_label.set_text(formatted_time);
+        this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
         let date_text = this.wallclock.get_clock_for_format("%-m / %e");
         this._date_label.set_text(date_text);
@@ -340,7 +342,7 @@ class P3Desklet extends Desklet.Desklet {
         this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
         this._time_shadow_label.set_style(
-            get_style_string(scale, 70, 23, time_style, "#447fab")
+            get_style_string(scale, 62+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
         );
 
 

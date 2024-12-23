@@ -27,7 +27,7 @@
         "middle-appearance-section": {
             "type": "section",
             "title": "Appearance",
-            "keys": ["middle-font"]
+            "keys": ["middle-font", "middle-shadow", "middle-shadow-offset"]
         },
 
         "weatherapi-section": {
@@ -50,6 +50,20 @@
         "type": "fontchooser",
         "default": "Ubuntu 70",
         "description": "Font"
+    },
+    "middle-shadow": {
+        "type": "switch",
+        "default": true,
+        "description": "Drop shadow"
+    },
+    "middle-shadow-offset": {
+        "type": "spinbutton",
+        "default": 8,
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "description": "Drop shadow offset",
+        "dependency": "middle-shadow"
     },
 
     "wapi-key": {
