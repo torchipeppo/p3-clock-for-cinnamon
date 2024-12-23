@@ -11,7 +11,7 @@
         "middle-page": {
             "type": "page",
             "title": "Middle row",
-            "sections": ["middle-section"]
+            "sections": ["middle-format-section", "middle-appearance-section"]
         },
         "bottom-page": {
             "type": "page",
@@ -19,10 +19,15 @@
             "sections": ["weatherapi-section"]
         },
 
-        "middle-section": {
+        "middle-format-section": {
             "type": "section",
-            "title": "Middle row settings",
+            "title": "Time format",
             "keys": ["middle-format", "middle-format-help"]
+        },
+        "middle-appearance-section": {
+            "type": "section",
+            "title": "Appearance",
+            "keys": ["middle-font"]
         },
 
         "weatherapi-section": {
@@ -35,11 +40,16 @@
     "middle-format": {
         "type": "entry",
         "default": "",
-        "description": "Date/Time format"
+        "description": "Format specification"
     },
     "middle-format-help": {
         "type": "label",
         "description": "This uses standard strftime, with the addition of the %! specifier to show an approximate phase of the day (e.g. Morning, Afternoon, Evening, ...). Leave empty to show a default clock according to your locale and settings."
+    },
+    "middle-font": {
+        "type": "fontchooser",
+        "default": "Ubuntu 70",
+        "description": "Font"
     },
 
     "wapi-key": {

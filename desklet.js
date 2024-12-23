@@ -58,6 +58,72 @@ function hour_to_p3time(hour) {
     }
 }
 
+const FONT_WEIGHTS_TO_NUMERIC = {
+    "thin": 100,
+    "extralight": 200,
+    "extra-light": 200,
+    "light": 300,
+    "regular": 400,
+    "normal": 400,
+    "medium": 500,
+    "semibold": 600,
+    "semi-bold": 600,
+    "bold": 700,
+    "extrabold": 800,
+    "extra-bold": 800,
+    "black": 900
+}
+const FONT_WEIGHTS = Object.keys(FONT_WEIGHTS_TO_NUMERIC);
+const FONT_STYLES = ["italic", "oblique"]
+function split_font_string(font_string) {
+    let a = font_string.split(" ");
+    let output = {};
+    output.size = Number(a.pop());
+    output.style = "normal";
+    output.weight = 400;
+    while (true) {
+        let last = a[a.length-1].toLowerCase();
+        let match;
+        if (FONT_STYLES.includes(last)) {
+            output.style = last;
+            a.pop();
+        }
+        else if (FONT_WEIGHTS.includes(last)) {
+            output.weight = FONT_WEIGHTS_TO_NUMERIC[last];
+            a.pop();
+        }
+        else if (match=/weight=([0-9]+)/.exec(last)) {
+            output.weight = Number(match[1]);
+            a.pop();
+        }
+        else {
+            break;
+        }
+    }
+    output.family = a.join(" ");
+    return output;
+}
+
+function get_style_string(scale, vpadding, hpadding, font_dict, color) {
+    let vpadding_dir = "top";
+    if (vpadding < 0) {
+        vpadding_dir = "bottom";
+        vpadding = -vpadding;
+    }
+    let hpadding_dir = "right";
+    if (hpadding < 0) {
+        hpadding_dir = "left";
+        hpadding = -hpadding;
+    }
+    return  "font-family: " + font_dict.family + "; " +
+            "font-size: " + scale*font_dict.size + "px; " +
+            "font-weight: " + font_dict.weight + "; " +
+            "font-style: " + font_dict.style + "; " +
+            "padding-" + vpadding_dir + ": " + scale*vpadding + "px; " +
+            "padding-" + hpadding_dir + ": " + scale*hpadding + "px; " +
+            "color: " + color + ";";
+}
+
 const MOON_PHASES_BY_WEATHERAPI_NAME = {
     "New Moon": "🌑",
     "Waxing Crescent": "🌒",
@@ -72,17 +138,20 @@ const MOON_PHASES_BY_WEATHERAPI_NAME = {
 class P3Desklet extends Desklet.Desklet {
     constructor(metadata, desklet_id) {
         super(metadata, desklet_id);
-        this.setupUI();
+        this.createUI();
 
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
+        this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
         this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
         this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
+
+        this.updateUI();
     }
 
     time_format_or_default() {
@@ -107,6 +176,11 @@ class P3Desklet extends Desklet.Desklet {
 
     _onSettingsChanged() {
         this._updateClock();
+    }
+
+    _onUISettingsChanged() {
+        this.updateUI();
+        this._onSettingsChanged();
     }
 
     _onFormatSettingsChanged() {
@@ -187,11 +261,43 @@ class P3Desklet extends Desklet.Desklet {
         }
     }
 
-    setupUI() {
+    createUI() {
         // main container for the desklet
         this._clock_actor = new St.Widget();
         this.setContent(this._clock_actor);
         // TODO this.setHeader
+
+        this._bg_image = new Clutter.Image();
+        this._bg_actor = new Clutter.Actor();
+        this._bg_actor.set_content(this._bg_image);  // this might wanna be in update if we ever do different color schenes, I dunno
+        this._clock_actor.add_actor(this._bg_actor);
+
+        this._time_label = new St.Label({style_class:"time-label"});
+        this._time_shadow_label = new St.Label({style_class:"time-label"});
+        // order is relevant: stuff added later comes up in front
+        this._clock_actor.add_actor(this._time_shadow_label);
+        this._clock_actor.add_actor(this._time_label);
+
+        this._date_label = new St.Label({style_class:"date-label"});
+        this._dot_label = new St.Label({style_class:"date-label"});
+        this._weekday_label = new St.Label({style_class:"weekday-label"});
+        this._clock_actor.add_actor(this._date_label);
+        this._clock_actor.add_actor(this._dot_label);
+        this._clock_actor.add_actor(this._weekday_label);
+
+        this._moon_label = new St.Label({style_class:"moon-label"});
+        this._phase_label = new St.Label({style_class:"phase-label"});
+        this._clock_actor.add_actor(this._phase_label);
+        this._clock_actor.add_actor(this._moon_label);
+    }
+
+    updateUI() {
+        let h_offset = 6;
+        let v_offset = 0;
+        this._clock_actor.set_style(
+            "margin-left:" + h_offset + "px;" +
+            "margin-top:" + v_offset + "px;"
+        );
 
 
         // background image
@@ -206,107 +312,79 @@ class P3Desklet extends Desklet.Desklet {
         let scaledWidth = scale * CANON_WIDTH;
         let scaledHeight = scale * CANON_HEIGHT;
 
-        let h_offset = 6;
-        let v_offset = 0;
-        this._clock_actor.set_style(
-            "margin-left:" + h_offset + "px;" +
-            "margin-top:" + v_offset + "px;"
-        );
-        
+
         let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/" + bgName, scaledWidth, scaledHeight);
-        let image = new Clutter.Image();
-        image.set_data(
+        this._bg_image.set_data(
             pixBuf.get_pixels(),
             pixBuf.get_has_alpha() ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGBA_888,
             scaledWidth, scaledHeight,
             pixBuf.get_rowstride()
         );
         
-        this._bg_actor = new Clutter.Actor({width: scaledWidth, height: scaledHeight});
-        this._bg_actor.set_content(image);
+        this._bg_actor.set_width(scaledWidth);
+        this._bg_actor.set_height(scaledHeight);
         this._bg_actor.set_pivot_point(0, 1);
-        
-        this._clock_actor.add_actor(this._bg_actor);
 
+
+        let time_style = split_font_string(this.time_font);
 
         // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
-        let time_text = "Unknown";
-        this._time_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
+        this._time_label.set_width(scaledWidth);
+        this._time_label.set_height(scaledHeight);
         this._time_label.set_position(0, 0);
-        this._time_label.set_text(time_text);
         this._time_label.set_style(
-            "font-size: " + scale*70 + "px; " +
-            "padding-top: " + scale*62 + "px; " +
-            "padding-right: " + scale*31 + "px;"
+            get_style_string(scale, 62, 31, time_style, "white")
         );
         // drop shadow
-        this._time_shadow_label = new St.Label({style_class:"time-label", width: scaledWidth, height: scaledHeight});
+        this._time_shadow_label.set_width(scaledWidth);
+        this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
-        this._time_shadow_label.set_text(time_text);
         this._time_shadow_label.set_style(
-            "font-size: " + scale*70 + "px; " +
-            "padding-top: " + scale*70 + "px; " +
-            "padding-right: " + scale*23 + "px;" +
-            "color: #447fab;"
+            get_style_string(scale, 70, 23, time_style, "#447fab")
         );
 
-        // order is relevant: stuff added later comes up in front
-        this._clock_actor.add_actor(this._time_shadow_label);
-        this._clock_actor.add_actor(this._time_label);
 
-
-        let date_text = "?? / ??";
-        this._date_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
+        this._date_label.set_width(scaledWidth);
+        this._date_label.set_height(scaledHeight);
         this._date_label.set_position(0, 0);
-        this._date_label.set_text(date_text);
         this._date_label.set_style(
             "font-size: " + scale*52 + "px; " +
             "padding-top: " + scale*17 + "px; " +
             "padding-right: " + scale*140 + "px;"
         );
-        let dot_text = ".";
-        this._dot_label = new St.Label({style_class:"date-label", width: scaledWidth, height: scaledHeight});
+        this._dot_label.set_width(scaledWidth);
+        this._dot_label.set_height(scaledHeight);
         this._dot_label.set_position(scale*(-101), scale*(-23));  // necessary, can't be at 0,0 b/c it's an ordinary dot
-        this._dot_label.set_text(dot_text);
+        this._dot_label.set_text(".");
         this._dot_label.set_style(
             "font-size: " + scale*81 + "px; "
         );
-        let weekday_text = "???";  // TODO qua non seguiamo il gioco, ma lasciamo al locale (strftime %a)
-        this._weekday_label = new St.Label({style_class:"weekday-label", width: scaledWidth, height: scaledHeight});
+        this._weekday_label.set_width(scaledWidth);
+        this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
-        this._weekday_label.set_text(weekday_text);
         this._weekday_label.set_style(
             "font-size: " + scale*35 + "px; " +
             "padding-top: " + scale*28 + "px; " +
             "padding-left: " + scale*510 + "px;"
         );
 
-        this._clock_actor.add_actor(this._date_label);
-        this._clock_actor.add_actor(this._dot_label);
-        this._clock_actor.add_actor(this._weekday_label);
 
-
-        let moon_text = "⚠️";
-        this._moon_label = new St.Label({style_class:"moon-label", width: scaledWidth, height: scaledHeight});
+        this._moon_label.set_width(scaledWidth);
+        this._moon_label.set_height(scaledHeight);
         this._moon_label.set_position(0, 0);
-        this._moon_label.set_text(moon_text);
         this._moon_label.set_style(
             "font-size: " + scale*70 + "px; " +
             "padding-top: " + scale*191 + "px; " +
             "padding-right: " + scale*15 + "px;"
         );
-        let phase_text = "";
-        this._phase_label = new St.Label({style_class:"phase-label", width: scaledWidth, height: scaledHeight});
+        this._phase_label.set_width(scaledWidth);
+        this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
-        this._phase_label.set_text(phase_text);
         this._phase_label.set_style(
             "font-size: " + scale*34 + "px; " +
             "padding-top: " + scale*184 + "px; " +
             "padding-right: " + scale*124 + "px;"
         );
-
-        this._clock_actor.add_actor(this._phase_label);
-        this._clock_actor.add_actor(this._moon_label);
     }
 
     // TODO NEXT two parallel paths now: make this dynamic,

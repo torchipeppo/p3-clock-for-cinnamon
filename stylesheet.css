@@ -1,12 +1,12 @@
 /* px measures are relative to the CANON_HEIGHT */
 .time-label {
-    color: white;
-    font-size: 70px;
-    font-family: "Instrument Sans";
-    text-align: right;
-    padding-top: 62px;
-    padding-right: 31px;
-    font-weight: 500;
+    /* color: white; */
+    /* font-size: 70px; */
+    /* font-family: "Instrument Sans"; */
+    text-align: right;  /* TODO mettere anche allineamento verticale al centro */
+    /* padding-top: 62px; */
+    /* padding-right: 31px; */
+    /* font-weight: 500; */
 }
 
 /* px measures are relative to the CANON_HEIGHT */
