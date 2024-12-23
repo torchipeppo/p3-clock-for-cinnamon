@@ -21,16 +21,16 @@
 
 /* px measures are relative to the CANON_HEIGHT */
 .date-label {
-    color: #226182;
-    font-family: "MADE Outer Sans";
+    /* color: #226182; */
+    /* font-family: "MADE Outer Sans"; */
     text-align: right;
-    font-weight: 500;
+    /* font-weight: 500; */
 }
 
 /* px measures are relative to the CANON_HEIGHT */
 .weekday-label {
-    color: #226182;
-    font-family: "MADE Outer Sans";
+    /* color: #226182; */
+    /* font-family: "MADE Outer Sans"; */
     text-align: center;
 }
 

@@ -6,7 +6,7 @@
         "top-page": {
             "type": "page",
             "title": "Top row",
-            "sections": []
+            "sections": ["top-format-section", "top-appearance-section"]
         },
         "middle-page": {
             "type": "page",
@@ -17,6 +17,17 @@
             "type": "page",
             "title": "Bottom row",
             "sections": ["weatherapi-section"]
+        },
+
+        "top-format-section": {
+            "type": "section",
+            "title": "Time format",
+            "keys": ["top-format", "top-format-help"]
+        },
+        "top-appearance-section": {
+            "type": "section",
+            "title": "Appearance",
+            "keys": ["top-font", "top-weekday"]
         },
 
         "middle-format-section": {
@@ -35,6 +46,26 @@
             "title": "WeatherAPI settings",
             "keys": ["wapi-key", "wapi-query"]
         }
+    },
+
+    "top-format": {
+        "type": "entry",
+        "default": "",
+        "description": "Format specification"
+    },
+    "top-format-help": {
+        "type": "label",
+        "description": "This uses standard strftime, with the addition of the %! specifier to show an approximate phase of the day (e.g. Morning, Afternoon, Evening, ...). Leave empty to show a default date according to your locale and settings."
+    },
+    "top-font": {
+        "type": "fontchooser",
+        "default": "Ubuntu Bold 52",
+        "description": "Font"
+    },
+    "top-weekday": {
+        "type": "switch",
+        "default": true,
+        "description": "Show separate weekday (fixed size)"
     },
 
     "middle-format": {

@@ -148,6 +148,11 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
         this.settings.bind("middle-shadow", "time_shadow_enabled", this._onUISettingsChanged);
         this.settings.bind("middle-shadow-offset", "time_shadow_offset", this._onUISettingsChanged);
+
+        this.settings.bind("top-format", "date_format", this._onFormatSettingsChanged);
+        this.settings.bind("top-font", "date_font", this._onUISettingsChanged);
+        this.settings.bind("top-weekday", "date_weekday_enabled", this._onUISettingsChanged);
+
         this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
         this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
 
@@ -159,12 +164,16 @@ class P3Desklet extends Desklet.Desklet {
     time_format_or_default() {
         return this.time_format || this.wallclock.get_default_time_format();
     }
+    date_format_or_default() {
+        return this.date_format || "%x";
+    }
 
     updateFormat() {
-        // this.use_custom_time_format = !!this.time_format;
         let actual_time_format = this.time_format_or_default();
+        let actual_date_format = this.date_format_or_default();
+        let combined_format = actual_time_format + " " + actual_date_format
         // this regex accounts for %% escaping  https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
-        if (/(^|[^%])(%%)*%[SLs]/.test(actual_time_format)) {
+        if (/(^|[^%])(%%)*%[SLs]/.test(combined_format)) {
             this.wallclock.set_format_string("%S");
         }
         else {
@@ -223,13 +232,32 @@ class P3Desklet extends Desklet.Desklet {
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
         let actual_time_format = this.time_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
         let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
+        if (!this.time_format) {
+            // default stylistic choice: put a little space in the clock
+            formatted_time = formatted_time.replace(":", " : ");
+            formatted_time = formatted_time.replace(".", " . ");
+        }
         this._time_label.set_text(formatted_time);
         this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
-        let date_text = this.wallclock.get_clock_for_format("%-m / %e");
-        this._date_label.set_text(date_text);
+        let actual_date_format = this.date_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
+        global.log(this.wallclock.get_default_time_format())
+        global.log(actual_date_format)
+        let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
+        if (!this.date_format) {
+            // default stylistic choice: try to remove the year (w/o trying too hard)
+            formatted_date = formatted_date.replace(/.?[0-9]{4}.?/, "");
+            // default stylistic choice: put a little space in the date
+            formatted_date = formatted_date.replace("/", " / ");
+            formatted_date = formatted_date.replace("-", " - ");
+        }
+        this._date_label.set_text(formatted_date);
 
-        this._weekday_label.set_text(this.wallclock.get_clock_for_format("%a"));
+        let weekday_text = "";
+        if (this.date_weekday_enabled) {
+            weekday_text = this.wallclock.get_clock_for_format("%a");
+        }
+        this._weekday_label.set_text(weekday_text);
 
         if (this.wapi_key === "") {  // disable
             this._moon_label.set_text("");
@@ -329,6 +357,9 @@ class P3Desklet extends Desklet.Desklet {
 
 
         let time_style = split_font_string(this.time_font);
+        let date_style = split_font_string(this.date_font);
+        let dot_style = split_font_string("Ubuntu Bold 82");
+        let weekday_style = split_font_string(date_style.family + " 35");
 
         // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
         this._time_label.set_width(scaledWidth);
@@ -349,25 +380,22 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_width(scaledWidth);
         this._date_label.set_height(scaledHeight);
         this._date_label.set_position(0, 0);
+        let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            "font-size: " + scale*52 + "px; " +
-            "padding-top: " + scale*17 + "px; " +
-            "padding-right: " + scale*140 + "px;"
+            get_style_string(scale, 17, date_padding_right, date_style, "#226182")
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
-        this._dot_label.set_position(scale*(-101), scale*(-23));  // necessary, can't be at 0,0 b/c it's an ordinary dot
-        this._dot_label.set_text(".");
+        this._dot_label.set_position(scale*(-108), scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
+        this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
-            "font-size: " + scale*81 + "px; "
+            get_style_string(scale, 0, 0, dot_style, "#226182")
         );
         this._weekday_label.set_width(scaledWidth);
         this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
         this._weekday_label.set_style(
-            "font-size: " + scale*35 + "px; " +
-            "padding-top: " + scale*28 + "px; " +
-            "padding-left: " + scale*510 + "px;"
+            get_style_string(scale, 28, -505, weekday_style, "#226182")
         );
 
 
