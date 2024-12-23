@@ -1,14 +1,57 @@
 {
+    "layout": {
+        "type": "layout",
+        "pages": ["top-page", "middle-page", "bottom-page"],
+
+        "top-page": {
+            "type": "page",
+            "title": "Top row",
+            "sections": []
+        },
+        "middle-page": {
+            "type": "page",
+            "title": "Middle row",
+            "sections": ["middle-section"]
+        },
+        "bottom-page": {
+            "type": "page",
+            "title": "Bottom row",
+            "sections": ["weatherapi-section"]
+        },
+
+        "middle-section": {
+            "type": "section",
+            "title": "Middle row settings",
+            "keys": ["middle-format", "middle-format-help"]
+        },
+
+        "weatherapi-section": {
+            "type": "section",
+            "title": "WeatherAPI settings",
+            "keys": ["wapi-key", "wapi-query"]
+        }
+    },
+
+    "middle-format": {
+        "type": "entry",
+        "default": "",
+        "description": "Date/Time format"
+    },
+    "middle-format-help": {
+        "type": "label",
+        "description": "This uses standard strftime, with the addition of the %! specifier to show an approximate phase of the day (e.g. Morning, Afternoon, Evening, ...). Leave empty to show a default clock according to your locale and settings."
+    },
+
     "wapi-key": {
         "type": "entry",
         "default": "",
-        "description": "WeatherAPI Key",
+        "description": "WeatherAPI key",
         "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather and moon phase display."
     },
     "wapi-query": {
         "type": "entry",
         "default": "auto:ip",
-        "description": "Weather Location",
+        "description": "Weather location",
         "tooltip": "Enter your location name (e.g. \"Tokyo\"), your coordinates (e.g. \"123.45,98.765\"), or \"auto:ip\" for automatic lookup based on your IP address."
     }
 }

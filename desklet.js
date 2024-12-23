@@ -58,7 +58,6 @@ function hour_to_p3time(hour) {
     }
 }
 
-const MOON_PHASES = "🌑🌒🌓🌔🌕🌖🌗🌘";
 const MOON_PHASES_BY_WEATHERAPI_NAME = {
     "New Moon": "🌑",
     "Waxing Crescent": "🌒",
@@ -79,22 +78,52 @@ class P3Desklet extends Desklet.Desklet {
         this.clock_notify_id = 0;
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
+        this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
         this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
+
+        this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
+    }
+
+    time_format_or_default() {
+        return this.time_format || this.wallclock.get_default_time_format();
+    }
+
+    updateFormat() {
+        // this.use_custom_time_format = !!this.time_format;
+        let actual_time_format = this.time_format_or_default();
+        // this regex accounts for %% escaping  https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
+        if (/(^|[^%])(%%)*%[SLs]/.test(actual_time_format)) {
+            this.wallclock.set_format_string("%S");
+        }
+        else {
+            this.wallclock.set_format_string(null);
+        }
+    }
+
+    requestWAPIUpdate() {
+        this.next_weather_update_is_fast = true;
     }
 
     _onSettingsChanged() {
         this._updateClock();
     }
 
+    _onFormatSettingsChanged() {
+        this.updateFormat();
+        this._onSettingsChanged();
+    }
+
     _onWAPISettingsChanged() {
-        this.next_weather_update_is_fast = true;
+        this.requestWAPIUpdate();
         this._onSettingsChanged();
     }
 
     on_desklet_added_to_desktop(userEnabled) {
         this.time_of_last_weather_update = new Date(0);  // eopch means "never updated before"
-        this._onWAPISettingsChanged();
+        this.updateFormat();
+        this.requestWAPIUpdate();
+        this._onSettingsChanged();
 
         if (this.clock_notify_id == 0) {
             this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
@@ -116,13 +145,12 @@ class P3Desklet extends Desklet.Desklet {
         // global.log("BABYBABYBABYBABYBABY");
 
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
-        this._time_label.set_text(p3time);
-        this._time_shadow_label.set_text(p3time);
+        let actual_time_format = this.time_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
+        let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
+        this._time_label.set_text(formatted_time);
+        this._time_shadow_label.set_text(formatted_time);
 
-        let date_text = this.wallclock.get_clock_for_format("%m / %e");
-        if (date_text[0] == "0") {
-            date_text = date_text.substr(1);
-        }
+        let date_text = this.wallclock.get_clock_for_format("%-m / %e");
         this._date_label.set_text(date_text);
 
         this._weekday_label.set_text(this.wallclock.get_clock_for_format("%a"));
