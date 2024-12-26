@@ -227,7 +227,7 @@
         "type": "spinbutton",
         "default": 70,
         "min": 10,
-        "max": 200,
+        "max": 90,
         "step": 10,
         "description": "Size",
         "dependency": "bottom-emoji-type!="

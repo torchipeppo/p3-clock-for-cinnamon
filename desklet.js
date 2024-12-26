@@ -474,19 +474,17 @@ class P3Desklet extends Desklet.Desklet {
         let moon_style = split_font_string("sans " + this.emoji_size);
         let phase_style = split_font_string(this.label_font);
 
-        // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
         this._time_label.set_width(scaledWidth);
         this._time_label.set_height(scaledHeight);
         this._time_label.set_position(0, 0);
         this._time_label.set_style(
-            get_style_string(this.scale, 62, 31, time_style, "white")
+            get_style_string(this.scale, 97-time_style.size*0.5, 31, time_style, "white")
         );
-        // drop shadow
         this._time_shadow_label.set_width(scaledWidth);
         this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
         this._time_shadow_label.set_style(
-            get_style_string(this.scale, 62+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
+            get_style_string(this.scale, 97-time_style.size*0.5+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
         );
 
 
@@ -495,7 +493,7 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_position(0, 0);
         let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            get_style_string(this.scale, 17, date_padding_right, date_style, "#226182")
+            get_style_string(this.scale, 43-date_style.size*0.5, date_padding_right, date_style, "#226182")
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
@@ -512,18 +510,17 @@ class P3Desklet extends Desklet.Desklet {
         );
 
 
-        // TODO mancano le impostazioni del font
         this._moon_label.set_width(scaledWidth);
         this._moon_label.set_height(scaledHeight);
         this._moon_label.set_position(0, 0);
         this._moon_label.set_style(
-            get_style_string(this.scale, 191, 15, moon_style, "white")
+            get_style_string(this.scale, 226-moon_style.size*0.5, -496, moon_style, "white")
         );
         this._phase_label.set_width(scaledWidth);
         this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
         this._phase_label.set_style(
-            get_style_string(this.scale, 184, 124, phase_style, "aliceblue")
+            get_style_string(this.scale, 226-phase_style.size*1.25, 124, phase_style, "aliceblue")
         );
     }
 

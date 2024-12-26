@@ -1,5 +1,7 @@
+/* TODO this thing doesn't do much now */
+
 .time-label {
-    text-align: right;  /* TODO mettere anche allineamento verticale al centro */
+    text-align: right;
 }
 
 .date-label {
@@ -15,5 +17,5 @@
 }
 
 .moon-label {
-    text-align: right;
+    text-align: center;
 }
