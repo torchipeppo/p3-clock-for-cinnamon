@@ -1,50 +1,19 @@
-/* px measures are relative to the CANON_HEIGHT */
 .time-label {
-    /* color: white; */
-    /* font-size: 70px; */
-    /* font-family: "Instrument Sans"; */
     text-align: right;  /* TODO mettere anche allineamento verticale al centro */
-    /* padding-top: 62px; */
-    /* padding-right: 31px; */
-    /* font-weight: 500; */
 }
 
-/* px measures are relative to the CANON_HEIGHT */
-.next-label {
-    color: aliceblue;
-    font-family: "Instrument Sans";
-    text-align: right;
-    font-weight: 700;
-}
-
-
-
-/* px measures are relative to the CANON_HEIGHT */
 .date-label {
-    /* color: #226182; */
-    /* font-family: "MADE Outer Sans"; */
     text-align: right;
-    /* font-weight: 500; */
 }
 
-/* px measures are relative to the CANON_HEIGHT */
 .weekday-label {
-    /* color: #226182; */
-    /* font-family: "MADE Outer Sans"; */
     text-align: center;
 }
 
-/* px measures are relative to the CANON_HEIGHT */
 .phase-label {
-    color: aliceblue;
-    font-family: "MADE Outer Sans";
     text-align: right;
 }
 
-
-
-/* px measures are relative to the CANON_HEIGHT */
 .moon-label {
-    color: white;
     text-align: right;
 }

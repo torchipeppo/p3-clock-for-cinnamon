@@ -230,7 +230,9 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("wapi-update-period-minutes", "wapi_update_period", this._onWAPISettingsChanged);
 
         this.settings.bind("bottom-emoji-type", "emoji_type", this._onWAPISettingsChanged);
+        this.settings.bind("bottom-emoji-size", "emoji_size", this._onUISettingsChanged);
         this.settings.bind("bottom-label-type", "label_type", this._onWAPISettingsChanged);
+        this.settings.bind("bottom-label-font", "label_font", this._onUISettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
@@ -470,6 +472,8 @@ class P3Desklet extends Desklet.Desklet {
         let date_style = split_font_string(this.date_font);
         let dot_style = split_font_string("Ubuntu Bold 82");
         let weekday_style = split_font_string(date_style.family + " 35");
+        let moon_style = split_font_string("sans " + this.emoji_size);
+        let phase_style = split_font_string(this.label_font);
 
         // big text to show the time, either as HH:MM or in a broader sense (morning/afternoon/...)
         this._time_label.set_width(scaledWidth);
@@ -514,17 +518,13 @@ class P3Desklet extends Desklet.Desklet {
         this._moon_label.set_height(scaledHeight);
         this._moon_label.set_position(0, 0);
         this._moon_label.set_style(
-            "font-size: " + this.scale*70 + "px; " +
-            "padding-top: " + this.scale*191 + "px; " +
-            "padding-right: " + this.scale*15 + "px;"
+            get_style_string(this.scale, 191, 15, moon_style, "white")
         );
         this._phase_label.set_width(scaledWidth);
         this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
         this._phase_label.set_style(
-            "font-size: " + this.scale*34 + "px; " +
-            "padding-top: " + this.scale*184 + "px; " +
-            "padding-right: " + this.scale*124 + "px;"
+            get_style_string(this.scale, 184, 124, phase_style, "aliceblue")
         );
     }
 

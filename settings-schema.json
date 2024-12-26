@@ -81,12 +81,12 @@
         "bottom-emoji-section": {
             "type": "section",
             "title": "Emoji settings",
-            "keys": ["bottom-emoji-type"]
+            "keys": ["bottom-emoji-type", "bottom-emoji-size"]
         },
         "bottom-label-section": {
             "type": "section",
             "title": "Caption settings",
-            "keys": ["bottom-label-type"]
+            "keys": ["bottom-label-type", "bottom-label-font"]
         }
     },
 
@@ -223,6 +223,15 @@
         },
         "description": "Emoji display"
     },
+    "bottom-emoji-size": {
+        "type": "spinbutton",
+        "default": 70,
+        "min": 10,
+        "max": 200,
+        "step": 10,
+        "description": "Size",
+        "dependency": "bottom-emoji-type!="
+    },
 
     "bottom-label-type": {
         "type": "combobox",
@@ -233,5 +242,11 @@
             "Moon phase (W)": "moon"
         },
         "description": "Caption display"
+    },
+    "bottom-label-font": {
+        "type": "fontchooser",
+        "default": "Ubuntu Bold 34",
+        "description": "Font",
+        "dependency": "bottom-label-type!="
     }
 }
