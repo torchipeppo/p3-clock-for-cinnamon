@@ -210,6 +210,11 @@ class P3Desklet extends Desklet.Desklet {
         this.clock_notify_id = 0;
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
+
+        this.settings.bind("global-h-offset", "h_offset", this._onUISettingsChanged);
+        this.settings.bind("global-v-offset", "v_offset", this._onUISettingsChanged);
+        this.settings.bind("global-scale", "scale", this._onUISettingsChanged);
+
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
         this.settings.bind("middle-shadow", "time_shadow_enabled", this._onUISettingsChanged);
@@ -403,7 +408,7 @@ class P3Desklet extends Desklet.Desklet {
         // main container for the desklet
         this._clock_actor = new St.Widget();
         this.setContent(this._clock_actor);
-        // TODO this.setHeader
+        this.setHeader(_("Moonlight Clock"));
 
         this._bg_image = new Clutter.Image();
         this._bg_actor = new Clutter.Actor();
@@ -430,11 +435,9 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     updateUI() {
-        let h_offset = 6;
-        let v_offset = 0;
         this._clock_actor.set_style(
-            "margin-left:" + h_offset + "px;" +
-            "margin-top:" + v_offset + "px;"
+            "margin-left:" + this.h_offset + "px;" +
+            "margin-top:" + this.v_offset + "px;"
         );
 
 
@@ -446,9 +449,8 @@ class P3Desklet extends Desklet.Desklet {
         const CANON_HEIGHT = 387.0;
         const CANON_WIDTH = orig_width * CANON_HEIGHT / orig_height;
 
-        let scale = 1;
-        let scaledWidth = scale * CANON_WIDTH;
-        let scaledHeight = scale * CANON_HEIGHT;
+        let scaledWidth = this.scale * CANON_WIDTH;
+        let scaledHeight = this.scale * CANON_HEIGHT;
 
 
         let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/" + bgName, scaledWidth, scaledHeight);
@@ -474,14 +476,14 @@ class P3Desklet extends Desklet.Desklet {
         this._time_label.set_height(scaledHeight);
         this._time_label.set_position(0, 0);
         this._time_label.set_style(
-            get_style_string(scale, 62, 31, time_style, "white")
+            get_style_string(this.scale, 62, 31, time_style, "white")
         );
         // drop shadow
         this._time_shadow_label.set_width(scaledWidth);
         this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
         this._time_shadow_label.set_style(
-            get_style_string(scale, 62+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
+            get_style_string(this.scale, 62+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
         );
 
 
@@ -490,38 +492,39 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_position(0, 0);
         let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            get_style_string(scale, 17, date_padding_right, date_style, "#226182")
+            get_style_string(this.scale, 17, date_padding_right, date_style, "#226182")
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
-        this._dot_label.set_position(scale*(-108), scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
+        this._dot_label.set_position(this.scale*(-108), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
         this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
-            get_style_string(scale, 0, 0, dot_style, "#226182")
+            get_style_string(this.scale, 0, 0, dot_style, "#226182")
         );
         this._weekday_label.set_width(scaledWidth);
         this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
         this._weekday_label.set_style(
-            get_style_string(scale, 28, -505, weekday_style, "#226182")
+            get_style_string(this.scale, 28, -505, weekday_style, "#226182")
         );
 
 
+        // TODO mancano le impostazioni del font
         this._moon_label.set_width(scaledWidth);
         this._moon_label.set_height(scaledHeight);
         this._moon_label.set_position(0, 0);
         this._moon_label.set_style(
-            "font-size: " + scale*70 + "px; " +
-            "padding-top: " + scale*191 + "px; " +
-            "padding-right: " + scale*15 + "px;"
+            "font-size: " + this.scale*70 + "px; " +
+            "padding-top: " + this.scale*191 + "px; " +
+            "padding-right: " + this.scale*15 + "px;"
         );
         this._phase_label.set_width(scaledWidth);
         this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
         this._phase_label.set_style(
-            "font-size: " + scale*34 + "px; " +
-            "padding-top: " + scale*184 + "px; " +
-            "padding-right: " + scale*124 + "px;"
+            "font-size: " + this.scale*34 + "px; " +
+            "padding-top: " + this.scale*184 + "px; " +
+            "padding-right: " + this.scale*124 + "px;"
         );
     }
 
