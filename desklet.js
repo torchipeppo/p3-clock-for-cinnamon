@@ -13,7 +13,6 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 /*
     TODO
-    - Ci sono un sacco di cose hardcodate che andranno trasformate in impostazioni nella finale
     - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
         non abbiamo un messaggio d'errore inutile a schermo
