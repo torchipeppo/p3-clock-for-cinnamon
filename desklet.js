@@ -26,6 +26,9 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
         Possibile pagina dove recuperarlo: https://www.timeanddate.com/moon/phases/
         Recupera setup attori Clutter e classi CSS da questo commit:
         538a95a8325166306607c6ebbeefa5594e4f1e24
+    - Fatto quello, e quindi una volta che abbiamo la struttura per la doppia label
+        in bottom row, possiamo anche espandere la funzionalità per includere anche
+        countdown a un giorno arbitrario e probabilità di pioggia
 */
 
 // REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
@@ -135,6 +138,69 @@ const MOON_PHASES_BY_WEATHERAPI_NAME = {
     "Waning Crescent": "🌘",
 }
 
+const WEATHER_EMOJIS_BY_CONDITION_CODE = {
+    1000: "☀️",
+    1003: "⛅",
+    1006: "☁️",
+    1009: "☁️",
+    1030: "🌫️",
+    1063: "🌦️",
+    1066: "🌨️",
+    1069: "🌨️",
+    1072: "🌦️",
+    1087: "⛈️",
+    1114: "🌨️",
+    1117: "🌨️",
+    1135: "🌫️",
+    1147: "🌫️",
+    1150: "🌦️",
+    1153: "🌦️",
+    1168: "🌦️",
+    1171: "🌦️",
+    1180: "🌦️",
+    1183: "🌧️",
+    1186: "🌦️",
+    1189: "🌧️",
+    1192: "🌦️",
+    1195: "🌧️",
+    1198: "🌧️",
+    1201: "🌧️",
+    1204: "🌨️",
+    1207: "🌨️",
+    1210: "🌨️",
+    1213: "🌨️",
+    1216: "🌨️",
+    1219: "🌨️",
+    1222: "🌨️",
+    1225: "🌨️",
+    1237: "🌨️",
+    1240: "🌧️",
+    1243: "🌧️",
+    1246: "🌧️",
+    1249: "🌨️",
+    1252: "🌨️",
+    1255: "🌨️",
+    1258: "🌨️",
+    1261: "🌨️",
+    1264: "🌨️",
+    1273: "⛈️",
+    1276: "⛈️",
+    1279: "🌨️",
+    1282: "🌨️",
+}
+
+// a very limited amount of descriptions, for the sake of the translations.
+const WEATHER_LABELS_BY_EMOJI = {
+    "☀️": "Clear",
+    "⛅": "Cloudy",
+    "☁️": "Cloudy",
+    "🌫️": "Fog",
+    "🌦️": "Rain",
+    "🌧️": "Rain",
+    "⛈️": "Storm",
+    "🌨️": "Cold\nprecip.",  // "Cold precipitations", a catch-all term for snow, sleet, etc.
+}
+
 class P3Desklet extends Desklet.Desklet {
     constructor(metadata, desklet_id) {
         super(metadata, desklet_id);
@@ -153,8 +219,13 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("top-font", "date_font", this._onUISettingsChanged);
         this.settings.bind("top-weekday", "date_weekday_enabled", this._onUISettingsChanged);
 
+        this.settings.bind("wapi-enable", "wapi_enabled_switch", this._onWAPISettingsChanged);
         this.settings.bind("wapi-key", "wapi_key", this._onWAPISettingsChanged);
         this.settings.bind("wapi-query", "wapi_query", this._onWAPISettingsChanged);
+        this.settings.bind("wapi-update-period-minutes", "wapi_update_period", this._onWAPISettingsChanged);
+
+        this.settings.bind("bottom-emoji-type", "emoji_type", this._onWAPISettingsChanged);
+        this.settings.bind("bottom-label-type", "label_type", this._onWAPISettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
@@ -166,6 +237,9 @@ class P3Desklet extends Desklet.Desklet {
     }
     date_format_or_default() {
         return this.date_format || "%x";
+    }
+    weatherapi_is_enabled() {
+        return this.wapi_enabled_switch && this.wapi_key && (this.emoji_type || this.label_type);
     }
 
     updateFormat() {
@@ -179,6 +253,13 @@ class P3Desklet extends Desklet.Desklet {
         else {
             this.wallclock.set_format_string(null);
         }
+    }
+
+    fullUpdateRightNow() {
+        this.time_of_last_weather_update = new Date(0);  // epoch means "never updated before"
+        this.updateFormat();
+        this.requestWAPIUpdate();
+        this._onSettingsChanged();
     }
 
     requestWAPIUpdate() {
@@ -205,10 +286,7 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     on_desklet_added_to_desktop(userEnabled) {
-        this.time_of_last_weather_update = new Date(0);  // eopch means "never updated before"
-        this.updateFormat();
-        this.requestWAPIUpdate();
-        this._onSettingsChanged();
+        this.fullUpdateRightNow();
 
         if (this.clock_notify_id == 0) {
             this.clock_notify_id = this.wallclock.connect("notify::clock", () => this._clockNotify());
@@ -241,8 +319,6 @@ class P3Desklet extends Desklet.Desklet {
         this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
         let actual_date_format = this.date_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
-        global.log(this.wallclock.get_default_time_format())
-        global.log(actual_date_format)
         let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
         if (!this.date_format) {
             // default stylistic choice: try to remove the year (w/o trying too hard)
@@ -259,15 +335,15 @@ class P3Desklet extends Desklet.Desklet {
         }
         this._weekday_label.set_text(weekday_text);
 
-        if (this.wapi_key === "") {  // disable
+        if (!this.weatherapi_is_enabled()) {
             this._moon_label.set_text("");
             this._phase_label.set_text("");
         }
         else {
             let now = new Date();
-            const ONE_HOUR_MS = 60*60*1000;  // 1 hour in milliseconds
+            const NORMAL_WAIT_TIME = this.wapi_update_period*60*1000;  // from minutes to milliseconds
             const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
-            let cooldown = this.next_weather_update_is_fast ? FAST_WAIT_TIME : ONE_HOUR_MS;
+            let cooldown = this.next_weather_update_is_fast ? FAST_WAIT_TIME : NORMAL_WAIT_TIME;
             if (now - this.time_of_last_weather_update > cooldown) {
                 // global.log("YEEEEEEEEEEEEEEEEEAAAAAAH");
                 this.time_of_last_weather_update = now;
@@ -277,9 +353,8 @@ class P3Desklet extends Desklet.Desklet {
                     (response) => {
                         if (response) {
                             let resp_json = JSON.parse(response);
-                            let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                            this._moon_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
-                            this._phase_label.set_text(moon_phase_name.replace(" ", "\n"));
+                            this._update_emoji(resp_json)
+                            this._update_label(resp_json)
                         }
                         else {
                             this._moon_label.set_text("⚠️");
@@ -288,6 +363,39 @@ class P3Desklet extends Desklet.Desklet {
                     }
                 )
             }
+        }
+    }
+
+    _update_emoji(resp_json) {
+        switch (this.emoji_type) {
+            case "moon":
+                let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
+                this._moon_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
+                break;
+            case "weather":
+                let weather_code = resp_json.current.condition.code;
+                this._moon_label.set_text(WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code]);
+                break;
+            default:
+                this._moon_label.set_text("");
+                break;
+        }
+    }
+
+    _update_label(resp_json) {
+        switch (this.label_type) {
+            case "moon":
+                let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
+                this._phase_label.set_text(moon_phase_name.replace(" ", "\n"));
+                break;
+            case "weather":
+                let weather_code = resp_json.current.condition.code;
+                let weather_emoji = WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
+                this._phase_label.set_text(WEATHER_LABELS_BY_EMOJI[weather_emoji]);
+                break;
+            default:
+                this._phase_label.set_text("");
+                break;
         }
     }
 
@@ -416,9 +524,6 @@ class P3Desklet extends Desklet.Desklet {
             "padding-right: " + scale*124 + "px;"
         );
     }
-
-    // TODO NEXT two parallel paths now: make this dynamic,
-    //           and make this more useful / less P3 accurate
 
     _getWeather(url, callback) {
         var here = this;

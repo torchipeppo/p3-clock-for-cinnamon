@@ -16,7 +16,12 @@
         "bottom-page": {
             "type": "page",
             "title": "Bottom row",
-            "sections": ["weatherapi-section"]
+            "sections": [
+                "bottom-requirements-section",
+                "bottom-weatherapi-section",
+                "bottom-emoji-section",
+                "bottom-label-section"
+            ]
         },
 
         "top-format-section": {
@@ -41,10 +46,31 @@
             "keys": ["middle-font", "middle-shadow", "middle-shadow-offset"]
         },
 
-        "weatherapi-section": {
+        "bottom-requirements-section": {
+            "type": "section",
+            "title": "Requirements",
+            "keys": ["bottom-requirements-help", "bottom-wapi-refresh-help"]
+        },
+        "bottom-weatherapi-section": {
             "type": "section",
             "title": "WeatherAPI settings",
-            "keys": ["wapi-key", "wapi-query"]
+            "keys": [
+                "wapi-enable",
+                "wapi-key",
+                "wapi-query",
+                "wapi-update-period-minutes",
+                "wapi-update-button"
+            ]
+        },
+        "bottom-emoji-section": {
+            "type": "section",
+            "title": "Emoji settings",
+            "keys": ["bottom-emoji-type"]
+        },
+        "bottom-label-section": {
+            "type": "section",
+            "title": "Caption settings",
+            "keys": ["bottom-label-type"]
         }
     },
 
@@ -97,16 +123,69 @@
         "dependency": "middle-shadow"
     },
 
+    "bottom-requirements-help": {
+        "type": "label",
+        "description": "(W) indicates that a valid WeatherAPI key is required. Sign up on weatherapi.com to get one."
+    },
+    "bottom-wapi-refresh-help": {
+        "type": "label",
+        "description": "Note: WeatherAPI changes may take up to one minute to take effect, to avoid request floods while typing. Use the button below to force an update. Please be mindful of your request budget."
+    },
+
+    "wapi-enable": {
+        "type": "switch",
+        "default": true,
+        "description": "Enable WeatherAPI for weather and/or moon phase display"
+    },
     "wapi-key": {
         "type": "entry",
         "default": "",
         "description": "WeatherAPI key",
-        "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather and moon phase display."
+        "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather and moon phase display.",
+        "dependency": "wapi-enable"
     },
     "wapi-query": {
         "type": "entry",
         "default": "auto:ip",
         "description": "Weather location",
-        "tooltip": "Enter your location name (e.g. \"Tokyo\"), your coordinates (e.g. \"123.45,98.765\"), or \"auto:ip\" for automatic lookup based on your IP address."
+        "tooltip": "Enter your location name (e.g. \"Tokyo\"), your coordinates (e.g. \"123.45,98.765\"), or \"auto:ip\" for automatic lookup based on your IP address.",
+        "dependency": "wapi-enable"
+    },
+    "wapi-update-period-minutes": {
+        "type": "combobox",
+        "default": 60,
+        "options": {
+            "60 minutes": 60
+        },
+        "description": "Update frequency",
+        "dependency": "wapi-enable"
+    },
+    "wapi-update-button" : {
+        "type" : "button",
+        "description" : "Refresh WeatherAPI",
+        "dependency" : "wapi-enable",
+        "callback" : "fullUpdateRightNow"
+    },
+
+    "bottom-emoji-type": {
+        "type": "combobox",
+        "default": "weather",
+        "options": {
+            "None": "",
+            "Weather (W)": "weather",
+            "Moon phase (W)": "moon"
+        },
+        "description": "Emoji display"
+    },
+
+    "bottom-label-type": {
+        "type": "combobox",
+        "default": "weather",
+        "options": {
+            "None": "",
+            "Weather (W)": "weather",
+            "Moon phase (W)": "moon"
+        },
+        "description": "Caption display"
     }
 }
