@@ -12,6 +12,27 @@ const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 /*
+    This desklet ships with a default configuration intended to be the most
+    generically useful to computer users.
+    P3 enthusiasts may follow the suggested configuration to recreate
+    the original look and feel as closely as open-source fonts allow:
+
+    - Top row:
+        Font "Geist ExtraBold 52".
+        Use the default format and enable weekday.
+    - Middle row: 
+        Font "Instrument Sans 70".
+        Use the special format "%!".
+        Enable drop shadow, with offset 8.
+    - Bottom row:
+        Get a WeatherAPI key and display the moon phases.
+        For the caption, use "Onest Bold 34".
+        "Geist" also works well, if you don't feel like downloading another font.
+
+    All fonts are found on Google Fonts.
+*/
+
+/*
     TODO
     - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
@@ -73,7 +94,10 @@ const FONT_WEIGHTS_TO_NUMERIC = {
     "bold": 700,
     "extrabold": 800,
     "extra-bold": 800,
-    "black": 900
+    "ultrabold": 800,
+    "ultra-bold": 800,
+    "black": 900,
+    "heavy": 900
 }
 const FONT_WEIGHTS = Object.keys(FONT_WEIGHTS_TO_NUMERIC);
 const FONT_STYLES = ["italic", "oblique"]
@@ -431,8 +455,8 @@ class P3Desklet extends Desklet.Desklet {
 
         this._moon_label = new St.Label({style_class:"moon-label"});
         this._phase_label = new St.Label({style_class:"phase-label"});
-        this._clock_actor.add_actor(this._phase_label);
         this._clock_actor.add_actor(this._moon_label);
+        this._clock_actor.add_actor(this._phase_label);
     }
 
     updateUI() {
@@ -493,7 +517,7 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_position(0, 0);
         let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            get_style_string(this.scale, 43-date_style.size*0.5, date_padding_right, date_style, "#226182")
+            get_style_string(this.scale, 41-date_style.size*0.5, date_padding_right, date_style, "#226182")
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
@@ -506,7 +530,7 @@ class P3Desklet extends Desklet.Desklet {
         this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
         this._weekday_label.set_style(
-            get_style_string(this.scale, 28, -505, weekday_style, "#226182")
+            get_style_string(this.scale, 27, -502, weekday_style, "#226182")
         );
 
 
