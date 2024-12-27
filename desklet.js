@@ -13,10 +13,13 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 /*
     This desklet ships with a default configuration intended to be the most
-    generically useful to computer users.
+    generically useful to computer users, and with a basic default font
+    that is expected to be available anywhere.
     P3 enthusiasts may follow the suggested configuration to recreate
     the original look and feel as closely as open-source fonts allow:
 
+    - Global:
+        Set the scale and global offset to your liking.
     - Top row:
         Font "Geist ExtraBold 52".
         Use the default format and enable weekday.
@@ -29,7 +32,8 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
         For the caption, use "Onest Bold 34".
         "Geist" also works well, if you don't feel like downloading another font.
 
-    All fonts are found on Google Fonts.
+    "Geist", "Instrument Sans" and "Onest" are found on Google Fonts,
+    licensed under the OFL.
 */
 
 /*
@@ -49,6 +53,9 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
     - Fatto quello, e quindi una volta che abbiamo la struttura per la doppia label
         in bottom row, possiamo anche espandere la funzionalità per includere anche
         countdown a un giorno arbitrario e probabilità di pioggia
+    - Anche fare diversi schemi di colore sarebbe carino
+        Blu, rosa, verde, giallo e rosso sono d'obbligo
+        Forse anche altri tipo viola, blu scuro, un altro verde, ...
 */
 
 // REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
@@ -277,7 +284,7 @@ class P3Desklet extends Desklet.Desklet {
         let actual_date_format = this.date_format_or_default();
         let combined_format = actual_time_format + " " + actual_date_format
         // this regex accounts for %% escaping  https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
-        if (/(^|[^%])(%%)*%[SLs]/.test(combined_format)) {
+        if (/(?<=(^|[^%])(%%)*)%[SLs]/.test(combined_format)) {
             this.wallclock.set_format_string("%S");
         }
         else {
@@ -338,24 +345,24 @@ class P3Desklet extends Desklet.Desklet {
         // global.log("BABYBABYBABYBABYBABY");
 
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
-        let actual_time_format = this.time_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
+        let actual_time_format = this.time_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
         let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
         if (!this.time_format) {
             // default stylistic choice: put a little space in the clock
-            formatted_time = formatted_time.replace(":", " : ");
-            formatted_time = formatted_time.replace(".", " . ");
+            formatted_time = formatted_time.replace(/[:]/g, " : ");
+            formatted_time = formatted_time.replace(/[.]/g, " . ");
         }
         this._time_label.set_text(formatted_time);
         this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
-        let actual_date_format = this.date_format_or_default().replace(/(^|[^%])(%%)*%!/g, p3time);
+        let actual_date_format = this.date_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
         let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
         if (!this.date_format) {
             // default stylistic choice: try to remove the year (w/o trying too hard)
             formatted_date = formatted_date.replace(/.?[0-9]{4}.?/, "");
             // default stylistic choice: put a little space in the date
-            formatted_date = formatted_date.replace("/", " / ");
-            formatted_date = formatted_date.replace("-", " - ");
+            formatted_date = formatted_date.replace(/[/]/g, " / ");
+            formatted_date = formatted_date.replace(/[-]/g, " - ");
         }
         this._date_label.set_text(formatted_date);
 

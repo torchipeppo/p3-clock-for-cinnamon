@@ -131,7 +131,7 @@
     },
     "top-font": {
         "type": "fontchooser",
-        "default": "Ubuntu Bold 52",
+        "default": "Sans Bold 52",
         "description": "Font"
     },
     "top-weekday": {
@@ -151,7 +151,7 @@
     },
     "middle-font": {
         "type": "fontchooser",
-        "default": "Ubuntu 70",
+        "default": "Sans 70",
         "description": "Font"
     },
     "middle-shadow": {
@@ -245,7 +245,7 @@
     },
     "bottom-label-font": {
         "type": "fontchooser",
-        "default": "Ubuntu Bold 34",
+        "default": "Sans Bold 34",
         "description": "Font",
         "dependency": "bottom-label-type!="
     }
