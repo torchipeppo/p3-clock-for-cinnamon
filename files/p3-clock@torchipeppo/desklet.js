@@ -261,8 +261,8 @@ class P3Desklet extends Desklet.Desklet {
 
         this.settings.bind("bottom-emoji-type", "emoji_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-emoji-size", "emoji_size", this._onUISettingsChanged);
-        this.settings.bind("bottom-label-type", "label_type", this._onWAPISettingsChanged);
-        this.settings.bind("bottom-label-font", "label_font", this._onUISettingsChanged);
+        this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
+        this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
@@ -276,7 +276,7 @@ class P3Desklet extends Desklet.Desklet {
         return this.date_format || "%x";
     }
     weatherapi_is_enabled() {
-        return this.wapi_enabled_switch && this.wapi_key && (this.emoji_type || this.label_type);
+        return this.wapi_enabled_switch && this.wapi_key && (this.emoji_type || this.caption_type);
     }
 
     updateFormat() {
@@ -373,8 +373,8 @@ class P3Desklet extends Desklet.Desklet {
         this._weekday_label.set_text(weekday_text);
 
         if (!this.weatherapi_is_enabled()) {
-            this._moon_label.set_text("");
-            this._phase_label.set_text("");
+            this._emoji_label.set_text("");
+            this._caption_label.set_text("");
         }
         else {
             let now = new Date();
@@ -394,8 +394,8 @@ class P3Desklet extends Desklet.Desklet {
                             this._update_label(resp_json)
                         }
                         else {
-                            this._moon_label.set_text("⚠️");
-                            this._phase_label.set_text("Error: see log\nSuper + L");
+                            this._emoji_label.set_text("⚠️");
+                            this._caption_label.set_text("Error: see log\nSuper + L");
                         }
                     }
                 )
@@ -407,31 +407,31 @@ class P3Desklet extends Desklet.Desklet {
         switch (this.emoji_type) {
             case "moon":
                 let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                this._moon_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
+                this._emoji_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
                 break;
             case "weather":
                 let weather_code = resp_json.current.condition.code;
-                this._moon_label.set_text(WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code]);
+                this._emoji_label.set_text(WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code]);
                 break;
             default:
-                this._moon_label.set_text("");
+                this._emoji_label.set_text("");
                 break;
         }
     }
 
     _update_label(resp_json) {
-        switch (this.label_type) {
+        switch (this.caption_type) {
             case "moon":
                 let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                this._phase_label.set_text(moon_phase_name.replace(" ", "\n"));
+                this._caption_label.set_text(moon_phase_name.replace(" ", "\n"));
                 break;
             case "weather":
                 let weather_code = resp_json.current.condition.code;
                 let weather_emoji = WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
-                this._phase_label.set_text(WEATHER_LABELS_BY_EMOJI[weather_emoji]);
+                this._caption_label.set_text(WEATHER_LABELS_BY_EMOJI[weather_emoji]);
                 break;
             default:
-                this._phase_label.set_text("");
+                this._caption_label.set_text("");
                 break;
         }
     }
@@ -460,10 +460,10 @@ class P3Desklet extends Desklet.Desklet {
         this._clock_actor.add_actor(this._dot_label);
         this._clock_actor.add_actor(this._weekday_label);
 
-        this._moon_label = new St.Label({style_class:"moon-label"});
-        this._phase_label = new St.Label({style_class:"phase-label"});
-        this._clock_actor.add_actor(this._moon_label);
-        this._clock_actor.add_actor(this._phase_label);
+        this._emoji_label = new St.Label({style_class:"emoji-label"});
+        this._caption_label = new St.Label({style_class:"caption-label"});
+        this._clock_actor.add_actor(this._emoji_label);
+        this._clock_actor.add_actor(this._caption_label);
     }
 
     updateUI() {
@@ -502,8 +502,8 @@ class P3Desklet extends Desklet.Desklet {
         let date_style = split_font_string(this.date_font);
         let dot_style = split_font_string("Ubuntu Bold 82");
         let weekday_style = split_font_string(date_style.family + " 35");
-        let moon_style = split_font_string("sans " + this.emoji_size);
-        let phase_style = split_font_string(this.label_font);
+        let emoji_style = split_font_string("sans " + this.emoji_size);
+        let caption_style = split_font_string(this.caption_font);
 
         this._time_label.set_width(scaledWidth);
         this._time_label.set_height(scaledHeight);
@@ -541,17 +541,17 @@ class P3Desklet extends Desklet.Desklet {
         );
 
 
-        this._moon_label.set_width(scaledWidth);
-        this._moon_label.set_height(scaledHeight);
-        this._moon_label.set_position(0, 0);
-        this._moon_label.set_style(
-            get_style_string(this.scale, 226-moon_style.size*0.5, -496, moon_style, "white")
+        this._emoji_label.set_width(scaledWidth);
+        this._emoji_label.set_height(scaledHeight);
+        this._emoji_label.set_position(0, 0);
+        this._emoji_label.set_style(
+            get_style_string(this.scale, 226-emoji_style.size*0.5, -496, emoji_style, "white")
         );
-        this._phase_label.set_width(scaledWidth);
-        this._phase_label.set_height(scaledHeight);
-        this._phase_label.set_position(0, 0);
-        this._phase_label.set_style(
-            get_style_string(this.scale, 226-phase_style.size*1.25, 124, phase_style, "aliceblue")
+        this._caption_label.set_width(scaledWidth);
+        this._caption_label.set_height(scaledHeight);
+        this._caption_label.set_position(0, 0);
+        this._caption_label.set_style(
+            get_style_string(this.scale, 226-caption_style.size*1.25, 124, caption_style, "aliceblue")
         );
     }
 

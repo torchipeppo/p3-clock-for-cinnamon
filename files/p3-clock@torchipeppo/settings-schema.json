@@ -86,7 +86,7 @@
         "bottom-label-section": {
             "type": "section",
             "title": "Caption settings",
-            "keys": ["bottom-label-type", "bottom-label-font"]
+            "keys": ["bottom-caption-type", "bottom-caption-font"]
         }
     },
 
@@ -233,7 +233,7 @@
         "dependency": "bottom-emoji-type!="
     },
 
-    "bottom-label-type": {
+    "bottom-caption-type": {
         "type": "combobox",
         "default": "weather",
         "options": {
@@ -243,10 +243,10 @@
         },
         "description": "Caption display"
     },
-    "bottom-label-font": {
+    "bottom-caption-font": {
         "type": "fontchooser",
         "default": "Sans Bold 34",
         "description": "Font",
-        "dependency": "bottom-label-type!="
+        "dependency": "bottom-caption-type!="
     }
 }
