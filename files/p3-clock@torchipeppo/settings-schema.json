@@ -171,7 +171,7 @@
 
     "bottom-requirements-help": {
         "type": "label",
-        "description": "(W) indicates that a valid WeatherAPI key is required. Sign up on weatherapi.com to get one."
+        "description": "(W) indicates that a valid WeatherAPI key is required. Sign up on weatherapi.com to get one.\n(C) indicates that generating a local lunar calendar is required. See [TODO] for instructions.\n(C/W) indicates that either data source is fine. If both are available, preference will be given to the local data."
     },
     "bottom-wapi-refresh-help": {
         "type": "label",
@@ -219,7 +219,7 @@
         "options": {
             "None": "",
             "Weather (W)": "weather",
-            "Moon phase (W)": "moon"
+            "Moon phase (C/W)": "moon"
         },
         "description": "Emoji display"
     },
@@ -239,13 +239,14 @@
         "options": {
             "None": "",
             "Weather (W)": "weather",
-            "Moon phase (W)": "moon"
+            "Moon phase (C/W)": "moon",
+            "Full moon countdown (C)": "cntdn-full"
         },
         "description": "Caption display"
     },
     "bottom-caption-font": {
         "type": "fontchooser",
-        "default": "Sans Bold 34",
+        "default": "Sans Bold 50",
         "description": "Font",
         "dependency": "bottom-caption-type!="
     }

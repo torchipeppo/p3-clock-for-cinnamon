@@ -1,3 +1,30 @@
+const CAPTION_TYPE_SPECS = {
+    "" : {
+        caption_label: "",
+        next_label: "",
+        countdown_label: "",
+        slash_label: "",
+    },
+    "weather" : {
+        caption_label: "<get>",
+        next_label: "",
+        countdown_label: "",
+        slash_label: "",
+    },
+    "moon" : {
+        caption_label: "<get>",
+        next_label: "",
+        countdown_label: "",
+        slash_label: "",
+    },
+    "cntdn-full" : {
+        caption_label: "",
+        next_label: "Next:",
+        countdown_label: "<get>",
+        slash_label: "/",
+    }
+}
+
 const FONT_WEIGHTS_TO_NUMERIC = {
     "thin": 100,
     "extralight": 200,
@@ -28,6 +55,24 @@ const MOON_PHASES_BY_WEATHERAPI_NAME = {
     "Waning Gibbous": "🌖",
     "Last Quarter": "🌗",
     "Waning Crescent": "🌘",
+}
+
+const MOON_PHASE_NAMES_BY_LUNCAL_RESULT = {
+    "new": "New Moon",
+    "new-fq": "Waxing Crescent",
+    "fq": "First Quarter",
+    "fq-full": "Waxing Gibbous",
+    "full": "Full Moon",
+    "full-lq": "Waning Gibbous",
+    "lq": "Last Quarter",
+    "lq-new": "Waning Crescent",
+}
+
+const MOON_PHASE_SHORTNAMES = {
+    "new": "New",
+    "fq": "Half",
+    "full": "Full",
+    "lq": "Half",
 }
 
 const WEATHER_EMOJIS_BY_CONDITION_CODE = {

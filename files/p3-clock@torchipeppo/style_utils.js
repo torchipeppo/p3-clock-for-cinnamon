@@ -51,3 +51,17 @@ function get_style_string(scale, vpadding, hpadding, font_dict, color) {
             "padding-" + hpadding_dir + ": " + scale*hpadding + "px; " +
             "color: " + color + ";";
 }
+
+function countdown_formatting(n) {
+    if (n < 10) {
+        return "  " + n;
+    }
+    else if (n < 100) {
+        let ones = n % 10;
+        let tens = (n - ones) / 10;
+        return tens + " " + ones
+    }
+    else {
+        return ""+n;
+    }
+}

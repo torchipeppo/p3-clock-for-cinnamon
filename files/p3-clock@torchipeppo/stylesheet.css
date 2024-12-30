@@ -19,3 +19,16 @@
 .emoji-label {
     text-align: center;
 }
+
+.next-label {
+    text-align: right;
+}
+
+.countdown-label {
+    text-align: center;
+}
+
+/* TODO trovare un apposito font "wide", se esiste */
+.phase-label {
+    text-align: right;
+}

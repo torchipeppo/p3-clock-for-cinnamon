@@ -13,6 +13,7 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 imports.searchPath.push(DESKLET_DIR);
 const SU = imports.style_utils;
 const WeatherAPISource = imports.weatherapi_source;
+const LunarCalendarSource = imports.lunar_calendar_source;
 const CONSTANTS = imports.constants;
 
 /*
@@ -33,7 +34,7 @@ const CONSTANTS = imports.constants;
         Enable drop shadow, with offset 8.
     - Bottom row:
         Get a WeatherAPI key and display the moon phases.
-        For the caption, use "Onest Bold 34".
+        For the caption, use "Onest Bold 50".
         "Geist" also works well, if you don't feel like downloading another font.
 
     "Geist", "Instrument Sans" and "Onest" are found on Google Fonts,
@@ -45,15 +46,9 @@ const CONSTANTS = imports.constants;
     - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
         non abbiamo un messaggio d'errore inutile a schermo
-    - Il countdown della luna piena ce lo teniamo per il postgame.
-        Richiederemo all'utente di avere un calendario lunare in un certo formato
-        in una certa posizione, perché moon-api richiede una carta di credito
-        per pagare l'overage.
-        Tanto un tale calendario lunare va aggiornato solo una volta l'anno.
-        (Anche meno, se ti porti avanti, ma non so se poi rischia di non essere accurato.)
-        Possibile pagina dove recuperarlo: https://www.timeanddate.com/moon/phases/
-        Recupera setup attori Clutter e classi CSS da questo commit:
-        538a95a8325166306607c6ebbeefa5594e4f1e24
+    - Mettere il calendario lunare da qualche parte in .local
+        (o proprio nella diretory dell'applet), non direttamente in una
+        sottocartella della home.
     - Fatto quello, e quindi una volta che abbiamo la struttura per la doppia label
         in bottom row, possiamo anche espandere la funzionalità per includere anche
         countdown a un giorno arbitrario e probabilità di pioggia
@@ -61,6 +56,10 @@ const CONSTANTS = imports.constants;
         Blu, rosa, verde, giallo e rosso sono d'obbligo
         Forse anche altri tipo viola, blu scuro, un altro verde, ...
 */
+
+const SOURCE_DISABLED = 0
+const SOURCE_WEATHERAPI = 1
+const SOURCE_LOCAL_LUNAR_CALENDAR = 2
 
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
@@ -93,6 +92,7 @@ class P3Desklet extends Desklet.Desklet {
         this.clock_notify_id = 0;
 
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
+        this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id);
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
@@ -130,8 +130,41 @@ class P3Desklet extends Desklet.Desklet {
     date_format_or_default() {
         return this.date_format || "%x";
     }
+
+    emoji_source() {
+        switch (this.emoji_type) {
+            case "":
+                return SOURCE_DISABLED;
+            case "moon":
+                let llce = this.luncal_source.local_lunar_calendar_exists();
+                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_WEATHERAPI;
+            case "weather":
+                return SOURCE_WEATHERAPI;
+            default:
+                global.logError("Unrecognized emoji_type :" + this.emoji_type);
+        }
+    }
+    caption_source() {
+        switch (this.caption_type) {
+            case "":
+                return SOURCE_DISABLED;
+            case "moon":
+                let llce = this.luncal_source.local_lunar_calendar_exists();
+                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_WEATHERAPI;
+            case "weather":
+                return SOURCE_WEATHERAPI;
+            case "cntdn-full":
+                return SOURCE_LOCAL_LUNAR_CALENDAR;
+            default:
+                global.logError("Unrecognized caption_type :" + this.caption_type);
+        }
+    }
     weatherapi_is_enabled() {
-        return this.wapi_enabled_switch && this.wapi_key && (this.emoji_type || this.caption_type);
+        return  this.wapi_enabled_switch &&
+                this.wapi_key && (
+                    this.emoji_source() == SOURCE_WEATHERAPI ||
+                    this.caption_source() == SOURCE_WEATHERAPI
+                );
     }
 
     updateFormat() {
@@ -223,12 +256,65 @@ class P3Desklet extends Desklet.Desklet {
         }
         this._weekday_label.set_text(weekday_text);
 
-        if (!this.weatherapi_is_enabled()) {
-            this._emoji_label.set_text("");
-            this._caption_label.set_text("");
+        // emoji and label in the SOURCE_WEATHERAPI case
+        // are updated in the callback for _getWeather, not directly here,
+        // because they need to wait for the response.
+        let es = this.emoji_source();
+        let cs = this.caption_source();
+        let luncal_exists = this.luncal_source.local_lunar_calendar_exists();
+
+        if (es == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) {
+            this._emoji_label.set_text(this.luncal_source.get_emoji_text());
         }
-        else {
-            this.wapi_source.make_weatherAPI_request(this, this.set_emoji_text, this.set_label_text);
+        else if (es != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
+            this._emoji_label.set_text("");
+        }
+        
+        // set labels that are constant (or empty) in this config
+        if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].caption_label != "<get>") {
+            this._caption_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].caption_label);
+        }
+        if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].next_label != "<get>") {
+            this._next_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].next_label);
+        }
+        if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].countdown_label != "<get>") {
+            this._countdown_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].countdown_label);
+        }
+        if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].slash_label != "<get>") {
+            this._slash_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].slash_label);
+        }
+        this._phase_label.set_text("");
+
+        if (cs == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) {
+            let text = this.luncal_source.get_label_text();
+            if (this.caption_type == "moon") {
+                this._caption_label.set_text(text);
+            }
+            else if (this.caption_type == "cntdn-full") {
+                if (/[0-9 ]+/.test(text)) {  // normal countdown
+                    this._countdown_label.set_text(text);
+                }
+                else {  // special moon phase
+                    this._next_label.set_text("");
+                    this._countdown_label.set_text("");
+                    this._slash_label.set_text("");
+                    this._phase_label.set_text(text);
+                }
+            }
+        }
+        else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
+            this._caption_label.set_text("");
+            this._next_label.set_text("");
+            this._countdown_label.set_text("");
+            this._slash_label.set_text("");
+        }
+
+        if (this.weatherapi_is_enabled()) {
+            this.wapi_source.make_weatherAPI_request(
+                this,
+                (es == SOURCE_WEATHERAPI) ? this.set_emoji_text : (_)=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_label_text : (_)=>{}
+            );
         }
     }
 
@@ -267,6 +353,15 @@ class P3Desklet extends Desklet.Desklet {
         this._caption_label = new St.Label({style_class:"caption-label"});
         this._clock_actor.add_actor(this._emoji_label);
         this._clock_actor.add_actor(this._caption_label);
+
+        this._next_label = new St.Label({style_class:"next-label"});
+        this._countdown_label = new St.Label({style_class:"countdown-label"});
+        this._slash_label = new St.Label({style_class:"countdown-label"});
+        this._phase_label = new St.Label({style_class:"phase-label"});
+        this._clock_actor.add_actor(this._next_label);
+        this._clock_actor.add_actor(this._countdown_label);
+        this._clock_actor.add_actor(this._slash_label);
+        this._clock_actor.add_actor(this._phase_label);
     }
 
     updateUI() {
@@ -306,7 +401,16 @@ class P3Desklet extends Desklet.Desklet {
         let dot_style = SU.split_font_string("Ubuntu Bold 82");
         let weekday_style = SU.split_font_string(date_style.family + " 35");
         let emoji_style = SU.split_font_string("sans " + this.emoji_size);
+        // There is a single bottom caption font,
+        // but everyone has a different (but related) size
         let caption_style = SU.split_font_string(this.caption_font);
+        caption_style.size *= 0.7;
+        let next_style = SU.split_font_string(this.caption_font);
+        next_style.size *= 0.8;
+        let countdown_style = SU.split_font_string(this.caption_font);
+        countdown_style.size *= 1.0;
+        let phase_style = SU.split_font_string(this.caption_font);
+        phase_style.size *= 0.9;
 
         this._time_label.set_width(scaledWidth);
         this._time_label.set_height(scaledHeight);
@@ -355,6 +459,33 @@ class P3Desklet extends Desklet.Desklet {
         this._caption_label.set_position(0, 0);
         this._caption_label.set_style(
             SU.get_style_string(this.scale, 226-caption_style.size*1.25, 124, caption_style, "aliceblue")
+        );
+
+        this._next_label.set_width(scaledWidth);
+        this._next_label.set_height(scaledHeight);
+        this._next_label.set_position(0, 0);
+        this._next_label.set_text("Next:");
+        this._next_label.set_style(
+            SU.get_style_string(this.scale, 169-next_style.size*0.5, 170, next_style, "aliceblue")
+        );
+        this._countdown_label.set_width(scaledWidth);
+        this._countdown_label.set_height(scaledHeight);
+        this._countdown_label.set_position(0, 0);
+        this._countdown_label.set_style(
+            SU.get_style_string(this.scale, 223-countdown_style.size*0.5, -170, countdown_style, "aliceblue")
+        );
+        this._slash_label.set_width(scaledWidth);
+        this._slash_label.set_height(scaledHeight);
+        this._slash_label.set_position(0, 0);
+        this._slash_label.set_text("/");
+        this._slash_label.set_style(
+            SU.get_style_string(this.scale, 223-countdown_style.size*0.5, -310, countdown_style, "aliceblue")
+        );
+        this._phase_label.set_width(scaledWidth);
+        this._phase_label.set_height(scaledHeight);
+        this._phase_label.set_position(0, 0);
+        this._phase_label.set_style(
+            SU.get_style_string(this.scale, 208-phase_style.size*0.5, 127, phase_style, "aliceblue")
         );
     }
 }

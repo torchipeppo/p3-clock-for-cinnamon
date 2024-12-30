@@ -1,10 +1,11 @@
 # Generating a lunar calendar
 
 You may use either of these scripts to generate the moon phase data
-necessary to use the "Countdown to next full moon" feature.
-I hope I manage to allow this data to be used instead of WeatherAPI's
-for the other moon-related features, too, but at the time of writing
-this is still unknown.
+used by certain features of the desklet.
+
+This step is usually optional, since moon phase data is also provided by
+WeatherAPI, so it's only necessary if you prefer to have access to offline
+data or if you want to use the "Countdown to the next full moon" feature.
 
 ## How to run
 
