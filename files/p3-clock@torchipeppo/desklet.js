@@ -5,11 +5,15 @@ const GdkPixbuf = imports.gi.GdkPixbuf;
 const Clutter = imports.gi.Clutter;
 const Cogl = imports.gi.Cogl;
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
-const Soup = imports.gi.Soup;
 const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+
+imports.searchPath.push(DESKLET_DIR);
+const SU = imports.style_utils;
+const WeatherAPISource = imports.weatherapi_source;
+const CONSTANTS = imports.constants;
 
 /*
     This desklet ships with a default configuration intended to be the most
@@ -58,15 +62,6 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
         Forse anche altri tipo viola, blu scuro, un altro verde, ...
 */
 
-// REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
-let _httpSession;
-if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
-    _httpSession = new Soup.SessionAsync();
-    Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
-} else { //version 3
-    _httpSession = new Soup.Session();
-}
-
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
         return "Late Night";
@@ -88,148 +83,6 @@ function hour_to_p3time(hour) {
     }
 }
 
-const FONT_WEIGHTS_TO_NUMERIC = {
-    "thin": 100,
-    "extralight": 200,
-    "extra-light": 200,
-    "light": 300,
-    "regular": 400,
-    "normal": 400,
-    "medium": 500,
-    "semibold": 600,
-    "semi-bold": 600,
-    "bold": 700,
-    "extrabold": 800,
-    "extra-bold": 800,
-    "ultrabold": 800,
-    "ultra-bold": 800,
-    "black": 900,
-    "heavy": 900
-}
-const FONT_WEIGHTS = Object.keys(FONT_WEIGHTS_TO_NUMERIC);
-const FONT_STYLES = ["italic", "oblique"]
-function split_font_string(font_string) {
-    let a = font_string.split(" ");
-    let output = {};
-    output.size = Number(a.pop());
-    output.style = "normal";
-    output.weight = 400;
-    while (true) {
-        let last = a[a.length-1].toLowerCase();
-        let match;
-        if (FONT_STYLES.includes(last)) {
-            output.style = last;
-            a.pop();
-        }
-        else if (FONT_WEIGHTS.includes(last)) {
-            output.weight = FONT_WEIGHTS_TO_NUMERIC[last];
-            a.pop();
-        }
-        else if (match=/weight=([0-9]+)/.exec(last)) {
-            output.weight = Number(match[1]);
-            a.pop();
-        }
-        else {
-            break;
-        }
-    }
-    output.family = a.join(" ");
-    return output;
-}
-
-function get_style_string(scale, vpadding, hpadding, font_dict, color) {
-    let vpadding_dir = "top";
-    if (vpadding < 0) {
-        vpadding_dir = "bottom";
-        vpadding = -vpadding;
-    }
-    let hpadding_dir = "right";
-    if (hpadding < 0) {
-        hpadding_dir = "left";
-        hpadding = -hpadding;
-    }
-    return  "font-family: " + font_dict.family + "; " +
-            "font-size: " + scale*font_dict.size + "px; " +
-            "font-weight: " + font_dict.weight + "; " +
-            "font-style: " + font_dict.style + "; " +
-            "padding-" + vpadding_dir + ": " + scale*vpadding + "px; " +
-            "padding-" + hpadding_dir + ": " + scale*hpadding + "px; " +
-            "color: " + color + ";";
-}
-
-const MOON_PHASES_BY_WEATHERAPI_NAME = {
-    "New Moon": "🌑",
-    "Waxing Crescent": "🌒",
-    "First Quarter": "🌓",
-    "Waxing Gibbous": "🌔",
-    "Full Moon": "🌕",
-    "Waning Gibbous": "🌖",
-    "Last Quarter": "🌗",
-    "Waning Crescent": "🌘",
-}
-
-const WEATHER_EMOJIS_BY_CONDITION_CODE = {
-    1000: "☀️",
-    1003: "⛅",
-    1006: "☁️",
-    1009: "☁️",
-    1030: "🌫️",
-    1063: "🌦️",
-    1066: "🌨️",
-    1069: "🌨️",
-    1072: "🌦️",
-    1087: "⛈️",
-    1114: "🌨️",
-    1117: "🌨️",
-    1135: "🌫️",
-    1147: "🌫️",
-    1150: "🌦️",
-    1153: "🌦️",
-    1168: "🌦️",
-    1171: "🌦️",
-    1180: "🌦️",
-    1183: "🌧️",
-    1186: "🌦️",
-    1189: "🌧️",
-    1192: "🌦️",
-    1195: "🌧️",
-    1198: "🌧️",
-    1201: "🌧️",
-    1204: "🌨️",
-    1207: "🌨️",
-    1210: "🌨️",
-    1213: "🌨️",
-    1216: "🌨️",
-    1219: "🌨️",
-    1222: "🌨️",
-    1225: "🌨️",
-    1237: "🌨️",
-    1240: "🌧️",
-    1243: "🌧️",
-    1246: "🌧️",
-    1249: "🌨️",
-    1252: "🌨️",
-    1255: "🌨️",
-    1258: "🌨️",
-    1261: "🌨️",
-    1264: "🌨️",
-    1273: "⛈️",
-    1276: "⛈️",
-    1279: "🌨️",
-    1282: "🌨️",
-}
-
-// a very limited amount of descriptions, for the sake of the translations.
-const WEATHER_LABELS_BY_EMOJI = {
-    "☀️": "Clear",
-    "⛅": "Cloudy",
-    "☁️": "Cloudy",
-    "🌫️": "Fog",
-    "🌦️": "Rain",
-    "🌧️": "Rain",
-    "⛈️": "Storm",
-    "🌨️": "Cold\nprecip.",  // "Cold precipitations", a catch-all term for snow, sleet, etc.
-}
 
 class P3Desklet extends Desklet.Desklet {
     constructor(metadata, desklet_id) {
@@ -238,6 +91,8 @@ class P3Desklet extends Desklet.Desklet {
 
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
+
+        this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
@@ -293,14 +148,10 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     fullUpdateRightNow() {
-        this.time_of_last_weather_update = new Date(0);  // epoch means "never updated before"
+        this.wapi_source.reset_time_of_last_weather_update();
         this.updateFormat();
-        this.requestWAPIUpdate();
+        this.wapi_source.requestWAPIUpdate();
         this._onSettingsChanged();
-    }
-
-    requestWAPIUpdate() {
-        this.next_weather_update_is_fast = true;
     }
 
     _onSettingsChanged() {
@@ -318,7 +169,7 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     _onWAPISettingsChanged() {
-        this.requestWAPIUpdate();
+        // weatherAPI-related stuff is in the WeatherAPISource
         this._onSettingsChanged();
     }
 
@@ -377,63 +228,15 @@ class P3Desklet extends Desklet.Desklet {
             this._caption_label.set_text("");
         }
         else {
-            let now = new Date();
-            const NORMAL_WAIT_TIME = this.wapi_update_period*60*1000;  // from minutes to milliseconds
-            const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
-            let cooldown = this.next_weather_update_is_fast ? FAST_WAIT_TIME : NORMAL_WAIT_TIME;
-            if (now - this.time_of_last_weather_update > cooldown) {
-                // global.log("YEEEEEEEEEEEEEEEEEAAAAAAH");
-                this.time_of_last_weather_update = now;
-                this.next_weather_update_is_fast = false;
-                this._getWeather(
-                    "http://api.weatherapi.com/v1/forecast.json?key="+this.wapi_key+"&q="+this.wapi_query,
-                    (response) => {
-                        if (response) {
-                            let resp_json = JSON.parse(response);
-                            this._update_emoji(resp_json)
-                            this._update_label(resp_json)
-                        }
-                        else {
-                            this._emoji_label.set_text("⚠️");
-                            this._caption_label.set_text("Error: see log\nSuper + L");
-                        }
-                    }
-                )
-            }
+            this.wapi_source.make_weatherAPI_request(this, this.set_emoji_text, this.set_label_text);
         }
     }
 
-    _update_emoji(resp_json) {
-        switch (this.emoji_type) {
-            case "moon":
-                let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                this._emoji_label.set_text(MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name]);
-                break;
-            case "weather":
-                let weather_code = resp_json.current.condition.code;
-                this._emoji_label.set_text(WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code]);
-                break;
-            default:
-                this._emoji_label.set_text("");
-                break;
-        }
+    set_emoji_text(text) {
+        this._emoji_label.set_text(text);
     }
-
-    _update_label(resp_json) {
-        switch (this.caption_type) {
-            case "moon":
-                let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                this._caption_label.set_text(moon_phase_name.replace(" ", "\n"));
-                break;
-            case "weather":
-                let weather_code = resp_json.current.condition.code;
-                let weather_emoji = WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
-                this._caption_label.set_text(WEATHER_LABELS_BY_EMOJI[weather_emoji]);
-                break;
-            default:
-                this._caption_label.set_text("");
-                break;
-        }
+    set_label_text(text) {
+        this._caption_label.set_text(text);
     }
 
     createUI() {
@@ -498,24 +301,24 @@ class P3Desklet extends Desklet.Desklet {
         this._bg_actor.set_pivot_point(0, 1);
 
 
-        let time_style = split_font_string(this.time_font);
-        let date_style = split_font_string(this.date_font);
-        let dot_style = split_font_string("Ubuntu Bold 82");
-        let weekday_style = split_font_string(date_style.family + " 35");
-        let emoji_style = split_font_string("sans " + this.emoji_size);
-        let caption_style = split_font_string(this.caption_font);
+        let time_style = SU.split_font_string(this.time_font);
+        let date_style = SU.split_font_string(this.date_font);
+        let dot_style = SU.split_font_string("Ubuntu Bold 82");
+        let weekday_style = SU.split_font_string(date_style.family + " 35");
+        let emoji_style = SU.split_font_string("sans " + this.emoji_size);
+        let caption_style = SU.split_font_string(this.caption_font);
 
         this._time_label.set_width(scaledWidth);
         this._time_label.set_height(scaledHeight);
         this._time_label.set_position(0, 0);
         this._time_label.set_style(
-            get_style_string(this.scale, 97-time_style.size*0.5, 31, time_style, "white")
+            SU.get_style_string(this.scale, 97-time_style.size*0.5, 31, time_style, "white")
         );
         this._time_shadow_label.set_width(scaledWidth);
         this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
         this._time_shadow_label.set_style(
-            get_style_string(this.scale, 97-time_style.size*0.5+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
+            SU.get_style_string(this.scale, 97-time_style.size*0.5+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
         );
 
 
@@ -524,20 +327,20 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_position(0, 0);
         let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            get_style_string(this.scale, 41-date_style.size*0.5, date_padding_right, date_style, "#226182")
+            SU.get_style_string(this.scale, 41-date_style.size*0.5, date_padding_right, date_style, "#226182")
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
         this._dot_label.set_position(this.scale*(-108), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
         this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
-            get_style_string(this.scale, 0, 0, dot_style, "#226182")
+            SU.get_style_string(this.scale, 0, 0, dot_style, "#226182")
         );
         this._weekday_label.set_width(scaledWidth);
         this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
         this._weekday_label.set_style(
-            get_style_string(this.scale, 27, -502, weekday_style, "#226182")
+            SU.get_style_string(this.scale, 27, -502, weekday_style, "#226182")
         );
 
 
@@ -545,55 +348,14 @@ class P3Desklet extends Desklet.Desklet {
         this._emoji_label.set_height(scaledHeight);
         this._emoji_label.set_position(0, 0);
         this._emoji_label.set_style(
-            get_style_string(this.scale, 226-emoji_style.size*0.5, -496, emoji_style, "white")
+            SU.get_style_string(this.scale, 226-emoji_style.size*0.5, -496, emoji_style, "white")
         );
         this._caption_label.set_width(scaledWidth);
         this._caption_label.set_height(scaledHeight);
         this._caption_label.set_position(0, 0);
         this._caption_label.set_style(
-            get_style_string(this.scale, 226-caption_style.size*1.25, 124, caption_style, "aliceblue")
+            SU.get_style_string(this.scale, 226-caption_style.size*1.25, 124, caption_style, "aliceblue")
         );
-    }
-
-    _getWeather(url, callback) {
-        var here = this;
-        let message = Soup.Message.new('GET', url);
-        if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
-            _httpSession.timeout = 10;
-            _httpSession.idle_timeout = 10;
-            _httpSession.queue_message(message, function (session, message) {
-                if( message.status_code == 200) {
-                    try {
-                        callback.call(here,message.response_body.data.toString());
-                    } catch(e) {
-                        global.logError(e)
-                        callback.call(here,false);
-                    }
-                } else {
-                    global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
-                    here.data.status.lasterror = message.status_code;
-                    callback.call(here,false);
-                }
-            });
-        } else { //version 3
-            _httpSession.timeout = 10;
-            _httpSession.idle_timeout = 10;
-            _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
-                if( message.get_status() === 200) {
-                    try {
-                        const bytes = _httpSession.send_and_read_finish(result);
-                        callback.call(here,ByteArray.toString(bytes.get_data()));
-                    } catch(e) {
-                        global.logError(e)
-                        callback.call(here,false);
-                    }
-                } else {
-                    global.logWarning("Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
-                    here.data.status.lasterror = message.get_status();
-                    callback.call(here,false);
-                }
-            });
-        }
     }
 }
 
