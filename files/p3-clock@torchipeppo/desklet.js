@@ -11,11 +11,12 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 // imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
 // https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, CONSTANTS;
+let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
     WeatherAPISource = require("./weatherapi_source");
     LunarCalendarSource = require("./lunar_calendar_source");
+    WallclockSource = require("./wallclock_source");
     CONSTANTS = require("./constants");
 }
 else {
@@ -23,6 +24,7 @@ else {
     SU = imports.style_utils;
     WeatherAPISource = imports.weatherapi_source;
     LunarCalendarSource = imports.lunar_calendar_source;
+    WallclockSource = imports.wallclock_source;
     CONSTANTS = imports.constants;
 }
 
@@ -39,7 +41,7 @@ else {
         Font "Geist ExtraBold 52".
         Use the default format and enable weekday.
     - Middle row: 
-        Font "Instrument Sans 70".
+        Font "Instrument Sans Medium 70".
         Use the special format "%!".
         Enable drop shadow, with offset 8.
     - Bottom row:
@@ -61,36 +63,16 @@ else {
         sottocartella della home.
     - Fatto quello, e quindi una volta che abbiamo la struttura per la doppia label
         in bottom row, possiamo anche espandere la funzionalità per includere anche
-        countdown a un giorno arbitrario e probabilità di pioggia
+        probabilità di pioggia o temperatura  (countdown arbitrario fatto!)
     - Anche fare diversi schemi di colore sarebbe carino
         Blu, rosa, verde, giallo e rosso sono d'obbligo
-        Forse anche altri tipo viola, blu scuro, un altro verde, ...
+        Forse anche altri tipo viola, blu scuro, un altro verde, grigio ...
 */
 
 const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
 const SOURCE_LOCAL_LUNAR_CALENDAR = 2
-
-function hour_to_p3time(hour) {
-    if (0<=hour && hour<5) {
-        return "Late Night";
-    }
-    else if (5<=hour && hour<7) {
-        return "Early Morning";
-    }
-    else if (7<=hour && hour<10) {
-        return "Morning";
-    }
-    else if (10<=hour && hour<15) {
-        return "Daytime";
-    }
-    else if (15<=hour && hour<19) {
-        return "Afternoon";
-    }
-    else if (19<=hour && hour<24) {
-        return "Evening";
-    }
-}
+const SOURCE_LOCAL_WALLCLOCK = 3
 
 
 class P3Desklet extends Desklet.Desklet {
@@ -103,6 +85,7 @@ class P3Desklet extends Desklet.Desklet {
 
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
         this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id);
+        this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock);
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
@@ -129,16 +112,11 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
 
+        this.settings.bind("custom-countdown-date-select", "countdown_target", this._onSettingsChanged);
+
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
         this.updateUI();
-    }
-
-    time_format_or_default() {
-        return this.time_format || this.wallclock.get_default_time_format();
-    }
-    date_format_or_default() {
-        return this.date_format || "%x";
     }
 
     emoji_source() {
@@ -165,6 +143,8 @@ class P3Desklet extends Desklet.Desklet {
                 return SOURCE_WEATHERAPI;
             case "cntdn-full":
                 return SOURCE_LOCAL_LUNAR_CALENDAR;
+            case "cntdn-cstm":
+                return SOURCE_LOCAL_WALLCLOCK;
             default:
                 global.logError("Unrecognized caption_type :" + this.caption_type);
         }
@@ -178,8 +158,8 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     updateFormat() {
-        let actual_time_format = this.time_format_or_default();
-        let actual_date_format = this.date_format_or_default();
+        let actual_time_format = this.clock_source.time_format_or_default();
+        let actual_date_format = this.clock_source.date_format_or_default();
         let combined_format = actual_time_format + " " + actual_date_format
         // this regex accounts for %% escaping  https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
         if (/(?<=(^|[^%])(%%)*)%[SLs]/.test(combined_format)) {
@@ -238,26 +218,11 @@ class P3Desklet extends Desklet.Desklet {
     _updateClock() {
         // global.log("BABYBABYBABYBABYBABY");
 
-        let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
-        let actual_time_format = this.time_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
-        let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
-        if (!this.time_format) {
-            // default stylistic choice: put a little space in the clock
-            formatted_time = formatted_time.replace(/[:]/g, " : ");
-            formatted_time = formatted_time.replace(/[.]/g, " . ");
-        }
+        let formatted_time = this.clock_source.get_time_text();
         this._time_label.set_text(formatted_time);
         this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
-        let actual_date_format = this.date_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
-        let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
-        if (!this.date_format) {
-            // default stylistic choice: try to remove the year (w/o trying too hard)
-            formatted_date = formatted_date.replace(/.?[0-9]{4}.?/, "");
-            // default stylistic choice: put a little space in the date
-            formatted_date = formatted_date.replace(/[/]/g, " / ");
-            formatted_date = formatted_date.replace(/[-]/g, " - ");
-        }
+        let formatted_date = this.clock_source.get_date_text();
         this._date_label.set_text(formatted_date);
 
         let weekday_text = "";
@@ -310,6 +275,14 @@ class P3Desklet extends Desklet.Desklet {
                     this._slash_label.set_text("");
                     this._phase_label.set_text(text);
                 }
+            }
+        }
+        else if (cs == SOURCE_LOCAL_WALLCLOCK) {
+            // there's only custom countdown at the moment, so no check
+            let text = this.clock_source.get_custom_countdown_text();
+            this._countdown_label.set_text(text);
+            if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
+                this._slash_label.set_text("");
             }
         }
         else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed

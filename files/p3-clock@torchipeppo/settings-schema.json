@@ -86,7 +86,11 @@
         "bottom-label-section": {
             "type": "section",
             "title": "Caption settings",
-            "keys": ["bottom-caption-type", "bottom-caption-font"]
+            "keys": [
+                "bottom-caption-type",
+                "bottom-caption-font",
+                "custom-countdown-date-select"
+            ]
         }
     },
 
@@ -240,7 +244,8 @@
             "None": "",
             "Weather (W)": "weather",
             "Moon phase (C/W)": "moon",
-            "Full moon countdown (C)": "cntdn-full"
+            "Full moon countdown (C)": "cntdn-full",
+            "Custom countdown": "cntdn-cstm"
         },
         "description": "Caption display"
     },
@@ -249,5 +254,15 @@
         "default": "Sans Bold 50",
         "description": "Font",
         "dependency": "bottom-caption-type!="
+    },
+    "custom-countdown-date-select" : {
+        "type" : "datechooser",
+        "description" : "Day to count down to",
+        "default" : {
+            "d" : 19,
+            "m" : 1,
+            "y" : 2038
+        },
+        "dependency": "bottom-caption-type=cntdn-cstm"
     }
 }

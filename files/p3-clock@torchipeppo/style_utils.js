@@ -59,15 +59,14 @@ function get_style_string(scale, vpadding, hpadding, font_dict, color) {
 }
 
 function countdown_formatting(n) {
-    if (n < 10) {
-        return "  " + n;
+    let n_str = n.toString();
+    if (n_str.length == 1) {
+        return "  "+n_str;
     }
-    else if (n < 100) {
-        let ones = n % 10;
-        let tens = (n - ones) / 10;
-        return tens + " " + ones
+    else if (n_str.length == 2) {
+        return n_str[0] + " " + n_str[1];
     }
     else {
-        return ""+n;
+        return n_str
     }
 }
