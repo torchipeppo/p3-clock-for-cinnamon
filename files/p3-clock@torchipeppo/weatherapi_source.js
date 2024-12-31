@@ -1,10 +1,17 @@
 const Settings = imports.ui.settings;
 const Soup = imports.gi.Soup;
+const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-imports.searchPath.push(DESKLET_DIR);
-const CONSTANTS = imports.constants;
+let CONSTANTS;
+if (typeof require !== 'undefined') {
+    CONSTANTS = require("./constants");
+}
+else {
+    imports.searchPath.push(DESKLET_DIR);
+    CONSTANTS = imports.constants;
+}
 
 // REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
 let _httpSession;

@@ -1,7 +1,13 @@
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-imports.searchPath.push(DESKLET_DIR);
-const CONSTANTS = imports.constants;
+let CONSTANTS;
+if (typeof require !== 'undefined') {
+    CONSTANTS = require("./constants");
+}
+else {
+    imports.searchPath.push(DESKLET_DIR);
+    CONSTANTS = imports.constants;
+}
 
 function split_font_string(font_string) {
     let a = font_string.split(" ");

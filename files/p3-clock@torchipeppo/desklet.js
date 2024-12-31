@@ -5,16 +5,26 @@ const GdkPixbuf = imports.gi.GdkPixbuf;
 const Clutter = imports.gi.Clutter;
 const Cogl = imports.gi.Cogl;
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
-const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
-imports.searchPath.push(DESKLET_DIR);
-const SU = imports.style_utils;
-const WeatherAPISource = imports.weatherapi_source;
-const LunarCalendarSource = imports.lunar_calendar_source;
-const CONSTANTS = imports.constants;
+// imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
+// https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
+let SU, WeatherAPISource, LunarCalendarSource, CONSTANTS;
+if (typeof require !== 'undefined') {
+    SU = require("./style_utils");
+    WeatherAPISource = require("./weatherapi_source");
+    LunarCalendarSource = require("./lunar_calendar_source");
+    CONSTANTS = require("./constants");
+}
+else {
+    imports.searchPath.push(DESKLET_DIR);
+    SU = imports.style_utils;
+    WeatherAPISource = imports.weatherapi_source;
+    LunarCalendarSource = imports.lunar_calendar_source;
+    CONSTANTS = imports.constants;
+}
 
 /*
     This desklet ships with a default configuration intended to be the most
