@@ -11,12 +11,13 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 // imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
 // https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, CONSTANTS;
+let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
     WeatherAPISource = require("./weatherapi_source");
     LunarCalendarSource = require("./lunar_calendar_source");
     WallclockSource = require("./wallclock_source");
+    ColorScheme = require("./color_scheme");
     CONSTANTS = require("./constants");
 }
 else {
@@ -25,6 +26,7 @@ else {
     WeatherAPISource = imports.weatherapi_source;
     LunarCalendarSource = imports.lunar_calendar_source;
     WallclockSource = imports.wallclock_source;
+    ColorScheme = imports.color_scheme;
     CONSTANTS = imports.constants;
 }
 
@@ -85,12 +87,14 @@ class P3Desklet extends Desklet.Desklet {
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
         this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id);
         this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock);
+        this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id);
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
         this.settings.bind("global-h-offset", "h_offset", this._onUISettingsChanged);
         this.settings.bind("global-v-offset", "v_offset", this._onUISettingsChanged);
         this.settings.bind("global-scale", "scale", this._onUISettingsChanged);
+        this.settings.bind("global-color-scheme", "color_scheme_name", this._onColorSettingsChanged);
 
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
@@ -181,6 +185,11 @@ class P3Desklet extends Desklet.Desklet {
 
     _onSettingsChanged() {
         this._updateClock();
+    }
+
+    _onColorSettingsChanged() {
+        this.color_scheme.load_color_scheme();
+        this._onUISettingsChanged();
     }
 
     _onUISettingsChanged() {
@@ -361,7 +370,7 @@ class P3Desklet extends Desklet.Desklet {
 
 
         // background image
-        let bgName = "p3corner.svg"
+        let bgName = "p3corner-custom.svg"
         let orig_width, orig_height, fileInfo;
         [fileInfo, orig_width, orig_height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
 
@@ -405,13 +414,25 @@ class P3Desklet extends Desklet.Desklet {
         this._time_label.set_height(scaledHeight);
         this._time_label.set_position(0, 0);
         this._time_label.set_style(
-            SU.get_style_string(this.scale, 97-time_style.size*0.5, 31, time_style, "white")
+            SU.get_style_string(
+                this.scale,
+                97-time_style.size*0.5,
+                31,
+                time_style,
+                this.color_scheme.time
+            )
         );
         this._time_shadow_label.set_width(scaledWidth);
         this._time_shadow_label.set_height(scaledHeight);
         this._time_shadow_label.set_position(0, 0);
         this._time_shadow_label.set_style(
-            SU.get_style_string(this.scale, 97-time_style.size*0.5+this.time_shadow_offset, 31-this.time_shadow_offset, time_style, "#447fab")
+            SU.get_style_string(
+                this.scale,
+                97-time_style.size*0.5+this.time_shadow_offset,
+                31-this.time_shadow_offset,
+                time_style,
+                this.color_scheme.time_shadow
+            )
         );
 
 
@@ -420,20 +441,38 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_position(0, 0);
         let date_padding_right = this.date_weekday_enabled ? 140 : 31;
         this._date_label.set_style(
-            SU.get_style_string(this.scale, 41-date_style.size*0.5, date_padding_right, date_style, "#226182")
+            SU.get_style_string(
+                this.scale,
+                41-date_style.size*0.5,
+                date_padding_right,
+                date_style,
+                this.color_scheme.date
+            )
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
         this._dot_label.set_position(this.scale*(-108), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
         this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
-            SU.get_style_string(this.scale, 0, 0, dot_style, "#226182")
+            SU.get_style_string(
+                this.scale,
+                0,
+                0,
+                dot_style,
+                this.color_scheme.date
+            )
         );
         this._weekday_label.set_width(scaledWidth);
         this._weekday_label.set_height(scaledHeight);
         this._weekday_label.set_position(0, 0);
         this._weekday_label.set_style(
-            SU.get_style_string(this.scale, 27, -502, weekday_style, "#226182")
+            SU.get_style_string(
+                this.scale,
+                27,
+                -502,
+                weekday_style,
+                this.color_scheme.date
+            )
         );
 
 
@@ -441,13 +480,25 @@ class P3Desklet extends Desklet.Desklet {
         this._emoji_label.set_height(scaledHeight);
         this._emoji_label.set_position(0, 0);
         this._emoji_label.set_style(
-            SU.get_style_string(this.scale, 226-emoji_style.size*0.5, -496, emoji_style, "white")
+            SU.get_style_string(
+                this.scale,
+                226-emoji_style.size*0.5,
+                -496,
+                emoji_style,
+                "white"
+            )
         );
         this._caption_label.set_width(scaledWidth);
         this._caption_label.set_height(scaledHeight);
         this._caption_label.set_position(0, 0);
         this._caption_label.set_style(
-            SU.get_style_string(this.scale, 226-caption_style.size*1.25, 124, caption_style, "aliceblue")
+            SU.get_style_string(
+                this.scale,
+                226-caption_style.size*1.25,
+                124,
+                caption_style,
+                this.color_scheme.bottom
+            )
         );
 
         this._next_label.set_width(scaledWidth);
@@ -455,26 +506,50 @@ class P3Desklet extends Desklet.Desklet {
         this._next_label.set_position(0, 0);
         this._next_label.set_text("Next:");
         this._next_label.set_style(
-            SU.get_style_string(this.scale, 169-next_style.size*0.5, 170, next_style, "aliceblue")
+            SU.get_style_string(
+                this.scale,
+                169-next_style.size*0.5,
+                170,
+                next_style,
+                this.color_scheme.bottom
+            )
         );
         this._countdown_label.set_width(scaledWidth);
         this._countdown_label.set_height(scaledHeight);
         this._countdown_label.set_position(0, 0);
         this._countdown_label.set_style(
-            SU.get_style_string(this.scale, 223-countdown_style.size*0.5, -170, countdown_style, "aliceblue")
+            SU.get_style_string(
+                this.scale,
+                223-countdown_style.size*0.5,
+                -170,
+                countdown_style,
+                this.color_scheme.bottom
+            )
         );
         this._slash_label.set_width(scaledWidth);
         this._slash_label.set_height(scaledHeight);
         this._slash_label.set_position(0, 0);
         this._slash_label.set_text("/");
         this._slash_label.set_style(
-            SU.get_style_string(this.scale, 223-countdown_style.size*0.5, -310, countdown_style, "aliceblue")
+            SU.get_style_string(
+                this.scale,
+                223-countdown_style.size*0.5,
+                -310,
+                countdown_style,
+                this.color_scheme.bottom
+            )
         );
         this._phase_label.set_width(scaledWidth);
         this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
         this._phase_label.set_style(
-            SU.get_style_string(this.scale, 208-phase_style.size*0.5, 127, phase_style, "aliceblue")
+            SU.get_style_string(
+                this.scale,
+                208-phase_style.size*0.5,
+                127,
+                phase_style,
+                this.color_scheme.bottom
+            )
         );
     }
 }

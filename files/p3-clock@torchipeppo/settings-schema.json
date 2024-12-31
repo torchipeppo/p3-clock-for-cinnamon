@@ -6,7 +6,7 @@
         "global-page": {
             "type": "page",
             "title": "Global",
-            "sections": ["global-scale-section", "global-positioning-section"]
+            "sections": ["global-color-section", "global-scale-section", "global-positioning-section"]
         },
         "top-page": {
             "type": "page",
@@ -38,6 +38,11 @@
             "type": "section",
             "title": "Size",
             "keys": ["global-scale"]
+        },
+        "global-color-section": {
+            "type": "section",
+            "title": "Color",
+            "keys": ["global-color-scheme"]
         },
 
         "top-format-section": {
@@ -122,6 +127,16 @@
         "max": 4,
         "step": 0.1,
         "description": "Global scale"
+    },
+
+    "global-color-scheme": {
+        "type": "combobox",
+        "default": "blue",
+        "options": {
+            "Blue": "blue",
+            "Pink": "pink"
+        },
+        "description": "Color scheme"
     },
 
     "top-format": {

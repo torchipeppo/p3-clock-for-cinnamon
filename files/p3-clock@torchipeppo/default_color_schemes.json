@@ -1,0 +1,18 @@
+{
+    "blue": {
+        "corner1": "#67baff",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#447fab",
+        "date": "#226182",
+        "bottom": "aliceblue"
+    },
+    "pink": {
+        "corner1": "#fc99b6",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#9f262d",
+        "date": "#9f262d",
+        "bottom": "lavenderblush"
+    }
+}
