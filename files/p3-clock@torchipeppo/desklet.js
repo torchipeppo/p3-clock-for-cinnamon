@@ -61,9 +61,8 @@ else {
     - Mettere il calendario lunare da qualche parte in .local
         (o proprio nella diretory dell'applet), non direttamente in una
         sottocartella della home.
-    - Fatto quello, e quindi una volta che abbiamo la struttura per la doppia label
-        in bottom row, possiamo anche espandere la funzionalità per includere anche
-        probabilità di pioggia o temperatura  (countdown arbitrario fatto!)
+    - _slash_label va messa in allineamento centrato
+    - Cachare risposta weatherapi
     - Anche fare diversi schemi di colore sarebbe carino
         Blu, rosa, verde, giallo e rosso sono d'obbligo
         Forse anche altri tipo viola, blu scuro, un altro verde, grigio ...
@@ -140,6 +139,9 @@ class P3Desklet extends Desklet.Desklet {
                 let llce = this.luncal_source.local_lunar_calendar_exists();
                 return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_WEATHERAPI;
             case "weather":
+            case "rain":
+            case "temp-c":
+            case "temp-f":
                 return SOURCE_WEATHERAPI;
             case "cntdn-full":
                 return SOURCE_LOCAL_LUNAR_CALENDAR;
@@ -296,7 +298,8 @@ class P3Desklet extends Desklet.Desklet {
             this.wapi_source.make_weatherAPI_request(
                 this,
                 (es == SOURCE_WEATHERAPI) ? this.set_emoji_text : (_)=>{},
-                (cs == SOURCE_WEATHERAPI) ? this.set_label_text : (_)=>{}
+                (cs == SOURCE_WEATHERAPI) ? this.set_caption_text : (_)=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_countdown_text : (_)=>{},
             );
         }
     }
@@ -304,8 +307,11 @@ class P3Desklet extends Desklet.Desklet {
     set_emoji_text(text) {
         this._emoji_label.set_text(text);
     }
-    set_label_text(text) {
+    set_caption_text(text) {
         this._caption_label.set_text(text);
+    }
+    set_countdown_text(text) {
+        this._countdown_label.set_text(text);
     }
 
     createUI() {

@@ -243,6 +243,9 @@
         "options": {
             "None": "",
             "Weather (W)": "weather",
+            "Chance of rain (W)": "rain",
+            "Temperature °C (W)": "temp-c",
+            "Temperature °F (W)": "temp-f",
             "Moon phase (C/W)": "moon",
             "Full moon countdown (C)": "cntdn-full",
             "Custom countdown": "cntdn-cstm"

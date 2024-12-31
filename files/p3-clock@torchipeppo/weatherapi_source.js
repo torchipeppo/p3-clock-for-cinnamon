@@ -4,12 +4,14 @@ const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let CONSTANTS;
+let SU, CONSTANTS;
 if (typeof require !== 'undefined') {
+    SU = require("./style_utils");
     CONSTANTS = require("./constants");
 }
 else {
     imports.searchPath.push(DESKLET_DIR);
+    SU = imports.style_utils;
     CONSTANTS = imports.constants;
 }
 
@@ -49,7 +51,7 @@ class WeatherAPISource {
         this.time_of_last_weather_update = new Date(0);  // epoch means "never updated before"
     }
 
-    make_weatherAPI_request(back_reference, emoji_callback, label_callback) {
+    make_weatherAPI_request(back_reference, emoji_callback, caption_callback, number_callback) {
         let now = new Date();
         const NORMAL_WAIT_TIME = this.wapi_update_period*60*1000;  // from minutes to milliseconds
         const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
@@ -64,11 +66,13 @@ class WeatherAPISource {
                     if (response) {
                         let resp_json = JSON.parse(response);
                         emoji_callback.call(back_reference, this._make_emoji_text(resp_json));
-                        label_callback.call(back_reference, this._make_label_text(resp_json));
+                        caption_callback.call(back_reference, this._make_caption_text(resp_json));
+                        number_callback.call(back_reference, this._make_number_text(resp_json));
                     }
                     else {
                         emoji_callback.call(back_reference, "⚠️");
-                        label_callback.call(back_reference, "Error: see log\nSuper + L");
+                        caption_callback.call(back_reference, "Error: see log\nSuper + L");
+                        number_callback.call(back_reference, "");
                     }
                 }
             )
@@ -88,7 +92,7 @@ class WeatherAPISource {
         }
     }
 
-    _make_label_text(resp_json) {
+    _make_caption_text(resp_json) {
         switch (this.caption_type) {
             case "moon":
                 let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
@@ -97,6 +101,22 @@ class WeatherAPISource {
                 let weather_code = resp_json.current.condition.code;
                 let weather_emoji = CONSTANTS.WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
                 return CONSTANTS.WEATHER_LABELS_BY_EMOJI[weather_emoji];
+            default:
+                return "";
+        }
+    }
+
+    _make_number_text(resp_json) {
+        switch (this.caption_type) {
+            case "rain":
+                let rain_chance = resp_json.forecast.forecastday[0].day.daily_chance_of_rain;
+                return SU.countdown_formatting(rain_chance);
+            case "temp-c":
+                let temp_c = resp_json.current.temp_c;
+                return SU.countdown_formatting(temp_c);
+            case "temp-f":
+                let temp_f = resp_json.current.temp_f;
+                return SU.countdown_formatting(temp_f);
             default:
                 return "";
         }
