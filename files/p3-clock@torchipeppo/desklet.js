@@ -66,8 +66,9 @@ else {
     - _slash_label va messa in allineamento centrato
     - Cachare risposta weatherapi
     - Anche fare diversi schemi di colore sarebbe carino
-        Blu, rosa, verde, giallo e rosso sono d'obbligo
+        Blu, rosa, verde, giallo e rosso sono d'obbligo (fatti!)
         Forse anche altri tipo viola, blu scuro, un altro verde, grigio ...
+        E ovviamente un'opzione "custom" che permette di selezionare ciascun colore manualmente!
 */
 
 const SOURCE_DISABLED = 0

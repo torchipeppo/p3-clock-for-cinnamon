@@ -14,5 +14,29 @@
         "time_shadow": "#9f262d",
         "date": "#9f262d",
         "bottom": "lavenderblush"
+    },
+    "green": {
+        "corner1": "#3ba960",
+        "corner2": "#000000",
+        "time": "mintcream",
+        "time_shadow": "#052808",
+        "date": "#052808",
+        "bottom": "mintcream"
+    },
+    "yellow": {
+        "corner1": "#fbfa0b",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#b6a906",
+        "date": "#776e03",
+        "bottom": "lightyellow"
+    },
+    "red": {
+        "corner1": "#ee1600",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#400000",
+        "date": "#400000",
+        "bottom": "#FFF0F0"
     }
 }

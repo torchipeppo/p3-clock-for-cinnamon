@@ -134,7 +134,10 @@
         "default": "blue",
         "options": {
             "Blue": "blue",
-            "Pink": "pink"
+            "Pink": "pink",
+            "Green": "green",
+            "Yellow": "yellow",
+            "Red": "red"
         },
         "description": "Color scheme"
     },
