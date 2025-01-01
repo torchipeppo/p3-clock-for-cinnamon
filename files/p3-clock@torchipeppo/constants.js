@@ -21,13 +21,13 @@ const CAPTION_TYPE_SPECS = {
         caption_label: "",
         next_label: "Temp:",
         countdown_label: "<get>",
-        slash_label: "°C",
+        slash_label: " °C",
     },
     "temp-f" : {
         caption_label: "",
         next_label: "Temp:",
         countdown_label: "<get>",
-        slash_label: "°F",
+        slash_label: " °F",
     },
     "moon" : {
         caption_label: "<get>",

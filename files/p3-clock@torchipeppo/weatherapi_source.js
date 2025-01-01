@@ -26,6 +26,7 @@ if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
 
 class WeatherAPISource {
     constructor(uuid, desklet_id) {
+        this.cached_response = undefined;
         this.reset_time_of_last_weather_update();
 
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
@@ -44,7 +45,7 @@ class WeatherAPISource {
     }
 
     requestWAPIUpdate() {
-        this.next_weather_update_is_fast = true;
+        // this.next_weather_update_is_fast = true;
     }
 
     reset_time_of_last_weather_update() {
@@ -64,18 +65,31 @@ class WeatherAPISource {
                 "http://api.weatherapi.com/v1/forecast.json?key="+this.wapi_key+"&q="+this.wapi_query,
                 (response) => {
                     if (response) {
-                        let resp_json = JSON.parse(response);
-                        emoji_callback.call(back_reference, this._make_emoji_text(resp_json));
-                        caption_callback.call(back_reference, this._make_caption_text(resp_json));
-                        number_callback.call(back_reference, this._make_number_text(resp_json));
+                        this.cached_response = JSON.parse(response);
                     }
                     else {
-                        emoji_callback.call(back_reference, "⚠️");
-                        caption_callback.call(back_reference, "Error: see log\nSuper + L");
-                        number_callback.call(back_reference, "");
+                        this.cached_response = null;
                     }
+                    this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback);
                 }
             )
+        }
+        else {
+            // global.log("cached");
+            this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback);
+        }
+    }
+
+    _call_callbacks(back_reference, emoji_callback, caption_callback, number_callback) {
+        if (this.cached_response) {
+            emoji_callback.call(back_reference, this._make_emoji_text(this.cached_response));
+            caption_callback.call(back_reference, this._make_caption_text(this.cached_response));
+            number_callback.call(back_reference, this._make_number_text(this.cached_response));
+        }
+        else if (this.cached_response === null) {
+            emoji_callback.call(back_reference, "⚠️");
+            caption_callback.call(back_reference, "Error: see log\nSuper + L");
+            number_callback.call(back_reference, "");
         }
     }
 

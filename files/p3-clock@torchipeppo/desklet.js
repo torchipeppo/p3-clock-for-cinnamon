@@ -63,7 +63,6 @@ else {
     - Mettere il calendario lunare da qualche parte in .local
         (o proprio nella diretory dell'applet), non direttamente in una
         sottocartella della home.
-    - _slash_label va messa in allineamento centrato
     - Cachare risposta weatherapi
     - Anche fare diversi schemi di colore sarebbe carino
         Blu, rosa, verde, giallo e rosso sono d'obbligo (fatti!)
