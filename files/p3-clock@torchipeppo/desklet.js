@@ -60,10 +60,6 @@ else {
     - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
         non abbiamo un messaggio d'errore inutile a schermo
-    - Mettere il calendario lunare da qualche parte in .local
-        (o proprio nella diretory dell'applet), non direttamente in una
-        sottocartella della home.
-    - Cachare risposta weatherapi
     - Anche fare diversi schemi di colore sarebbe carino
         Blu, rosa, verde, giallo e rosso sono d'obbligo (fatti!)
         Forse anche altri tipo viola, blu scuro, un altro verde, grigio ...

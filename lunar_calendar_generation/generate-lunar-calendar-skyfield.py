@@ -17,7 +17,9 @@ PHASE_CODES = np.array(["new", "fq", "full", "lq"])
 # For alternative table files and extra info: https://rhodesmill.org/skyfield/planets.html
 EPHEMERIS = load("de440s.bsp")
 
-MOON_PATH = Path.home() / ".torchipeppo-moon"
+BASE_MOON_PATH = Path.home() / ".local/share/cinnamon/desklets/p3-clock@torchipeppo"
+assert BASE_MOON_PATH.exists(), "The installation directory of the desklet doesn't seem to exist. Either Cinnamon changed the path for desklets, or something is wrong with your installation. Please correct either your installation path or the BASE_MOON_PATH variable in this script accordingly."
+MOON_PATH = BASE_MOON_PATH / "local_lunar_calendar"
 
 
 

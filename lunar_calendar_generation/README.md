@@ -50,14 +50,14 @@ Anecdotally, I encountered no issues with it.
 
 ## About the generated data
 
-Running either script will create the directory `~/.torchipeppo-moon`
-if it doesn't exist yet and will store a number of JSON files there.
+Running either script will create a `local_lunar_calendar` directory
+in the installation folder of the desklet and store a number of JSON files there.
 As a ballpark estimate, the generated data from year 2000 to year 2148
 takes up just about 300 KB.
 
 You may generate this data all at once, or you may decide to only generate
 the current year. In the latter case, you may want to delete the
-`.torchipeppo-moon` directory to get rid of the old data.
+`local_lunar_calendar` directory to get rid of the old data.
 
 ## Attribution and licensing
 
