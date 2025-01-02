@@ -70,7 +70,7 @@
         "bottom-requirements-section": {
             "type": "section",
             "title": "Requirements",
-            "keys": ["bottom-requirements-help", "bottom-wapi-refresh-help"]
+            "keys": ["bottom-requirements-help"]
         },
         "bottom-weatherapi-section": {
             "type": "section",
@@ -137,7 +137,10 @@
             "Pink": "pink",
             "Green": "green",
             "Yellow": "yellow",
-            "Red": "red"
+            "Red": "red",
+            "Purple": "purple",
+            "Dark Blue": "dark-blue",
+            "Grey": "grey"
         },
         "description": "Color scheme"
     },
@@ -194,10 +197,6 @@
     "bottom-requirements-help": {
         "type": "label",
         "description": "(W) indicates that a valid WeatherAPI key is required. Sign up on weatherapi.com to get one.\n(C) indicates that generating a local lunar calendar is required. See [TODO] for instructions.\n(C/W) indicates that either data source is fine. If both are available, preference will be given to the local data."
-    },
-    "bottom-wapi-refresh-help": {
-        "type": "label",
-        "description": "Note: WeatherAPI changes may take up to one minute to take effect, to avoid request floods while typing. Use the button below to force an update. Please be mindful of your request budget."
     },
 
     "wapi-enable": {

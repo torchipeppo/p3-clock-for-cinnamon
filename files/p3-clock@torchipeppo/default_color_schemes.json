@@ -38,5 +38,29 @@
         "time_shadow": "#400000",
         "date": "#400000",
         "bottom": "#FFF0F0"
+    },
+    "purple": {
+        "corner1": "blueviolet",
+        "corner2": "#000000",
+        "time": "lavender",
+        "time_shadow": "indigo",
+        "date": "#3b0066",
+        "bottom": "lavender"
+    },
+    "dark-blue": {
+        "corner1": "#0000b0",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#000040",
+        "date": "#000020",
+        "bottom": "aliceblue"
+    },
+    "grey": {
+        "corner1": "lightgrey",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "grey",
+        "date": "dimgrey",
+        "bottom": "#f0f0f0"
     }
 }

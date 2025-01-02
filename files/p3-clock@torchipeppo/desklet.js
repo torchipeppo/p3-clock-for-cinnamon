@@ -61,9 +61,9 @@ else {
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
-        Blu, rosa, verde, giallo e rosso sono d'obbligo (fatti!)
-        Forse anche altri tipo viola, blu scuro, un altro verde, grigio ...
+        Forse anche un altro verde
         E ovviamente un'opzione "custom" che permette di selezionare ciascun colore manualmente!
+    - Label del countdown arbitrario customizzabile
 */
 
 const SOURCE_DISABLED = 0
