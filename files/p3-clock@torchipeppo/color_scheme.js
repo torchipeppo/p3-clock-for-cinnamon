@@ -9,16 +9,32 @@ class ColorScheme {
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
 
         this.settings.bind("global-color-scheme", "color_scheme_name");
+        this.settings.bind("global-custom-corner1", "custom_corner1_color");
+        this.settings.bind("global-custom-corner2", "custom_corner2_color");
+        this.settings.bind("global-custom-date", "custom_date_color");
+        this.settings.bind("global-custom-time", "custom_time_color");
+        this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color");
+        this.settings.bind("global-custom-bottom", "custom_bottom_color");
 
         this.load_color_scheme();
     }
 
     load_color_scheme() {
-        // TODO special handling for custom, when we get to it
-        let schemes = JSON.parse(String(GLib.file_get_contents(
-            DESKLET_DIR + "/default_color_schemes.json"
-        )[1]));
-        Object.assign(this, schemes[this.color_scheme_name]);
+        // "custom" looks like a special name in the settings_schema
+        if (this.color_scheme_name == "the-custom") {
+            this.corner1 = this.custom_corner1_color;
+            this.corner2 = this.custom_corner2_color;
+            this.date = this.custom_date_color;
+            this.time = this.custom_time_color;
+            this.time_shadow = this.custom_time_shadow_color;
+            this.bottom = this.custom_bottom_color;
+        }
+        else {
+            let schemes = JSON.parse(String(GLib.file_get_contents(
+                DESKLET_DIR + "/default_color_schemes.json"
+            )[1]));
+            Object.assign(this, schemes[this.color_scheme_name]);
+        }
         this._apply_colors_to_svg();
     }
 

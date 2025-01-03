@@ -62,7 +62,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-        E ovviamente un'opzione "custom" che permette di selezionare ciascun colore manualmente!
     - Label del countdown arbitrario customizzabile
 */
 
@@ -90,7 +89,14 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("global-h-offset", "h_offset", this._onUISettingsChanged);
         this.settings.bind("global-v-offset", "v_offset", this._onUISettingsChanged);
         this.settings.bind("global-scale", "scale", this._onUISettingsChanged);
+
         this.settings.bind("global-color-scheme", "color_scheme_name", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-corner1", "custom_corner1_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-corner2", "custom_corner2_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-date", "custom_date_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-time", "custom_time_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-bottom", "custom_bottom_color", this._onColorSettingsChanged);
 
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);

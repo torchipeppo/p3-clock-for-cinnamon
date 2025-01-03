@@ -42,7 +42,15 @@
         "global-color-section": {
             "type": "section",
             "title": "Color",
-            "keys": ["global-color-scheme"]
+            "keys": [
+                "global-color-scheme",
+                "global-custom-corner1",
+                "global-custom-corner2",
+                "global-custom-date",
+                "global-custom-time",
+                "global-custom-time-shadow",
+                "global-custom-bottom"
+            ]
         },
 
         "top-format-section": {
@@ -140,9 +148,46 @@
             "Red": "red",
             "Purple": "purple",
             "Dark Blue": "dark-blue",
-            "Grey": "grey"
+            "Grey": "grey",
+            "Custom": "the-custom"
         },
         "description": "Color scheme"
+    },
+    "global-custom-corner1": {
+        "type": "colorchooser",
+        "default": "#67baff",
+        "description": "Main color 1",
+        "dependency": "global-color-scheme=the-custom"
+    },
+    "global-custom-corner2": {
+        "type": "colorchooser",
+        "default": "black",
+        "description": "Main color 2",
+        "dependency": "global-color-scheme=the-custom"
+    },
+    "global-custom-time": {
+        "type": "colorchooser",
+        "default": "white",
+        "description": "Middle row text",
+        "dependency": "global-color-scheme=the-custom"
+    },
+    "global-custom-time-shadow": {
+        "type": "colorchooser",
+        "default": "#447fab",
+        "description": "Middle row drop shadow",
+        "dependency": "global-color-scheme=the-custom"
+    },
+    "global-custom-date": {
+        "type": "colorchooser",
+        "default": "#226182",
+        "description": "Top row text",
+        "dependency": "global-color-scheme=the-custom"
+    },
+    "global-custom-bottom": {
+        "type": "colorchooser",
+        "default": "aliceblue",
+        "description": "Bottom row text",
+        "dependency": "global-color-scheme=the-custom"
     },
 
     "top-format": {
