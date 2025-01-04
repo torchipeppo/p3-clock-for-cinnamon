@@ -62,7 +62,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Label del countdown arbitrario customizzabile
 */
 
 const SOURCE_DISABLED = 0
