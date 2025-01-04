@@ -102,7 +102,8 @@
             "keys": [
                 "bottom-caption-type",
                 "bottom-caption-font",
-                "custom-countdown-date-select"
+                "custom-countdown-date-select",
+                "custom-countdown-name"
             ]
         }
     },
@@ -328,6 +329,13 @@
             "m" : 1,
             "y" : 2038
         },
+        "dependency": "bottom-caption-type=cntdn-cstm"
+    },
+    "custom-countdown-name" : {
+        "type" : "entry",
+        "default" : "",
+        "description" : "Countdown name",
+        "tooltip": "If this field is empty, a default name will be used.",
         "dependency": "bottom-caption-type=cntdn-cstm"
     }
 }

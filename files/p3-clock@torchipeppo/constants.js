@@ -43,7 +43,7 @@ const CAPTION_TYPE_SPECS = {
     },
     "cntdn-cstm" : {
         caption_label: "",
-        next_label: "Limit:",
+        next_label: "<get>",
         countdown_label: "<get>",
         slash_label: "/",
     }

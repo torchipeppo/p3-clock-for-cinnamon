@@ -118,6 +118,7 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
 
         this.settings.bind("custom-countdown-date-select", "countdown_target", this._onSettingsChanged);
+        this.settings.bind("custom-countdown-name", "countdown_name", this._onSettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
@@ -296,6 +297,12 @@ class P3Desklet extends Desklet.Desklet {
             this._countdown_label.set_text(text);
             if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
                 this._slash_label.set_text("");
+            }
+            if (this.countdown_name) {
+                this._next_label.set_text(this.countdown_name + ":");
+            }
+            else {
+                this._next_label.set_text("Limit:");
             }
         }
         else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
