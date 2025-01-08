@@ -63,12 +63,15 @@ class WeatherAPISource {
             this.next_weather_update_is_fast = false;
             this._getWeather(
                 "http://api.weatherapi.com/v1/forecast.json?key="+this.wapi_key+"&q="+this.wapi_query,
-                (response) => {
+                (response, status_code) => {
                     if (response) {
                         this.cached_response = JSON.parse(response);
                     }
                     else {
                         this.cached_response = null;
+                        if (status_code == 0) {  // may add more status codes here with ||
+                            this.next_weather_update_is_fast = true;
+                        }
                     }
                     this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback);
                 }
@@ -145,15 +148,17 @@ class WeatherAPISource {
             _httpSession.queue_message(message, function (session, message) {
                 if( message.status_code == 200) {
                     try {
-                        callback.call(here,message.response_body.data.toString());
+                        callback.call(here, message.response_body.data.toString(), message.status_code);
                     } catch(e) {
                         global.logError(e)
-                        callback.call(here,false);
+                        callback.call(here, false, message.status_code);
                     }
                 } else {
                     global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
-                    here.data.status.lasterror = message.status_code;
-                    callback.call(here,false);
+                    if (message.status_code == 0) {
+                        global.logWarning("(You may be disconnected from the network)");
+                    }
+                    callback.call(here, false, message.status_code);
                 }
             });
         } else { //version 3
@@ -163,15 +168,17 @@ class WeatherAPISource {
                 if( message.get_status() === 200) {
                     try {
                         const bytes = _httpSession.send_and_read_finish(result);
-                        callback.call(here,ByteArray.toString(bytes.get_data()));
+                        callback.call(here, ByteArray.toString(bytes.get_data()), message.get_status());
                     } catch(e) {
                         global.logError(e)
-                        callback.call(here,false);
+                        callback.call(here, false, message.get_status());
                     }
                 } else {
                     global.logWarning("Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
-                    here.data.status.lasterror = message.get_status();
-                    callback.call(here,false);
+                    if (message.get_status() == 0) {
+                        global.logWarning("(You may be disconnected from the network)");
+                    }
+                    callback.call(here, false, message.get_status());
                 }
             });
         }
