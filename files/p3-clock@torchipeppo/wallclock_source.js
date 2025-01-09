@@ -45,7 +45,7 @@ class WallclockSource {
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("top-format", "date_format", this._onFormatSettingsChanged);
 
-        this.settings.bind("custom-countdown-date-select", "countdown_target");
+        this.settings.bind("custom-countdown-list", "countdown_list");
     }
 
     time_format_or_default() {
@@ -81,17 +81,32 @@ class WallclockSource {
         return formatted_date;
     }
 
-    get_custom_countdown_text() {
+    get_custom_countdown_item_from_list(i) {
+        let found = -1
+        for (let item of this.countdown_list) {
+            if (item.enabled) {
+                found++;
+                if (found == i) {
+                    return item;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    get_custom_countdown_text_from_list_item(item) {
         let today = new Date();
         today.setHours(0);
         today.setMinutes(0);
         today.setSeconds(0);
         today.setMilliseconds(0);
 
+        let countdown_target = JSON.parse(item.date)
+
         let target = new Date(
-            this.countdown_target.y,
-            this.countdown_target.m-1,
-            this.countdown_target.d
+            countdown_target.y,
+            countdown_target.m-1,
+            countdown_target.d
         );
 
         let days_left = (target - today) / (1000 * 60 * 60 * 24);

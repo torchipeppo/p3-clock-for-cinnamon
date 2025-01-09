@@ -102,8 +102,8 @@
             "keys": [
                 "bottom-caption-type",
                 "bottom-caption-font",
-                "custom-countdown-date-select",
-                "custom-countdown-name"
+                "custom-countdown-list-label",
+                "custom-countdown-list-widget"
             ]
         }
     },
@@ -337,5 +337,24 @@
         "description" : "Countdown name",
         "tooltip": "If this field is empty, a default name will be used.",
         "dependency": "bottom-caption-type=cntdn-cstm"
+    },
+
+
+    "custom-countdown-list-label": {
+        "type": "label",
+        "description": "List of important dates to count down to:"
+    },
+    "custom-countdown-list-widget": {
+        "type": "custom",
+        "file": "settingsWidgets.py",
+        "widget": "ListOfDates",
+        "storage": "custom-countdown-list",
+        "height": 150,
+        "dependency": "bottom-caption-type=cntdn-cstm"
+    },
+    "custom-countdown-list": {
+        "type": "generic",
+        "default": [],
+        "comment": "Data storage for 'custom-countdown-list-widget'"
     }
 }

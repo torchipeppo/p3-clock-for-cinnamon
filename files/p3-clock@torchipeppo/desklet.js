@@ -62,6 +62,8 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
+    - Lista dei countdown e countdown secondari (in corso)
+    - Opzione per decidere se skippare i countdown passati o meno
 */
 
 const SOURCE_DISABLED = 0
@@ -116,8 +118,7 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
 
-        this.settings.bind("custom-countdown-date-select", "countdown_target", this._onSettingsChanged);
-        this.settings.bind("custom-countdown-name", "countdown_name", this._onSettingsChanged);
+        this.settings.bind("custom-countdown-list", "countdown_list", this._onSettingsChanged);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
@@ -292,16 +293,23 @@ class P3Desklet extends Desklet.Desklet {
         }
         else if (cs == SOURCE_LOCAL_WALLCLOCK) {
             // there's only custom countdown at the moment, so no check
-            let text = this.clock_source.get_custom_countdown_text();
-            this._countdown_label.set_text(text);
-            if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
-                this._slash_label.set_text("");
-            }
-            if (this.countdown_name) {
-                this._next_label.set_text(this.countdown_name + ":");
+            let countdown_item = this.clock_source.get_custom_countdown_item_from_list(0);
+            if (countdown_item) {
+                let text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
+                this._countdown_label.set_text(text);
+                if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
+                    this._slash_label.set_text("");
+                }
+                if (countdown_item.name) {
+                    this._next_label.set_text(countdown_item.name + ":");
+                }
+                else {
+                    this._next_label.set_text("Limit:");
+                }
             }
             else {
-                this._next_label.set_text("Limit:");
+                this._next_label.set_text("None:")
+                this._countdown_label.set_text("--");
             }
         }
         else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
