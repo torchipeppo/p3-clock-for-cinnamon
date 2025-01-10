@@ -39,6 +39,7 @@ else {
 
     - Global:
         Set the scale and global offset to your liking.
+        Set one of the first three color schemes.
     - Top row:
         Font "Geist ExtraBold 52".
         Use the default format and enable weekday.
@@ -47,8 +48,9 @@ else {
         Use the special format "%!".
         Enable drop shadow, with offset 8.
     - Bottom row:
-        Get a WeatherAPI key and display the moon phases.
-        For the caption, use "Onest Bold 50".
+        Generate the lunar calendar data with the Python scripts in the repo.
+        Set the emoji to "Moon Phase", size 70.
+        Set the caption to "Full moon countdown", font "Onest Bold 50".
         "Geist" also works well, if you don't feel like downloading another font.
 
     "Geist", "Instrument Sans" and "Onest" are found on Google Fonts,
@@ -62,8 +64,8 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Lista dei countdown e countdown secondari (in corso)
     - Opzione per decidere se skippare i countdown passati o meno
+        (potrebbe essere un'opzione nella tabella, indipendente riga per riga)
 */
 
 const SOURCE_DISABLED = 0
@@ -117,6 +119,7 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-emoji-size", "emoji_size", this._onUISettingsChanged);
         this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
+        this.settings.bind("bottom-show-secondary-countdowns", "show_secondary_countdowns", this._onUISettingsChanged);
 
         this.settings.bind("custom-countdown-list", "countdown_list", this._onSettingsChanged);
 
@@ -282,6 +285,9 @@ class P3Desklet extends Desklet.Desklet {
             else if (this.caption_type == "cntdn-full") {
                 if (/[0-9 ]+/.test(text)) {  // normal countdown
                     this._countdown_label.set_text(text);
+                    if (!this.emoji_type) {  // remove the slash if we don't have an emoji, it looks better
+                        this._slash_label.set_text("");
+                    }
                 }
                 else {  // special moon phase
                     this._next_label.set_text("");
@@ -296,8 +302,12 @@ class P3Desklet extends Desklet.Desklet {
             let countdown_item = this.clock_source.get_custom_countdown_item_from_list(0);
             if (countdown_item) {
                 let text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
+                text = SU.countdown_formatting(text);
                 this._countdown_label.set_text(text);
                 if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
+                    this._slash_label.set_text("");
+                }
+                if (!this.emoji_type) {  // also remove it if we don't have an emoji, it looks better
                     this._slash_label.set_text("");
                 }
                 if (countdown_item.name) {
@@ -318,6 +328,30 @@ class P3Desklet extends Desklet.Desklet {
             this._countdown_label.set_text("");
             this._slash_label.set_text("");
         }
+
+        // secondary countdowns
+        // (this is the only current use of the secondary label, so no other checks for now)
+        let secondary_text = ""
+        if (this.show_secondary_countdowns) {
+            for (let i of [0,1]) {
+                if (this.caption_type == "cntdn-cstm") {
+                    i += 1;
+                }
+                let countdown_item = this.clock_source.get_custom_countdown_item_from_list(i);
+                if (countdown_item) {
+                    let name_text = countdown_item.name ? countdown_item.name : "Limit";
+                    let number_text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
+                    if (number_text.length < 2) {
+                        number_text = "  " + number_text;
+                    }
+                    if (secondary_text.length > 0) {
+                        secondary_text += "\n";
+                    }
+                    secondary_text += name_text + ": " + number_text;
+                }
+            }
+        }
+        this._secondary_caption_label.set_text(secondary_text);
 
         if (this.weatherapi_is_enabled()) {
             this.wapi_source.make_weatherAPI_request(
@@ -372,10 +406,12 @@ class P3Desklet extends Desklet.Desklet {
         this._countdown_label = new St.Label({style_class:"countdown-label"});
         this._slash_label = new St.Label({style_class:"countdown-label"});
         this._phase_label = new St.Label({style_class:"phase-label"});
+        this._secondary_caption_label = new St.Label({style_class:"caption-label"});
         this._clock_actor.add_actor(this._next_label);
         this._clock_actor.add_actor(this._countdown_label);
         this._clock_actor.add_actor(this._slash_label);
         this._clock_actor.add_actor(this._phase_label);
+        this._clock_actor.add_actor(this._secondary_caption_label);
     }
 
     updateUI() {
@@ -564,6 +600,18 @@ class P3Desklet extends Desklet.Desklet {
                 208-phase_style.size*0.5,
                 127,
                 phase_style,
+                this.color_scheme.bottom
+            )
+        );
+        this._secondary_caption_label.set_width(scaledWidth);
+        this._secondary_caption_label.set_height(scaledHeight);
+        this._secondary_caption_label.set_position(0, 0);
+        this._secondary_caption_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                295-caption_style.size*0.5,
+                124,
+                caption_style,
                 this.color_scheme.bottom
             )
         );

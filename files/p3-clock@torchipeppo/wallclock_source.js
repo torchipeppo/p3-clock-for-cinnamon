@@ -4,17 +4,6 @@
 
 const Settings = imports.ui.settings;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let SU;
-if (typeof require !== 'undefined') {
-    SU = require("./style_utils");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    SU = imports.style_utils;
-}
-
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
         return "Late Night";
@@ -114,7 +103,7 @@ class WallclockSource {
             return "Today";
         }
         else {
-            return SU.countdown_formatting(days_left);
+            return days_left.toString();
         }
     }
 }

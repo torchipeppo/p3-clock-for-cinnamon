@@ -1,7 +1,7 @@
 {
     "layout": {
         "type": "layout",
-        "pages": ["global-page", "top-page", "middle-page", "bottom-page"],
+        "pages": ["global-page", "top-page", "middle-page", "bottom-page", "data-page"],
 
         "global-page": {
             "type": "page",
@@ -23,9 +23,16 @@
             "title": "Bottom row",
             "sections": [
                 "bottom-requirements-section",
-                "bottom-weatherapi-section",
                 "bottom-emoji-section",
                 "bottom-label-section"
+            ]
+        },
+        "data-page": {
+            "type": "page",
+            "title": "Data",
+            "sections": [
+                "data-weatherapi-section",
+                "data-countdown-section"
             ]
         },
 
@@ -78,18 +85,7 @@
         "bottom-requirements-section": {
             "type": "section",
             "title": "Requirements",
-            "keys": ["bottom-requirements-help"]
-        },
-        "bottom-weatherapi-section": {
-            "type": "section",
-            "title": "WeatherAPI settings",
-            "keys": [
-                "wapi-enable",
-                "wapi-key",
-                "wapi-query",
-                "wapi-update-period-minutes",
-                "wapi-update-button"
-            ]
+            "keys": ["bottom-requirements-help", "wapi-update-button"]
         },
         "bottom-emoji-section": {
             "type": "section",
@@ -102,6 +98,26 @@
             "keys": [
                 "bottom-caption-type",
                 "bottom-caption-font",
+                "bottom-show-secondary-countdowns"
+            ]
+        },
+
+        "data-weatherapi-section": {
+            "type": "section",
+            "title": "WeatherAPI settings",
+            "keys": [
+                "wapi-help",
+                "wapi-enable",
+                "wapi-key",
+                "wapi-query",
+                "wapi-update-period-minutes",
+                "wapi-update-button"
+            ]
+        },
+        "data-countdown-section": {
+            "type": "section",
+            "title": "Custom countdown dates",
+            "keys": [
                 "custom-countdown-list-label",
                 "custom-countdown-list-widget"
             ]
@@ -242,9 +258,13 @@
 
     "bottom-requirements-help": {
         "type": "label",
-        "description": "(W) indicates that a valid WeatherAPI key is required. Sign up on weatherapi.com to get one.\n(C) indicates that generating a local lunar calendar is required. See [TODO] for instructions.\n(C/W) indicates that either data source is fine. If both are available, preference will be given to the local data."
+        "description": "(W) indicates that a valid WeatherAPI key is required. Go to the \"Data\" page to enable it.\n(C) indicates that generating a local lunar calendar is required. See [TODO] for instructions.\n(C/W) indicates that either data source is fine. If both are available, preference will be given to the local data.\n(D) indicates that you must provide one or more important dates to count down to in the \"Data\" page."
     },
 
+    "wapi-help": {
+        "type": "label",
+        "description": "To access weather and moon phase data from WeatherAPI, an API key is required. Sign up on weatherapi.com to get one. Be mindful of your request budget when setting the update frequency or manually requesting updates."
+    },
     "wapi-enable": {
         "type": "switch",
         "default": true,
@@ -311,7 +331,7 @@
             "Temperature °F (W)": "temp-f",
             "Moon phase (C/W)": "moon",
             "Full moon countdown (C)": "cntdn-full",
-            "Custom countdown": "cntdn-cstm"
+            "Custom countdown (D)": "cntdn-cstm"
         },
         "description": "Caption display"
     },
@@ -321,36 +341,24 @@
         "description": "Font",
         "dependency": "bottom-caption-type!="
     },
-    "custom-countdown-date-select" : {
-        "type" : "datechooser",
-        "description" : "Day to count down to",
-        "default" : {
-            "d" : 19,
-            "m" : 1,
-            "y" : 2038
-        },
-        "dependency": "bottom-caption-type=cntdn-cstm"
-    },
-    "custom-countdown-name" : {
-        "type" : "entry",
-        "default" : "",
-        "description" : "Countdown name",
-        "tooltip": "If this field is empty, a default name will be used.",
-        "dependency": "bottom-caption-type=cntdn-cstm"
+    "bottom-show-secondary-countdowns": {
+        "type": "switch",
+        "default": true,
+        "description": "Show more countdowns in secondary text (D)",
+        "dependency": "bottom-caption-type!="
     },
 
 
     "custom-countdown-list-label": {
         "type": "label",
-        "description": "List of important dates to count down to:"
+        "description": "Enter one or more dates to count down to when selecting \"Custom countdown\" (1 date) and/or \"Show more countdowns in secondary text\" (up to 2 additional dates). The order of the list represents the priority order for the dates. Disable dates to skip them."
     },
     "custom-countdown-list-widget": {
         "type": "custom",
         "file": "settingsWidgets.py",
         "widget": "ListOfDates",
         "storage": "custom-countdown-list",
-        "height": 150,
-        "dependency": "bottom-caption-type=cntdn-cstm"
+        "height": 150
     },
     "custom-countdown-list": {
         "type": "generic",
