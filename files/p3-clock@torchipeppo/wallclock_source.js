@@ -25,6 +25,24 @@ function hour_to_p3time(hour) {
     }
 }
 
+function _get_days_left(date_json_string) {
+    let today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+
+    let countdown_target = JSON.parse(date_json_string)
+
+    let target = new Date(
+        countdown_target.y,
+        countdown_target.m-1,
+        countdown_target.d
+    );
+
+    return (target - today) / (1000 * 60 * 60 * 24);
+}
+
 class WallclockSource {
     constructor(uuid, desklet_id, wallclock) {
         // share a reference with the main desklet
@@ -73,7 +91,10 @@ class WallclockSource {
     get_custom_countdown_item_from_list(i) {
         let found = -1
         for (let item of this.countdown_list) {
-            if (item.enabled) {
+            if (
+                item.enabled &&
+                (item.persistent || _get_days_left(item.date) >= 0)
+            ) {
                 found++;
                 if (found == i) {
                     return item;
@@ -84,21 +105,7 @@ class WallclockSource {
     }
 
     get_custom_countdown_text_from_list_item(item) {
-        let today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        today.setMilliseconds(0);
-
-        let countdown_target = JSON.parse(item.date)
-
-        let target = new Date(
-            countdown_target.y,
-            countdown_target.m-1,
-            countdown_target.d
-        );
-
-        let days_left = (target - today) / (1000 * 60 * 60 * 24);
+        let days_left = _get_days_left(item.date)
         if (days_left == 0) {
             return "Today";
         }

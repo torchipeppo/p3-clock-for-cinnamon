@@ -119,9 +119,10 @@ class ListOfDates(SettingsWidget):
         self.settings = settings
 
         columns=[
-            {"id": "enabled", "title": "Enabled", "type": "boolean", "default": True},
-            {"id": "date",    "title": "Date",    "type": "date"},
-            {"id": "name",    "title": "Name",    "type": "string"},
+            {"id": "enabled",    "title": "Enabled",    "type": "boolean", "default": True},
+            {"id": "persistent", "title": "Persistent", "type": "boolean", "default": False},
+            {"id": "date",       "title": "Date",       "type": "date"},
+            {"id": "name",       "title": "Name",       "type": "string"},
         ]
         show_buttons=True
         label=info.get("label", None)
@@ -443,6 +444,8 @@ class ListOfDates(SettingsWidget):
             for i, col in enumerate(self.columns):
                 if col["id"] in entry:
                     entry_value_list.append(entry[col["id"]])
+                elif "default" in col:
+                    entry_value_list.append(col["default"])
                 else:
                     raise ValueError("Entry of column "+str(i)+" doesn't contain key: "+col["id"])
                     continue

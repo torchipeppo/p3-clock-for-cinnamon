@@ -64,8 +64,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Opzione per decidere se skippare i countdown passati o meno
-        (potrebbe essere un'opzione nella tabella, indipendente riga per riga)
 */
 
 const SOURCE_DISABLED = 0
