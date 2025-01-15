@@ -25,7 +25,8 @@ function new_midnight_date(isostring) {
 }
 
 class LunarCalendarSource {
-    constructor(uuid, desklet_id) {
+    constructor(uuid, desklet_id, file_handler) {
+        this.file_handler = file_handler;
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
 
         this.settings.bind("bottom-emoji-type", "emoji_type");
@@ -64,8 +65,7 @@ class LunarCalendarSource {
 
     _find_moon_phase_name() {
         let today = new_midnight_date();
-        let path = this._get_fpath();
-        let lunar_calendar = JSON.parse(String(GLib.file_get_contents(path)[1]));
+        let lunar_calendar = JSON.parse(this.file_handler.get_file_text(this._get_fpath()));
         // find today's date or the two dates today falls in between
         let i = lunar_calendar.month_index[today.getMonth()];
         while (today > new_midnight_date(lunar_calendar.calendar[i][0])) {
@@ -86,8 +86,7 @@ class LunarCalendarSource {
 
     _get_full_moon_countdown_str() {
         let today = new_midnight_date();
-        let path = this._get_fpath();
-        let lunar_calendar = JSON.parse(String(GLib.file_get_contents(path)[1]));
+        let lunar_calendar = JSON.parse(this.file_handler.get_file_text(this._get_fpath()));
         // find the first full moon that is today or later,
         // but also stop if today is any other "important" phase
         // b/c that's a special message

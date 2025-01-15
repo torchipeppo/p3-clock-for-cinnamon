@@ -5,7 +5,8 @@ const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 class ColorScheme {
-    constructor(uuid, desklet_id) {
+    constructor(uuid, desklet_id, file_handler) {
+        this.file_handler = file_handler;
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
 
         this.settings.bind("global-color-scheme", "color_scheme_name");
@@ -30,18 +31,18 @@ class ColorScheme {
             this.bottom = this.custom_bottom_color;
         }
         else {
-            let schemes = JSON.parse(String(GLib.file_get_contents(
+            let schemes = JSON.parse(this.file_handler.get_file_text(
                 DESKLET_DIR + "/default_color_schemes.json"
-            )[1]));
+            ));
             Object.assign(this, schemes[this.color_scheme_name]);
         }
         this._apply_colors_to_svg();
     }
 
     _apply_colors_to_svg() {
-        let svg_content = String(GLib.file_get_contents(
+        let svg_content = this.file_handler.get_file_text(
             DESKLET_DIR + "/p3corner-template.svgtemp"
-        )[1]);
+        );
         svg_content = svg_content.replace(/%corner1%/g, this.corner1);
         svg_content = svg_content.replace(/%corner2%/g, this.corner2);
         GLib.file_set_contents(

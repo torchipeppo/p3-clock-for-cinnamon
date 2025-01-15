@@ -11,13 +11,14 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 // imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
 // https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, CONSTANTS;
+let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, FileHandler, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
     WeatherAPISource = require("./weatherapi_source");
     LunarCalendarSource = require("./lunar_calendar_source");
     WallclockSource = require("./wallclock_source");
     ColorScheme = require("./color_scheme");
+    FileHandler = require("./file_handler");
     CONSTANTS = require("./constants");
 }
 else {
@@ -27,6 +28,7 @@ else {
     LunarCalendarSource = imports.lunar_calendar_source;
     WallclockSource = imports.wallclock_source;
     ColorScheme = imports.color_scheme;
+    FileHandler = imports.file_handler;
     CONSTANTS = imports.constants;
 }
 
@@ -64,6 +66,10 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
+    - Feature "inverti luminosità" che inverte la luminosità (spazio HSV\HSL)
+        di "bottom row text" e "corner2" (o semplicemente li scambia di posto?)
+        per permettere il funzionamento anche contro sfondi desktop chiari
+        senza costringere a impegnarsi sul custom color scheme
 */
 
 const SOURCE_DISABLED = 0
@@ -80,10 +86,11 @@ class P3Desklet extends Desklet.Desklet {
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
 
+        this.file_handler = new FileHandler.FileHandler(this.metadata["uuid"], desklet_id)
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
-        this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id);
+        this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id, this.file_handler);
         this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock);
-        this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id);
+        this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id, this.file_handler);
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
