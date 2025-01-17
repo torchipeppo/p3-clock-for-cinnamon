@@ -56,7 +56,8 @@
                 "global-custom-date",
                 "global-custom-time",
                 "global-custom-time-shadow",
-                "global-custom-bottom"
+                "global-custom-bottom",
+                "global-color-invert-bottom"
             ]
         },
 
@@ -206,6 +207,12 @@
         "description": "Bottom row text",
         "dependency": "global-color-scheme=the-custom"
     },
+    "global-color-invert-bottom": {
+        "type": "switch",
+        "default": false,
+        "description": "Invert bottom colors",
+        "tooltip": "May be useful if the bottom caption doesn't stand out against your background"
+    },
 
     "top-format": {
         "type": "entry",
@@ -322,7 +329,7 @@
 
     "bottom-caption-type": {
         "type": "combobox",
-        "default": "weather",
+        "default": "cntdn-cstm",
         "options": {
             "None": "",
             "Weather (W)": "weather",

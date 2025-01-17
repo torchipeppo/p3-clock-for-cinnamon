@@ -1,8 +1,8 @@
 {
     "uuid": "p3-clock@torchipeppo",
     "name": "Moonlight Clock",
-    "description": "An aesthetic desklet that shows the current date, time, and weather or moon phase. Customizable.",
-    "comments": "Best placed in the top right corner on the screen. Based on the UI of the video game Persona 3.",
+    "description": "An aesthetic and customizable desklet that can function as clock, weather display, and/or tracker of important dates. Based on Persona 3.",
+    "comments": "Best placed in the top right corner on the screen. Use the \"offset\" configuration for precise alignment.",
     "author": "torchipeppo",
     "prevent-decorations": true
 }

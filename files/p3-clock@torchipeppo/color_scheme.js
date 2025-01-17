@@ -16,6 +16,7 @@ class ColorScheme {
         this.settings.bind("global-custom-time", "custom_time_color");
         this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color");
         this.settings.bind("global-custom-bottom", "custom_bottom_color");
+        this.settings.bind("global-color-invert-bottom", "invert_bottom_colors");
 
         this.load_color_scheme();
     }
@@ -35,6 +36,9 @@ class ColorScheme {
                 DESKLET_DIR + "/default_color_schemes.json"
             ));
             Object.assign(this, schemes[this.color_scheme_name]);
+        }
+        if (this.invert_bottom_colors) {
+            [this.corner2, this.bottom] = [this.bottom, this.corner2];
         }
         this._apply_colors_to_svg();
     }

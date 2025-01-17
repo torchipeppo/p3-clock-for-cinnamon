@@ -66,10 +66,10 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Feature "inverti luminosità" che inverte la luminosità (spazio HSV\HSL)
-        di "bottom row text" e "corner2" (o semplicemente li scambia di posto?)
-        per permettere il funzionamento anche contro sfondi desktop chiari
-        senza costringere a impegnarsi sul custom color scheme
+    - Fixare setting color_scheme che fa un po' i capricci
+        (a questo punto credo tutti i sottomoduli)
+    - Setting nascosta "first_time" che mostra un messaggio che incoraggia a customizzare.
+        Si può impostare a false in onSettingsChanged.
 */
 
 const SOURCE_DISABLED = 0
@@ -105,6 +105,7 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("global-custom-time", "custom_time_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-bottom", "custom_bottom_color", this._onColorSettingsChanged);
+        this.settings.bind("global-color-invert-bottom", "invert_bottom_colors", this._onColorSettingsChanged);
 
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
@@ -312,9 +313,6 @@ class P3Desklet extends Desklet.Desklet {
                 if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
                     this._slash_label.set_text("");
                 }
-                if (!this.emoji_type) {  // also remove it if we don't have an emoji, it looks better
-                    this._slash_label.set_text("");
-                }
                 if (countdown_item.name) {
                     this._next_label.set_text(countdown_item.name + ":");
                 }
@@ -325,6 +323,9 @@ class P3Desklet extends Desklet.Desklet {
             else {
                 this._next_label.set_text("None:")
                 this._countdown_label.set_text("--");
+            }
+            if (!this.emoji_type) {  // also remove the slash if we don't have an emoji, it looks better
+                this._slash_label.set_text("");
             }
         }
         else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
