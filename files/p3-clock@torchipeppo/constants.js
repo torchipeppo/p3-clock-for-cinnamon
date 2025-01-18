@@ -13,21 +13,21 @@ const CAPTION_TYPE_SPECS = {
     },
     "rain" : {
         caption_label: "",
-        next_label: "Rain:",
+        next_label: "<get>",
         countdown_label: "<get>",
-        slash_label: "%",
+        slash_label: "<get>",
     },
     "temp-c" : {
         caption_label: "",
-        next_label: "Temp:",
+        next_label: "<get>",
         countdown_label: "<get>",
-        slash_label: " °C",
+        slash_label: "<get>",
     },
     "temp-f" : {
         caption_label: "",
-        next_label: "Temp:",
+        next_label: "<get>",
         countdown_label: "<get>",
-        slash_label: " °F",
+        slash_label: "<get>",
     },
     "moon" : {
         caption_label: "<get>",

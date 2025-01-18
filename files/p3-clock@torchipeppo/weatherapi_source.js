@@ -52,7 +52,7 @@ class WeatherAPISource {
         this.time_of_last_weather_update = new Date(0);  // epoch means "never updated before"
     }
 
-    make_weatherAPI_request(back_reference, emoji_callback, caption_callback, number_callback) {
+    make_weatherAPI_request(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback) {
         let now = new Date();
         const NORMAL_WAIT_TIME = this.wapi_update_period*60*1000;  // from minutes to milliseconds
         const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
@@ -73,26 +73,30 @@ class WeatherAPISource {
                             this.next_weather_update_is_fast = true;
                         }
                     }
-                    this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback);
+                    this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback);
                 }
             )
         }
         else {
             // global.log("cached");
-            this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback);
+            this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback);
         }
     }
 
-    _call_callbacks(back_reference, emoji_callback, caption_callback, number_callback) {
+    _call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback) {
         if (this.cached_response) {
             emoji_callback.call(back_reference, this._make_emoji_text(this.cached_response));
             caption_callback.call(back_reference, this._make_caption_text(this.cached_response));
             number_callback.call(back_reference, this._make_number_text(this.cached_response));
+            head_callback.call(back_reference, this._get_head_text());
+            unit_callback.call(back_reference, this._get_unit_text());
         }
         else if (this.cached_response === null) {
             emoji_callback.call(back_reference, "⚠️");
             caption_callback.call(back_reference, "Error: see log\nSuper + L");
             number_callback.call(back_reference, "");
+            head_callback.call(back_reference, "");
+            unit_callback.call(back_reference, "");
         }
     }
 
@@ -134,6 +138,31 @@ class WeatherAPISource {
             case "temp-f":
                 let temp_f = resp_json.current.temp_f;
                 return SU.countdown_formatting(temp_f);
+            default:
+                return "";
+        }
+    }
+
+    _get_head_text() {
+        switch (this.caption_type) {
+            case "rain":
+                return "Rain:";
+            case "temp-c":
+            case "temp-f":
+                return "Temp:";
+            default:
+                return "";
+        }
+    }
+
+    _get_unit_text() {
+        switch (this.caption_type) {
+            case "rain":
+                return "%";
+            case "temp-c":
+                return " °C"
+            case "temp-f":
+                return " °F";
             default:
                 return "";
         }

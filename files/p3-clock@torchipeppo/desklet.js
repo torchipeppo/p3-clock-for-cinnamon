@@ -367,6 +367,8 @@ class P3Desklet extends Desklet.Desklet {
                 (es == SOURCE_WEATHERAPI) ? this.set_emoji_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_caption_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_countdown_text : (_)=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_next_text : ()=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_slash_text : ()=>{},
             );
         }
     }
@@ -379,6 +381,12 @@ class P3Desklet extends Desklet.Desklet {
     }
     set_countdown_text(text) {
         this._countdown_label.set_text(text);
+    }
+    set_next_text(text) {
+        this._next_label.set_text(text);
+    }
+    set_slash_text(text) {
+        this._slash_label.set_text(text);
     }
 
     createUI() {
