@@ -70,6 +70,8 @@ else {
         (a questo punto credo tutti i sottomoduli)
     - Setting nascosta "first_time" che mostra un messaggio che incoraggia a customizzare.
         Si può impostare a false in onSettingsChanged.
+    - Liberarsi di stylesheet.css, ormai è inutile, l'allineamento può andare
+        tranquillamente nel JS col resto
 */
 
 const SOURCE_DISABLED = 0
