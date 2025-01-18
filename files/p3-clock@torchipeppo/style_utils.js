@@ -38,7 +38,7 @@ function split_font_string(font_string) {
     return output;
 }
 
-function get_style_string(scale, vpadding, hpadding, font_dict, color) {
+function get_style_string(scale, align, vpadding, hpadding, font_dict, color) {
     let vpadding_dir = "top";
     if (vpadding < 0) {
         vpadding_dir = "bottom";
@@ -53,6 +53,7 @@ function get_style_string(scale, vpadding, hpadding, font_dict, color) {
             "font-size: " + scale*font_dict.size + "px; " +
             "font-weight: " + font_dict.weight + "; " +
             "font-style: " + font_dict.style + "; " +
+            "text-align: " + align + ";" +
             "padding-" + vpadding_dir + ": " + scale*vpadding + "px; " +
             "padding-" + hpadding_dir + ": " + scale*hpadding + "px; " +
             "color: " + color + ";";

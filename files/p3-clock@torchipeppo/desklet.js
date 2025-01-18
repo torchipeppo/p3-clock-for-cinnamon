@@ -70,8 +70,12 @@ else {
         (a questo punto credo tutti i sottomoduli)
     - Setting nascosta "first_time" che mostra un messaggio che incoraggia a customizzare.
         Si può impostare a false in onSettingsChanged.
-    - Liberarsi di stylesheet.css, ormai è inutile, l'allineamento può andare
-        tranquillamente nel JS col resto
+    - Importante per il local_lunar_calendar: fare in modo o che qui mi possa accorgere
+        se sono nella directory 5.7 e cercare il calendario un livello sopra
+        (ora che ci penso, forse basta banalmente che se non lo trovo qui
+        cerco sopra) o che lo script che genera il calendario lunare si accorga
+        della versione di Cinnamon e metta l'output nella cartella giusta
+        (o banalmente spammi link in tutte le cartelle di versione che trova (regex))
 */
 
 const SOURCE_DISABLED = 0
@@ -484,6 +488,7 @@ class P3Desklet extends Desklet.Desklet {
         this._time_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 97-time_style.size*0.5,
                 31,
                 time_style,
@@ -496,6 +501,7 @@ class P3Desklet extends Desklet.Desklet {
         this._time_shadow_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 97-time_style.size*0.5+this.time_shadow_offset,
                 31-this.time_shadow_offset,
                 time_style,
@@ -511,6 +517,7 @@ class P3Desklet extends Desklet.Desklet {
         this._date_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 41-date_style.size*0.5,
                 date_padding_right,
                 date_style,
@@ -524,6 +531,7 @@ class P3Desklet extends Desklet.Desklet {
         this._dot_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 0,
                 0,
                 dot_style,
@@ -536,6 +544,7 @@ class P3Desklet extends Desklet.Desklet {
         this._weekday_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "center",
                 27,
                 -502,
                 weekday_style,
@@ -550,6 +559,7 @@ class P3Desklet extends Desklet.Desklet {
         this._emoji_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "center",
                 226-emoji_style.size*0.5,
                 -496,
                 emoji_style,
@@ -562,6 +572,7 @@ class P3Desklet extends Desklet.Desklet {
         this._caption_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 226-caption_style.size*1.25,
                 124,
                 caption_style,
@@ -576,6 +587,7 @@ class P3Desklet extends Desklet.Desklet {
         this._next_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 169-next_style.size*0.5,
                 170,
                 next_style,
@@ -588,6 +600,7 @@ class P3Desklet extends Desklet.Desklet {
         this._countdown_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "center",
                 223-countdown_style.size*0.5,
                 -170,
                 countdown_style,
@@ -601,6 +614,7 @@ class P3Desklet extends Desklet.Desklet {
         this._slash_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "center",
                 223-countdown_style.size*0.5,
                 -310,
                 countdown_style,
@@ -613,6 +627,7 @@ class P3Desklet extends Desklet.Desklet {
         this._phase_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 208-phase_style.size*0.5,
                 127,
                 phase_style,
@@ -625,6 +640,7 @@ class P3Desklet extends Desklet.Desklet {
         this._secondary_caption_label.set_style(
             SU.get_style_string(
                 this.scale,
+                "right",
                 295-caption_style.size*0.5,
                 124,
                 caption_style,
