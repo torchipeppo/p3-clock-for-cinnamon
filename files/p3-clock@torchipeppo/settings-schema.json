@@ -119,8 +119,8 @@
             "type": "section",
             "title": "Custom countdown dates",
             "keys": [
-                "custom-countdown-list-label",
-                "custom-countdown-list-widget"
+                "custom-countdown-list-widget",
+                "custom-countdown-list-label"
             ]
         }
     },
@@ -358,7 +358,7 @@
 
     "custom-countdown-list-label": {
         "type": "label",
-        "description": "Enter one or more dates to count down to when selecting \"Custom countdown\" (1 date) and/or \"Show more countdowns in secondary text\" (up to 2 additional dates).\nThe order of the list represents the priority order for the dates.\nDisable dates to skip them.\nDates set in the past are also skipped unless they are \"persistent\"."
+        "description": "Enter one or more dates to count down to when selecting \"Custom countdown\" (1 date) and/or \"Show more countdowns in secondary text\" (up to 2 additional dates).\nThe order of the list represents the priority order for the dates.\nDisable dates to skip them.\nDates set in the past are also skipped unless they are \"persistent\".\n\n"
     },
     "custom-countdown-list-widget": {
         "type": "custom",
@@ -371,5 +371,11 @@
         "type": "generic",
         "default": [],
         "comment": "Data storage for 'custom-countdown-list-widget'"
+    },
+
+    "first-time": {
+        "type": "generic",
+        "default": true,
+        "comment": "Causes the desklet to display a message encouraging the user to configure this. Changed to false as soon as any setting is changed."
     }
 }

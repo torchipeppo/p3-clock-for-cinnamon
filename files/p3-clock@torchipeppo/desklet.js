@@ -68,8 +68,6 @@ else {
         Forse anche un altro verde
     - Fixare setting color_scheme che fa un po' i capricci
         (a questo punto credo tutti i sottomoduli)
-    - Setting nascosta "first_time" che mostra un messaggio che incoraggia a customizzare.
-        Si può impostare a false in onSettingsChanged.
     - Importante per il local_lunar_calendar: fare in modo o che qui mi possa accorgere
         se sono nella directory 5.7 e cercare il calendario un livello sopra
         (ora che ci penso, forse basta banalmente che se non lo trovo qui
@@ -135,6 +133,8 @@ class P3Desklet extends Desklet.Desklet {
 
         this.settings.bind("custom-countdown-list", "countdown_list", this._onSettingsChanged);
 
+        this.settings.bind("first-time", "first_time", this._updateClock);
+
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
         this.updateUI();
@@ -198,10 +198,13 @@ class P3Desklet extends Desklet.Desklet {
         this.wapi_source.reset_time_of_last_weather_update();
         this.updateFormat();
         this.wapi_source.requestWAPIUpdate();
-        this._onSettingsChanged();
+        this._updateClock();
     }
 
     _onSettingsChanged() {
+        if (this.first_time) {
+            this.first_time = false;
+        }
         this._updateClock();
     }
 
@@ -362,6 +365,10 @@ class P3Desklet extends Desklet.Desklet {
                     secondary_text += name_text + ": " + number_text;
                 }
             }
+        }
+        // this OVERRIDES any other setting (which should be false by default at this point anyway)
+        if (this.first_time) {
+            secondary_text = "Right-click\nto configure!"
         }
         this._secondary_caption_label.set_text(secondary_text);
 
