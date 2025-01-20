@@ -33,7 +33,7 @@ class ColorScheme {
         }
         else {
             let schemes = JSON.parse(this.file_handler.get_file_text(
-                DESKLET_DIR + "/default_color_schemes.json"
+                this.file_handler.get_path_to_file("default_color_schemes.json")
             ));
             Object.assign(this, schemes[this.color_scheme_name]);
         }
@@ -45,12 +45,12 @@ class ColorScheme {
 
     _apply_colors_to_svg() {
         let svg_content = this.file_handler.get_file_text(
-            DESKLET_DIR + "/p3corner-template.svgtemp"
+            this.file_handler.get_path_to_file("p3corner-template.svgtemp")
         );
         svg_content = svg_content.replace(/%corner1%/g, this.corner1);
         svg_content = svg_content.replace(/%corner2%/g, this.corner2);
         GLib.file_set_contents(
-            DESKLET_DIR + "/p3corner-custom.svg",
+            this.file_handler.get_path_to_file("p3corner-custom.svg"),
             svg_content,
         );
     }

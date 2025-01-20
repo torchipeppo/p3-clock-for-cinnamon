@@ -68,12 +68,6 @@ else {
         Forse anche un altro verde
     - Fixare setting color_scheme che fa un po' i capricci
         (a questo punto credo tutti i sottomoduli)
-    - Importante per il local_lunar_calendar: fare in modo o che qui mi possa accorgere
-        se sono nella directory 5.7 e cercare il calendario un livello sopra
-        (ora che ci penso, forse basta banalmente che se non lo trovo qui
-        cerco sopra) o che lo script che genera il calendario lunare si accorga
-        della versione di Cinnamon e metta l'output nella cartella giusta
-        (o banalmente spammi link in tutte le cartelle di versione che trova (regex))
 */
 
 const SOURCE_DISABLED = 0

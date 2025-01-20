@@ -35,7 +35,7 @@ class LunarCalendarSource {
 
     _get_fpath() {
         let today = new Date();
-        return DESKLET_DIR+"/local_lunar_calendar/"+today.getFullYear()+".json"
+        return this.file_handler.get_path_to_file("local_lunar_calendar/"+today.getFullYear()+".json")
     }
 
     local_lunar_calendar_exists() {
