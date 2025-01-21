@@ -66,8 +66,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Fixare setting color_scheme che fa un po' i capricci
-        (a questo punto credo tutti i sottomoduli)
 */
 
 const SOURCE_DISABLED = 0
@@ -131,6 +129,7 @@ class P3Desklet extends Desklet.Desklet {
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
 
+        this._onColorSettingsChanged();
         this.updateUI();
     }
 
@@ -203,7 +202,19 @@ class P3Desklet extends Desklet.Desklet {
     }
 
     _onColorSettingsChanged() {
-        this.color_scheme.load_color_scheme();
+        let custom_scheme = {};
+        // just "custom" would have looked too much like some reserved name
+        if (this.color_scheme_name == "the-custom") {
+            custom_scheme = {
+                "corner1": this.custom_corner1_color,
+                "corner2": this.custom_corner2_color,
+                "date": this.custom_date_color,
+                "time": this.custom_time_color,
+                "time_shadow": this.custom_time_shadow_color,
+                "bottom": this.custom_bottom_color,
+            };
+        }
+        this.color_scheme.load_color_scheme(this.color_scheme_name, custom_scheme, this.invert_bottom_colors);
         this._onUISettingsChanged();
     }
 

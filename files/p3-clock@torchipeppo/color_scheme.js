@@ -1,43 +1,23 @@
 const Settings = imports.ui.settings;
 const GLib = imports.gi.GLib;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-
 class ColorScheme {
     constructor(uuid, desklet_id, file_handler) {
         this.file_handler = file_handler;
-        this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
-
-        this.settings.bind("global-color-scheme", "color_scheme_name");
-        this.settings.bind("global-custom-corner1", "custom_corner1_color");
-        this.settings.bind("global-custom-corner2", "custom_corner2_color");
-        this.settings.bind("global-custom-date", "custom_date_color");
-        this.settings.bind("global-custom-time", "custom_time_color");
-        this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color");
-        this.settings.bind("global-custom-bottom", "custom_bottom_color");
-        this.settings.bind("global-color-invert-bottom", "invert_bottom_colors");
-
-        this.load_color_scheme();
     }
 
-    load_color_scheme() {
-        // "custom" looks like a special name in the settings_schema
-        if (this.color_scheme_name == "the-custom") {
-            this.corner1 = this.custom_corner1_color;
-            this.corner2 = this.custom_corner2_color;
-            this.date = this.custom_date_color;
-            this.time = this.custom_time_color;
-            this.time_shadow = this.custom_time_shadow_color;
-            this.bottom = this.custom_bottom_color;
+    load_color_scheme(color_scheme_name, custom_scheme, invert_bottom_colors) {
+        // just "custom" would have looked too much like some reserved name
+        if (color_scheme_name == "the-custom") {
+            Object.assign(this, custom_scheme);
         }
         else {
             let schemes = JSON.parse(this.file_handler.get_file_text(
                 this.file_handler.get_path_to_file("default_color_schemes.json")
             ));
-            Object.assign(this, schemes[this.color_scheme_name]);
+            Object.assign(this, schemes[color_scheme_name]);
         }
-        if (this.invert_bottom_colors) {
+        if (invert_bottom_colors) {
             [this.corner2, this.bottom] = [this.bottom, this.corner2];
         }
         this._apply_colors_to_svg();
