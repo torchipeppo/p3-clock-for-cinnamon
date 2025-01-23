@@ -12,6 +12,10 @@ data or if you want to use the "Countdown to the next full moon" feature.
 You only need to run **one** of the two scripts.
 See below for a description of their (minimal) differences.
 
+It doesn't matter which directory you execute these scripts from:
+they'll automatically find the standard installation path of the desklet
+and put the genreated data there.
+
 ### Skyfield version
 Setup:
 ```bash
