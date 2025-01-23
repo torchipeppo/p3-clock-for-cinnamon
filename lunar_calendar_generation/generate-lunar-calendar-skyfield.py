@@ -17,9 +17,16 @@ PHASE_CODES = np.array(["new", "fq", "full", "lq"])
 # For alternative table files and extra info: https://rhodesmill.org/skyfield/planets.html
 EPHEMERIS = load("de440s.bsp")
 
-BASE_MOON_PATH = Path.home() / ".local/share/cinnamon/desklets/p3-clock@torchipeppo"
-assert BASE_MOON_PATH.exists(), "The installation directory of the desklet doesn't seem to exist. Either Cinnamon changed the path for desklets, or something is wrong with your installation. Please correct either your installation path or the BASE_MOON_PATH variable in this script accordingly."
-MOON_PATH = BASE_MOON_PATH / "local_lunar_calendar"
+CINNAMON_DESKLETS_PATH = Path.home() / ".local/share/cinnamon/desklets"
+# one is my personal unstable version where I work, the other is connected to cinnamon spices
+# so I can have both without them interfering with each other.
+# this double search allows me to update both versions while being completely
+# transparent to users, who should only have one.
+UUIDS = ["p3-clock@torchipeppo", "moonlight-clock@torchipeppo"]
+candidate_paths = [CINNAMON_DESKLETS_PATH / uuid for uuid in UUIDS]
+base_moon_paths = [path for path in candidate_paths if path.exists()]
+assert len(base_moon_paths), "The installation directory of the desklet doesn't seem to exist. Either Cinnamon changed the path for desklets, or something is wrong with your installation. Please correct either your installation path or the CINNAMON_DESKLETS_PATH variable in this script accordingly."
+MOON_PATHS = [bp / "local_lunar_calendar" for bp in base_moon_paths]
 
 
 
@@ -48,8 +55,9 @@ def calculate_year(target_year):
         prev_month = t.utc.month
     assert len(month_idx_list) == 12
 
-    with open(MOON_PATH / f"{target_year}.json", "w") as f:
-        json.dump({"calendar": lunar_calendar_list, "month_index": month_idx_list}, f)
+    for mp in MOON_PATHS:
+        with open(mp / f"{target_year}.json", "w") as f:
+            json.dump({"calendar": lunar_calendar_list, "month_index": month_idx_list}, f)
 
 
 
@@ -57,7 +65,8 @@ if len(sys.argv) != 2:
     print("Usage:", __file__, "year1[-year2]")
     exit(1)
 
-MOON_PATH.mkdir(exist_ok=True)
+for mp in MOON_PATHS:
+    mp.mkdir(exist_ok=True)
 
 arg = sys.argv[1]
 if "-" in arg:
