@@ -59,13 +59,6 @@ function get_style_string(scale, align, vpadding, hpadding, font_dict, color) {
             "color: " + color + ";";
 }
 
-function get_shadow_style_string(scale, offset, color) {
-    return "text-shadow: " +
-            Math.round(scale*offset) + "px " +
-            Math.round(scale*offset) + "px " +
-            color + ";";
-}
-
 function countdown_formatting(n) {
     let n_str = n.toString();
     if (n_str.length == 1) {

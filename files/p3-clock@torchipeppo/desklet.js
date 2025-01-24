@@ -66,8 +66,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - text-shadow glitcha sulla mia macchina Mint 21, vedere come va sulla Mint 20
-        poi revert
     - Eliminare style_class in createUI, devo essermene dimenticato di farlo quando
         ho eliminato stylesheet.css
     - In dot_style (più giù in questo file) è rimasta una reference al font Ubuntu,
@@ -268,6 +266,7 @@ class P3Desklet extends Desklet.Desklet {
 
         let formatted_time = this.clock_source.get_time_text();
         this._time_label.set_text(formatted_time);
+        this._time_shadow_label.set_text(this.time_shadow_enabled ? formatted_time : "");
 
         let formatted_date = this.clock_source.get_date_text();
         this._date_label.set_text(formatted_date);
@@ -427,6 +426,9 @@ class P3Desklet extends Desklet.Desklet {
         this._clock_actor.add_actor(this._bg_actor);
 
         this._time_label = new St.Label({style_class:"time-label"});
+        this._time_shadow_label = new St.Label({style_class:"time-label"});
+        // order is relevant: stuff added later comes up in front
+        this._clock_actor.add_actor(this._time_shadow_label);
         this._clock_actor.add_actor(this._time_label);
 
         this._date_label = new St.Label({style_class:"date-label"});
@@ -512,9 +514,18 @@ class P3Desklet extends Desklet.Desklet {
                 31,
                 time_style,
                 this.color_scheme.time
-            ) + SU.get_shadow_style_string(
+            )
+        );
+        this._time_shadow_label.set_width(scaledWidth);
+        this._time_shadow_label.set_height(scaledHeight);
+        this._time_shadow_label.set_position(0, 0);
+        this._time_shadow_label.set_style(
+            SU.get_style_string(
                 this.scale,
-                this.time_shadow_offset,
+                "right",
+                97-time_style.size*0.5+this.time_shadow_offset,
+                31-this.time_shadow_offset,
+                time_style,
                 this.color_scheme.time_shadow
             )
         );
