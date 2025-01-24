@@ -55,6 +55,7 @@ class LunarCalendarSource {
         switch (this.caption_type) {
             case "moon":
                 let moon_phase_name = this._find_moon_phase_name();
+                moon_phase_name = CONSTANTS.TRANSLATED_MOON_PHASE_NAMES[moon_phase_name];
                 return moon_phase_name.replace(" ", "\n");
             case "cntdn-full":
                 return this._get_full_moon_countdown_str();

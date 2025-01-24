@@ -66,6 +66,17 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
+    - text-shadow glitcha sulla mia macchina Mint 21, vedere come va sulla Mint 20
+        poi revert
+    - Eliminare style_class in createUI, devo essermene dimenticato di farlo quando
+        ho eliminato stylesheet.css
+    - In dot_style (più giù in questo file) è rimasta una reference al font Ubuntu,
+        l'ho lasciata per un motivo o devo sostituirla con un font ancora più base?
+        (Non che Ubuntu non lo sia, di solito su Mint c'è,
+         e poi non è che il desklet crasha se non lo trova)
+        (Ok, il motivo è che il font di default "sans" ha il punto quadrato...
+         Ma c'è anche un font di default "serif" che ce l'ha tondo! Mettiamo quello)
+    - Traduzione ita
 */
 
 const SOURCE_DISABLED = 0
@@ -330,11 +341,11 @@ class P3Desklet extends Desklet.Desklet {
                     this._next_label.set_text(countdown_item.name + ":");
                 }
                 else {
-                    this._next_label.set_text("Limit:");
+                    this._next_label.set_text(_("Limit") + ":");
                 }
             }
             else {
-                this._next_label.set_text("None:")
+                this._next_label.set_text(_("None") + ":")
                 this._countdown_label.set_text("--");
             }
             if (!this.emoji_type) {  // also remove the slash if we don't have an emoji, it looks better
@@ -358,7 +369,7 @@ class P3Desklet extends Desklet.Desklet {
                 }
                 let countdown_item = this.clock_source.get_custom_countdown_item_from_list(i);
                 if (countdown_item) {
-                    let name_text = countdown_item.name ? countdown_item.name : "Limit";
+                    let name_text = countdown_item.name ? countdown_item.name : _("Limit");
                     let number_text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
                     if (number_text.length < 2) {
                         number_text = "  " + number_text;
@@ -372,7 +383,7 @@ class P3Desklet extends Desklet.Desklet {
         }
         // this OVERRIDES any other setting (which should be false by default at this point anyway)
         if (this.first_time) {
-            secondary_text = "Right-click\nto configure!"
+            secondary_text = _("Right-click\nto configure!");
         }
         this._secondary_caption_label.set_text(secondary_text);
 

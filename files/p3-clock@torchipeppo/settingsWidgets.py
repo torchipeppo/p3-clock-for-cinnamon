@@ -119,10 +119,10 @@ class ListOfDates(SettingsWidget):
         self.settings = settings
 
         columns=[
-            {"id": "enabled",    "title": "Enabled",    "type": "boolean", "default": True},
-            {"id": "persistent", "title": "Persistent", "type": "boolean", "default": False},
-            {"id": "date",       "title": "Date",       "type": "date"},
-            {"id": "name",       "title": "Name",       "type": "string"},
+            {"id": "enabled",    "title": _("Enabled"),    "type": "boolean", "default": True},
+            {"id": "persistent", "title": _("Persistent"), "type": "boolean", "default": False},
+            {"id": "date",       "title": _("Date"),       "type": "date"},
+            {"id": "name",       "title": _("Name"),       "type": "string"},
         ]
         show_buttons=True
         label=info.get("label", None)

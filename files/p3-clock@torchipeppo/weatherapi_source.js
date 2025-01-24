@@ -93,7 +93,7 @@ class WeatherAPISource {
         }
         else if (this.cached_response === null) {
             emoji_callback.call(back_reference, "⚠️");
-            caption_callback.call(back_reference, "Error: see log\nSuper + L");
+            caption_callback.call(back_reference, _("Error: see log\nSuper + L"));
             number_callback.call(back_reference, "");
             head_callback.call(back_reference, "");
             unit_callback.call(back_reference, "");
@@ -117,6 +117,7 @@ class WeatherAPISource {
         switch (this.caption_type) {
             case "moon":
                 let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
+                moon_phase_name = CONSTANTS.TRANSLATED_MOON_PHASE_NAMES[moon_phase_name];
                 return moon_phase_name.replace(" ", "\n");
             case "weather":
                 let weather_code = resp_json.current.condition.code;
@@ -146,10 +147,10 @@ class WeatherAPISource {
     _get_head_text() {
         switch (this.caption_type) {
             case "rain":
-                return "Rain:";
+                return _("Rain") + ":";
             case "temp-c":
             case "temp-f":
-                return "Temp:";
+                return _("Temp") + ":";
             default:
                 return "";
         }

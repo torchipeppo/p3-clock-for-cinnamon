@@ -6,22 +6,22 @@ const Settings = imports.ui.settings;
 
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
-        return "Late Night";
+        return _("Late Night");
     }
     else if (5<=hour && hour<7) {
-        return "Early Morning";
+        return _("Early Morning");
     }
     else if (7<=hour && hour<10) {
-        return "Morning";
+        return _("Morning");
     }
     else if (10<=hour && hour<15) {
-        return "Daytime";
+        return _("Daytime");
     }
     else if (15<=hour && hour<19) {
-        return "Afternoon";
+        return _("Afternoon");
     }
     else if (19<=hour && hour<24) {
-        return "Evening";
+        return _("Evening");
     }
 }
 
@@ -107,7 +107,7 @@ class WallclockSource {
     get_custom_countdown_text_from_list_item(item) {
         let days_left = _get_days_left(item.date)
         if (days_left == 0) {
-            return "Today";
+            return _("Today");
         }
         else {
             return days_left.toString();

@@ -1,3 +1,15 @@
+const UUID = "p3-clock@torchipeppo";
+const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+let Translation;
+if (typeof require !== 'undefined') {
+    Translation = require("./translation");
+}
+else {
+    imports.searchPath.push(DESKLET_DIR);
+    Translation = imports.translation;
+}
+const _ = Translation._;
+
 const CAPTION_TYPE_SPECS = {
     "" : {
         caption_label: "",
@@ -37,7 +49,7 @@ const CAPTION_TYPE_SPECS = {
     },
     "cntdn-full" : {
         caption_label: "",
-        next_label: "Next:",
+        next_label: _("Next:"),
         countdown_label: "<get>",
         slash_label: "/",
     },
@@ -92,11 +104,23 @@ const MOON_PHASE_NAMES_BY_LUNCAL_RESULT = {
     "lq-new": "Waning Crescent",
 }
 
+// to mark them with the _() function
+const TRANSLATED_MOON_PHASE_NAMES = {
+    "New Moon": _("New Moon"),
+    "Waxing Crescent": _("Waxing Crescent"),
+    "First Quarter": _("First Quarter"),
+    "Waxing Gibbous": _("Waxing Gibbous"),
+    "Full Moon": _("Full Moon"),
+    "Waning Gibbous": _("Waning Gibbous"),
+    "Last Quarter": _("Last Quarter"),
+    "Waning Crescent": _("Waning Crescent"),
+}
+
 const MOON_PHASE_SHORTNAMES = {
-    "new": "New",
-    "fq": "Half",
-    "full": "Full",
-    "lq": "Half",
+    "new": _("New"),
+    "fq": _("Half"),
+    "full": _("Full"),
+    "lq": _("Half"),
 }
 
 const WEATHER_EMOJIS_BY_CONDITION_CODE = {
@@ -152,12 +176,12 @@ const WEATHER_EMOJIS_BY_CONDITION_CODE = {
 
 // a very limited amount of descriptions, for the sake of the translations.
 const WEATHER_LABELS_BY_EMOJI = {
-    "☀️": "Clear",
-    "⛅": "Cloudy",
-    "☁️": "Cloudy",
-    "🌫️": "Fog",
-    "🌦️": "Rain",
-    "🌧️": "Rain",
-    "⛈️": "Storm",
-    "🌨️": "Cold\nprecip.",  // "Cold precipitations", a catch-all term for snow, sleet, etc.
+    "☀️": _("Clear"),
+    "⛅": _("Cloudy"),
+    "☁️": _("Cloudy"),
+    "🌫️": _("Fog"),
+    "🌦️": _("Rain"),
+    "🌧️": _("Rain"),
+    "⛈️": _("Storm"),
+    "🌨️": _("Cold\nprecip."),  // "Cold precipitations", a catch-all term for snow, sleet, etc.
 }
