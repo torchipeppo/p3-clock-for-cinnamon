@@ -66,14 +66,16 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Eliminare style_class in createUI, devo essermene dimenticato di farlo quando
-        ho eliminato stylesheet.css
     - In dot_style (più giù in questo file) è rimasta una reference al font Ubuntu,
         l'ho lasciata per un motivo o devo sostituirla con un font ancora più base?
         (Non che Ubuntu non lo sia, di solito su Mint c'è,
          e poi non è che il desklet crasha se non lo trova)
         (Ok, il motivo è che il font di default "sans" ha il punto quadrato...
          Ma c'è anche un font di default "serif" che ce l'ha tondo! Mettiamo quello)
+    - Import/export di:
+        * Color scheme
+        * Impostazioni testo (font + emoji size + shadow offset + forse stringhe di formato (ma penso di no))
+        * Date di countdown
     - Traduzione ita
 */
 
@@ -425,29 +427,29 @@ class P3Desklet extends Desklet.Desklet {
         this._bg_actor.set_content(this._bg_image);  // this might wanna be in update if we ever do different color schenes, I dunno
         this._clock_actor.add_actor(this._bg_actor);
 
-        this._time_label = new St.Label({style_class:"time-label"});
-        this._time_shadow_label = new St.Label({style_class:"time-label"});
+        this._time_label = new St.Label();
+        this._time_shadow_label = new St.Label();
         // order is relevant: stuff added later comes up in front
         this._clock_actor.add_actor(this._time_shadow_label);
         this._clock_actor.add_actor(this._time_label);
 
-        this._date_label = new St.Label({style_class:"date-label"});
-        this._dot_label = new St.Label({style_class:"date-label"});
-        this._weekday_label = new St.Label({style_class:"weekday-label"});
+        this._date_label = new St.Label();
+        this._dot_label = new St.Label();
+        this._weekday_label = new St.Label();
         this._clock_actor.add_actor(this._date_label);
         this._clock_actor.add_actor(this._dot_label);
         this._clock_actor.add_actor(this._weekday_label);
 
-        this._emoji_label = new St.Label({style_class:"emoji-label"});
-        this._caption_label = new St.Label({style_class:"caption-label"});
+        this._emoji_label = new St.Label();
+        this._caption_label = new St.Label();
         this._clock_actor.add_actor(this._emoji_label);
         this._clock_actor.add_actor(this._caption_label);
 
-        this._next_label = new St.Label({style_class:"next-label"});
-        this._countdown_label = new St.Label({style_class:"countdown-label"});
-        this._slash_label = new St.Label({style_class:"countdown-label"});
-        this._phase_label = new St.Label({style_class:"phase-label"});
-        this._secondary_caption_label = new St.Label({style_class:"caption-label"});
+        this._next_label = new St.Label();
+        this._countdown_label = new St.Label();
+        this._slash_label = new St.Label();
+        this._phase_label = new St.Label();
+        this._secondary_caption_label = new St.Label();
         this._clock_actor.add_actor(this._next_label);
         this._clock_actor.add_actor(this._countdown_label);
         this._clock_actor.add_actor(this._slash_label);
