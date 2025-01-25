@@ -66,12 +66,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - In dot_style (più giù in questo file) è rimasta una reference al font Ubuntu,
-        l'ho lasciata per un motivo o devo sostituirla con un font ancora più base?
-        (Non che Ubuntu non lo sia, di solito su Mint c'è,
-         e poi non è che il desklet crasha se non lo trova)
-        (Ok, il motivo è che il font di default "sans" ha il punto quadrato...
-         Ma c'è anche un font di default "serif" che ce l'ha tondo! Mettiamo quello)
     - Import/export di:
         * Color scheme
         * Impostazioni testo (font + emoji size + shadow offset + forse stringhe di formato (ma penso di no))
@@ -491,7 +485,7 @@ class P3Desklet extends Desklet.Desklet {
 
         let time_style = SU.split_font_string(this.time_font);
         let date_style = SU.split_font_string(this.date_font);
-        let dot_style = SU.split_font_string("Ubuntu Bold 82");
+        let dot_style = SU.split_font_string("serif Bold 82");
         let weekday_style = SU.split_font_string(date_style.family + " 35");
         let emoji_style = SU.split_font_string("sans " + this.emoji_size);
         // There is a single bottom caption font,
@@ -549,7 +543,7 @@ class P3Desklet extends Desklet.Desklet {
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
-        this._dot_label.set_position(this.scale*(-108), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
+        this._dot_label.set_position(this.scale*(-103), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
         this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
             SU.get_style_string(
