@@ -40,7 +40,7 @@ function _get_days_left(date_json_string) {
         countdown_target.d
     );
 
-    return (target - today) / (1000 * 60 * 60 * 24);
+    return Math.round((target - today) / (1000 * 60 * 60 * 24));
 }
 
 class WallclockSource {
