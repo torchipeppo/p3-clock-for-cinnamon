@@ -57,6 +57,9 @@ else {
 
     "Geist", "Instrument Sans" and "Onest" are found on Google Fonts,
     licensed under the OFL.
+
+    TODO sostituire questo commentone con file importabili
+         tramite la futura feature import/export
 */
 
 /*
@@ -67,8 +70,9 @@ else {
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
     - Import/export di:
-        * Color scheme
+        * Color scheme (corrente, anche se non è custom. È l'opzione che ha più senso vista da fuori.)
         * Impostazioni testo (font + emoji size + shadow offset + forse stringhe di formato (ma penso di no))
+        * Impostazioni contenuto (stringhe formato, giorno della settimana, selezioni per bottom)
         * Date di countdown
     - Traduzione ita
 */
