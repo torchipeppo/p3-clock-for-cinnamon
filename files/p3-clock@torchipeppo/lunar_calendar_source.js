@@ -39,7 +39,13 @@ class LunarCalendarSource {
     }
 
     local_lunar_calendar_exists() {
-        return GLib.file_test(this._get_fpath(), GLib.FileTest.EXISTS);
+        let path = this._get_fpath();
+        if (path) {
+            return GLib.file_test(path, GLib.FileTest.EXISTS);
+        }
+        else {
+            return false;
+        }
     }
 
     get_emoji_text() {
@@ -98,7 +104,7 @@ class LunarCalendarSource {
                 return CONSTANTS.MOON_PHASE_SHORTNAMES[lunar_calendar.calendar[i][1]];
             }
             if (today < i_date && lunar_calendar.calendar[i][1] == "full") {
-                let days_left = (i_date - today) / (1000 * 60 * 60 * 24);
+                let days_left = Math.round((i_date - today) / (1000 * 60 * 60 * 24));
                 return SU.countdown_formatting(days_left);
             }
             i += 1;

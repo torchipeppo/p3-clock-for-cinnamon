@@ -5,14 +5,13 @@ A multipurpose display for current date, time, weather, and/or custom important 
 ## Features
 - Two separate lines to display the current date and/or time,
   fully customizable via strftime
-- Weather and moon phase information via WeatherAPI,
+- Weather information via WeatherAPI,
   including current temperature and daily chance of rain
   *(requires you to make an account and get an API key)*
 - Display one or more countdowns to any important dates of your choosing
   to keep yourself organized
-- Display a countdown to the next full moon
-  *(requires generating lunar calendar data via one of the included Python scripts,
-  see `lunar-calendar-generation` folder for instructions)*
+- Moon phase display, including a countdown to the next full moon
+  *(with optional extra precision, see "Installation")*
 - Last but not least, tweak the appearance to your liking: color, size, font, ...
 
 ## Screenshots
@@ -36,6 +35,10 @@ Configuration that replicates the inspiration material as closely as possible. T
 ## Installation
 Download or clone this repo, then put the `p3-clock@torchipeppo` directory
 (contained in the `files` directory) into `~/.local/share/cinnamon/desklets/`
+
+<!-- TODO add link once the personal repo goes public -->
+Optional: run the Python script from my personal repo to generate more precise
+data for the moon phases
 
 ### Design goals
 1. Adapt the style of the UI from the video game "Persona 3" into an

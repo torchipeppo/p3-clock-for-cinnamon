@@ -1,71 +1,78 @@
-# Generating a lunar calendar
+# Generating an accurate lunar calendar
 
-You may use either of these scripts to generate the moon phase data
-used by certain features of the desklet.
+By default, this desklet computes data related to the moon phases by itself,
+with a JavaScript library called `suncalc`. Although it's easy to include
+in the project and doesn't require any setup by the user, the simple algorithm
+in this library can be a little inaccurate, resulting in random errors
+of several hours in magnitude and sometimes reporting new/full/half moons
+one day earlier or later.
 
-This step is usually optional, since moon phase data is also provided by
-WeatherAPI, so it's only necessary if you prefer to have access to offline
-data or if you want to use the "Countdown to the next full moon" feature.
+Now, this is nothing catastrophic for the purposes of this application
+(showing a little moon icon and occasionally a countdown to the next full moon),
+but still, those who want more precise astronomical data can follow these
+instructions and run the included Python script to generate an accurate
+lunar calendar that the desklet will read instead of calling `suncalc`.
+
+Note that this is completely optional: the only gain is in precision,
+not in features.
+
+## Requirements and effects
+
+You will be required to install the `skyfield` Python library,
+which is geared for high-precision astronomical calculations.
+
+Running the included Python script will also download a file containing
+a so-called "ephemeris table", a collection of detailed astronomical data
+necessary for `skyfield` to accurately compute future moon phases.
+As of the time of writing, the script is instructed to download
+the shortest-term ephemeris table from among those published by the
+NASA Jet Propulsion Laboratory, which **weighs about 32 MB**
+and allows to calculate moon phases in the **year range 2000-2148**.
+The ephemeris file will be stored in the same directory you run the script from,
+so you may reuse them again.
+For more information and to select a different ephemeris table,
+see around the beginning of the script.
+
+It doesn't matter which directory you execute the script from:
+it will automatically find the standard installation path of the desklet
+and put the generated data there, inside a directory called `local_lunar_calendar`.
 
 ## How to run
 
-You only need to run **one** of the two scripts.
-See below for a description of their (minimal) differences.
-
-It doesn't matter which directory you execute these scripts from:
-they'll automatically find the standard installation path of the desklet
-and put the genreated data there.
-
-### Skyfield version
-Setup:
+Start by creating a Python virtual environment and installing the `skyfield`
+library, which is geared for high-precision astronomical calculations:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip3 install skyfield
 ```
 
-Generate a century and a half's worth of data all at once:
-```python3 generate-lunar-calendar-skyfield.py 2000-2148```
+Then, run the included script, specifying the year or years for which
+to generate the moon phase data.
 
-**Or** generate just one year:
-```python3 generate-lunar-calendar-skyfield.py 2025```
+For example, you may generate a century and a half's worth of data at the same time
+and never think about it again (~300KB at the time of writing):
+```python3 generate-lunar-calendar.py 2000-2148```
 
-### Ephem version
+**Or** you may generate just one year at a time:
+```python3 generate-lunar-calendar.py 2025```
+(In this case, you may want to delete the old data first.)
 
-As above, but replace all instances of `skyfield` with `ephem`.
+## Using the generated data
 
-## Differences between the two scripts
+The generated data should be automatically detected by the applet within one minute.
+No confirmation is given of this.
+If you want to make sure the local lunar calendar is being detected,
+restart Cinnamon and check the Looking Glass log for a message that says
+whether it's been found or not.
+(This check is only made once, as the desklet starts up.)
 
-They do the same thing. Results for the year 2024 appear to differ by
-a few seconds, which is negligible for the purpose of determining
-on which day the moon will be full/new/half.
-
-Regarding the execution time, the `ephem` version is faster, at least on my machine.
-There are also more differences in the characteristics of the two libraries.
-
-As far as I could find, **`skyfield` is the most accurate, so I suggest that one**,
-as long as you are fine with downloading 32 MB of astronomic tables.
-The tables will be stored in the same directory you run the script from,
-so you may reuse them again.
-
-As for `ephem`, it won't download anything, but the author of the library notes
-that, being written in C, it might turn out to be harder to install for some users.
-Anecdotally, I encountered no issues with it.
-
-## About the generated data
-
-Running either script will create a `local_lunar_calendar` directory
-in the installation folder of the desklet and store a number of JSON files there.
-As a ballpark estimate, the generated data from year 2000 to year 2148
-takes up just about 300 KB.
-
-You may generate this data all at once, or you may decide to only generate
-the current year. In the latter case, you may want to delete the
-`local_lunar_calendar` directory to get rid of the old data.
+If the lunar calendar for the current year is not found,
+the desklet will silently switch back to `suncalc` until this is corrected.
 
 ## Attribution and licensing
 
-`ephem` and `skyfield` are © Brandon Rhodes, licensed under the MIT license.
+`skyfield` is © Brandon Rhodes, licensed under the MIT license.
 
 The scripts in this directory are licensed under the same license as the
 desklet as a whole.

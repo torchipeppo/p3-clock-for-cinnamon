@@ -12,7 +12,7 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 // imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
 // https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, FileHandler, CONSTANTS;
+let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, FileHandler, SunCalcSource, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
     WeatherAPISource = require("./weatherapi_source");
@@ -20,6 +20,7 @@ if (typeof require !== 'undefined') {
     WallclockSource = require("./wallclock_source");
     ColorScheme = require("./color_scheme");
     FileHandler = require("./file_handler");
+    SunCalcSource = require("./suncalc_source");
     CONSTANTS = require("./constants");
 }
 else {
@@ -30,6 +31,7 @@ else {
     WallclockSource = imports.wallclock_source;
     ColorScheme = imports.color_scheme;
     FileHandler = imports.file_handler;
+    SunCalcSource = imports.suncalc_source;
     CONSTANTS = imports.constants;
 }
 
@@ -73,6 +75,16 @@ else {
         Forse anche un altro verde
     - Testare questa libreria:  https://github.com/Hypnos3/suncalc3
         Applet weather@mockturl può essere utile
+        Verdetto su suncalc: sbaglia rispetto a skyfield di diverse ore (a caso),
+        ma è JS-only, quindi includerlo ci dà il doppio beneficio di non avere
+        una feature bloccata dietro uno script esterno (countdown luna piena),
+        e di staccarci completamente da WeatherAPI per la fase lunare,
+        il che ci permette anche di aprirci ad altri provider meteo
+        (e qua ci viene in aiuto weather@mockturl).
+        Rimane comunque la possibilità di generare dati più precisi
+        con Python+skyfield, ma a questo punto menziono solo skyfield,
+        non anche ephem: tengo la più precisa, e tanto chi non vuole mettersi
+        a tirar giù tabelle astronomiche ha suncalc.
     - Spostare tutti i file di libreria in una cartella "lib", così posso linkare
         solo quella anziché tutti i file uno per uno
     - Traduzione ita
@@ -82,6 +94,7 @@ const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
 const SOURCE_LOCAL_LUNAR_CALENDAR = 2
 const SOURCE_LOCAL_WALLCLOCK = 3
+const SOURCE_SUNCALC = 4
 
 const color_scheme_keys = [
     "custom_corner1_color",
@@ -124,11 +137,19 @@ class P3Desklet extends Desklet.Desklet {
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
 
-        this.file_handler = new FileHandler.FileHandler(this.metadata["uuid"], desklet_id)
+        this.file_handler = new FileHandler.FileHandler(this.metadata["uuid"], desklet_id);
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
         this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id, this.file_handler);
         this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock);
+        this.suncalc_source = new SunCalcSource.SunCalcSource(this.metadata["uuid"], desklet_id);
         this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id, this.file_handler);
+
+        if (this.luncal_source.local_lunar_calendar_exists()) {
+            global.log("["+UUID+"] Local lunar calendar found, using high-precision data.")
+        }
+        else {
+            global.log("["+UUID+"] Local lunar calendar NOT found, defaulting to suncalc.")
+        }
 
         this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
 
@@ -178,6 +199,10 @@ class P3Desklet extends Desklet.Desklet {
 
         this._onColorSettingsChanged();
         this.updateUI();
+
+        // suncalc_test();
+        // suncalc_test_2();
+        // this.suncalc_test_3();
     }
 
     emoji_source() {
@@ -186,7 +211,7 @@ class P3Desklet extends Desklet.Desklet {
                 return SOURCE_DISABLED;
             case "moon":
                 let llce = this.luncal_source.local_lunar_calendar_exists();
-                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_WEATHERAPI;
+                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_SUNCALC;
             case "weather":
                 return SOURCE_WEATHERAPI;
             default:
@@ -198,15 +223,14 @@ class P3Desklet extends Desklet.Desklet {
             case "":
                 return SOURCE_DISABLED;
             case "moon":
+            case "cntdn-full":
                 let llce = this.luncal_source.local_lunar_calendar_exists();
-                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_WEATHERAPI;
+                return llce ? SOURCE_LOCAL_LUNAR_CALENDAR : SOURCE_SUNCALC;
             case "weather":
             case "rain":
             case "temp-c":
             case "temp-f":
                 return SOURCE_WEATHERAPI;
-            case "cntdn-full":
-                return SOURCE_LOCAL_LUNAR_CALENDAR;
             case "cntdn-cstm":
                 return SOURCE_LOCAL_WALLCLOCK;
             default:
@@ -370,6 +394,9 @@ class P3Desklet extends Desklet.Desklet {
         if (es == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) {
             this._emoji_label.set_text(this.luncal_source.get_emoji_text());
         }
+        else if (es == SOURCE_SUNCALC) {
+            this._emoji_label.set_text(this.suncalc_source.get_emoji_text());
+        }
         else if (es != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
             this._emoji_label.set_text("");
         }
@@ -389,8 +416,12 @@ class P3Desklet extends Desklet.Desklet {
         }
         this._phase_label.set_text("");
 
-        if (cs == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) {
-            let text = this.luncal_source.get_label_text();
+        if ((cs == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) || cs == SOURCE_SUNCALC) {
+            let text;
+            switch (cs) {
+                case SOURCE_LOCAL_LUNAR_CALENDAR: text = this.luncal_source.get_label_text(); break;
+                case SOURCE_SUNCALC: text = this.suncalc_source.get_label_text(); break;
+            }
             if (this.caption_type == "moon") {
                 this._caption_label.set_text(text);
             }
@@ -752,8 +783,110 @@ class P3Desklet extends Desklet.Desklet {
             )
         );
     }
+
+
+    // suncalc_test_3() {
+    //     var next_quarter = {
+    //         "new": "fq",
+    //         "fq": "full",
+    //         "full": "lq",
+    //         "lq": "new",
+    //     }
+    //     let date = new Date("1970-01-01T00:00:00.000Z");
+    //     let prev_quarter = undefined;
+    //     while (date.getFullYear() <= 2150) {
+    //         if (date.getFullYear() % 10 == 0 && date.getMonth() == 0 && date.getDate() == 1) {
+    //             global.log("The year is " + date.getFullYear())
+    //         }
+    //         let illum = SunCalc.getMoonIllumination(date);
+    //         let phase = this.suncalc_source._calculate_moon_phase(date, illum);
+    //         // if is quarter
+    //         if (phase in next_quarter) {
+    //             // if it's the same quarter as before, that's bad
+    //             if (phase === prev_quarter) {
+    //                 global.log(date.toISOString())
+    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 1")
+    //             }
+    //             // if we skipped a quarter, that's bad (skip the initial undefined)
+    //             if (prev_quarter && phase.id != next_quarter[prev_quarter]) {
+    //                 global.log(date.toISOString())
+    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 2")
+    //             }
+    //             // if full moon is not aligned with the countdown, that's bad
+    //             let next = SunCalcSource.new_midnight_date(
+    //                 this.suncalc_source._calculate_next_full(date, illum)
+    //             );
+    //             let days_to_next_full = Math.round((next - date) / (1000 * 60 * 60 * 24));
+    //             if (phase === "full" && days_to_next_full != 0) {
+    //                 global.log(date.toISOString())
+    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 3")
+    //             }
+    //             if (phase != "full" && days_to_next_full == 0) {
+    //                 global.log(date.toISOString())
+    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 4")
+    //             }
+    //             // else it's good, move on
+    //             prev_quarter = phase.id
+    //         }
+    //         date.setDate(date.getDate() + 1);
+    //     }
+    // }
 }
 
 function main(metadata, desklet_id) {
     return new P3Desklet(metadata, desklet_id);
 }
+
+// const SunCalc = require("./suncalc");
+
+// function suncalc_test() {
+//     var conv = {
+//         "newMoon": "new",
+//         "firstQuarter": "fq",
+//         "fullMoon": "full",
+//         "thirdQuarter": "lq",
+//     }
+//     let calendar = [];
+//     let date = new Date(2024, 11, 1);
+//     let end = new Date(2026, 1, 1);
+//     while (date < end) {
+//         let illum = SunCalc.getMoonIllumination(date);
+//         let phase = illum.phase;
+//         let next = illum.next;
+//         date = new Date(next.date);
+//         date.setMilliseconds(0);
+//         calendar.push([date.toISOString(), conv[next.type]]);
+//         date.setDate(date.getDate() + 1);
+//     }
+//     global.log(JSON.stringify(calendar));
+// }
+
+// function suncalc_test_2() {
+//     var next_quarter = {
+//         "newMoon": "firstQuarterMoon",
+//         "firstQuarterMoon": "fullMoon",
+//         "fullMoon": "thirdQuarterMoon",
+//         "thirdQuarterMoon": "newMoon",
+//     }
+//     let date = new Date("2025-01-01T00:00:00.000Z");
+//     let last_quarter = undefined;
+//     while (date.getFullYear() < 2026) {
+//         let phase = SunCalc.getMoonIllumination(date).phase;
+//         // if is quarter
+//         if (phase.id in next_quarter) {
+//             // if it's the same quarter as before, that's bad
+//             if (phase.id === last_quarter) {
+//                 global.log(date.toISOString())
+//                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 1")
+//             }
+//             // if we skipped a quarter, that's bad (skip the initial undefined)
+//             if (last_quarter && phase.id != next_quarter[last_quarter]) {
+//                 global.log(date.toISOString())
+//                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 2")
+//             }
+//             // else it's good, move on
+//             last_quarter = phase.id
+//         }
+//         date.setDate(date.getDate() + 1);
+//     }
+// }
