@@ -23,8 +23,10 @@ def log(message):
 def main():
     to_save = json.loads(sys.argv[1])
 
-    # TODO can I filter for JSON files only?
-    # TODO can I get an automatic overwrite confirm dialog...?
+    json_filter = Gtk.FileFilter()
+    json_filter.add_mime_type("application/json")
+    json_filter.set_name(_("JSON files"))
+
     saver = Gtk.FileChooserDialog(
         _('Save'),
         None,
@@ -34,6 +36,8 @@ def main():
             Gtk.STOCK_SAVE, Gtk.ResponseType.OK
         ),
     )
+    saver.add_filter(json_filter)
+    saver.set_do_overwrite_confirmation(True)
     response = saver.run()
     if response == Gtk.ResponseType.OK:
         file_path = saver.get_filename()

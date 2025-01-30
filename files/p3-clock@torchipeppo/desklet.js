@@ -73,19 +73,7 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Testare questa libreria:  https://github.com/Hypnos3/suncalc3
-        Applet weather@mockturl può essere utile
-        Verdetto su suncalc: sbaglia rispetto a skyfield di diverse ore (a caso),
-        ma è JS-only, quindi includerlo ci dà il doppio beneficio di non avere
-        una feature bloccata dietro uno script esterno (countdown luna piena),
-        e di staccarci completamente da WeatherAPI per la fase lunare,
-        il che ci permette anche di aprirci ad altri provider meteo
-        (e qua ci viene in aiuto weather@mockturl).
-        Rimane comunque la possibilità di generare dati più precisi
-        con Python+skyfield, ma a questo punto menziono solo skyfield,
-        non anche ephem: tengo la più precisa, e tanto chi non vuole mettersi
-        a tirar giù tabelle astronomiche ha suncalc.
-    - Spostare tutti i file di libreria in una cartella "lib", così posso linkare
+    - Spostare molti file di libreria in una cartella "lib", così posso linkare
         solo quella anziché tutti i file uno per uno
     - Traduzione ita
 */
@@ -783,110 +771,8 @@ class P3Desklet extends Desklet.Desklet {
             )
         );
     }
-
-
-    // suncalc_test_3() {
-    //     var next_quarter = {
-    //         "new": "fq",
-    //         "fq": "full",
-    //         "full": "lq",
-    //         "lq": "new",
-    //     }
-    //     let date = new Date("1970-01-01T00:00:00.000Z");
-    //     let prev_quarter = undefined;
-    //     while (date.getFullYear() <= 2150) {
-    //         if (date.getFullYear() % 10 == 0 && date.getMonth() == 0 && date.getDate() == 1) {
-    //             global.log("The year is " + date.getFullYear())
-    //         }
-    //         let illum = SunCalc.getMoonIllumination(date);
-    //         let phase = this.suncalc_source._calculate_moon_phase(date, illum);
-    //         // if is quarter
-    //         if (phase in next_quarter) {
-    //             // if it's the same quarter as before, that's bad
-    //             if (phase === prev_quarter) {
-    //                 global.log(date.toISOString())
-    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 1")
-    //             }
-    //             // if we skipped a quarter, that's bad (skip the initial undefined)
-    //             if (prev_quarter && phase.id != next_quarter[prev_quarter]) {
-    //                 global.log(date.toISOString())
-    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 2")
-    //             }
-    //             // if full moon is not aligned with the countdown, that's bad
-    //             let next = SunCalcSource.new_midnight_date(
-    //                 this.suncalc_source._calculate_next_full(date, illum)
-    //             );
-    //             let days_to_next_full = Math.round((next - date) / (1000 * 60 * 60 * 24));
-    //             if (phase === "full" && days_to_next_full != 0) {
-    //                 global.log(date.toISOString())
-    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 3")
-    //             }
-    //             if (phase != "full" && days_to_next_full == 0) {
-    //                 global.log(date.toISOString())
-    //                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 4")
-    //             }
-    //             // else it's good, move on
-    //             prev_quarter = phase.id
-    //         }
-    //         date.setDate(date.getDate() + 1);
-    //     }
-    // }
 }
 
 function main(metadata, desklet_id) {
     return new P3Desklet(metadata, desklet_id);
 }
-
-// const SunCalc = require("./suncalc");
-
-// function suncalc_test() {
-//     var conv = {
-//         "newMoon": "new",
-//         "firstQuarter": "fq",
-//         "fullMoon": "full",
-//         "thirdQuarter": "lq",
-//     }
-//     let calendar = [];
-//     let date = new Date(2024, 11, 1);
-//     let end = new Date(2026, 1, 1);
-//     while (date < end) {
-//         let illum = SunCalc.getMoonIllumination(date);
-//         let phase = illum.phase;
-//         let next = illum.next;
-//         date = new Date(next.date);
-//         date.setMilliseconds(0);
-//         calendar.push([date.toISOString(), conv[next.type]]);
-//         date.setDate(date.getDate() + 1);
-//     }
-//     global.log(JSON.stringify(calendar));
-// }
-
-// function suncalc_test_2() {
-//     var next_quarter = {
-//         "newMoon": "firstQuarterMoon",
-//         "firstQuarterMoon": "fullMoon",
-//         "fullMoon": "thirdQuarterMoon",
-//         "thirdQuarterMoon": "newMoon",
-//     }
-//     let date = new Date("2025-01-01T00:00:00.000Z");
-//     let last_quarter = undefined;
-//     while (date.getFullYear() < 2026) {
-//         let phase = SunCalc.getMoonIllumination(date).phase;
-//         // if is quarter
-//         if (phase.id in next_quarter) {
-//             // if it's the same quarter as before, that's bad
-//             if (phase.id === last_quarter) {
-//                 global.log(date.toISOString())
-//                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 1")
-//             }
-//             // if we skipped a quarter, that's bad (skip the initial undefined)
-//             if (last_quarter && phase.id != next_quarter[last_quarter]) {
-//                 global.log(date.toISOString())
-//                 global.log("BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD 2")
-//             }
-//             // else it's good, move on
-//             last_quarter = phase.id
-//         }
-//         date.setDate(date.getDate() + 1);
-//     }
-// }

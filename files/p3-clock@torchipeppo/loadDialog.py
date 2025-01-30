@@ -20,6 +20,10 @@ def log(message):
     print(message, file=sys.stderr)
 
 def main():
+    json_filter = Gtk.FileFilter()
+    json_filter.add_mime_type("application/json")
+    json_filter.set_name(_("JSON files"))
+
     loader = Gtk.FileChooserDialog(
         _('Load'),
         None,
@@ -29,6 +33,7 @@ def main():
             Gtk.STOCK_OPEN, Gtk.ResponseType.OK
         ),
     )
+    loader.add_filter(json_filter)
     response = loader.run()
     if response == Gtk.ResponseType.OK:
         file_path = loader.get_filename()

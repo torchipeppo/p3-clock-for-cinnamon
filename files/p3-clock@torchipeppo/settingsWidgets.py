@@ -183,7 +183,7 @@ class ListOfDates(SettingsWidget):
 
             column = Gtk.TreeViewColumn(column_def['title'], renderer)
 
-            if column_def['type'] == "date":     # TODO
+            if column_def['type'] == "date":
                 def map_func(col, rend, model, row_iter, data):
                     date_dict = json.loads(model[row_iter][data])
                     if date_dict is None:
