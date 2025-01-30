@@ -5,6 +5,7 @@ const GdkPixbuf = imports.gi.GdkPixbuf;
 const Clutter = imports.gi.Clutter;
 const Cogl = imports.gi.Cogl;
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
+const Util = imports.misc.util;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
@@ -59,7 +60,8 @@ else {
     licensed under the OFL.
 
     TODO sostituire questo commentone con file importabili
-         tramite la futura feature import/export
+         tramite la feature import/export.
+         Se proprio ci va, farne uno per ogni stile nello screenshot showcase.
 */
 
 /*
@@ -69,11 +71,10 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Import/export di:
-        * Color scheme (corrente, anche se non è custom. È l'opzione che ha più senso vista da fuori.)
-        * Impostazioni testo (font + emoji size + shadow offset + forse stringhe di formato (ma penso di no))
-        * Impostazioni contenuto (stringhe formato, giorno della settimana, selezioni per bottom)
-        * Date di countdown
+    - Testare questa libreria:  https://github.com/Hypnos3/suncalc3
+        Applet weather@mockturl può essere utile
+    - Spostare tutti i file di libreria in una cartella "lib", così posso linkare
+        solo quella anziché tutti i file uno per uno
     - Traduzione ita
 */
 
@@ -81,6 +82,38 @@ const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
 const SOURCE_LOCAL_LUNAR_CALENDAR = 2
 const SOURCE_LOCAL_WALLCLOCK = 3
+
+const color_scheme_keys = [
+    "custom_corner1_color",
+    "custom_corner2_color",
+    "custom_date_color",
+    "custom_time_color",
+    "custom_time_shadow_color",
+    "custom_bottom_color",
+];
+const text_style_keys = [
+    "time_font",
+    "time_shadow_enabled",
+    "time_shadow_offset",
+    "date_font",
+    "emoji_size",
+    "caption_font",
+];
+const text_content_keys = [
+    "time_format",
+    "date_format",
+    "date_weekday_enabled",
+    "emoji_type",
+    "caption_type",
+    "show_secondary_countdowns",
+];
+const countdown_keys = [
+    "countdown_list",
+];
+
+function _settings_key_to_color_scheme_key(settings_key) {
+    return /^custom_([a-zA-Z0-9_]+?)_color$/.exec(settings_key)[1];
+}
 
 
 class P3Desklet extends Desklet.Desklet {
@@ -134,6 +167,11 @@ class P3Desklet extends Desklet.Desklet {
 
         this.settings.bind("custom-countdown-list", "countdown_list", this._onSettingsChanged);
 
+        this.settings.bind("load-colors", "loading_color_scheme_enabled");
+        this.settings.bind("load-style", "loading_text_style_enabled");
+        this.settings.bind("load-content", "loading_text_content_enabled");
+        this.settings.bind("load-countdown-list", "loading_countdown_list_enabled");
+
         this.settings.bind("first-time", "first_time", this._updateClock);
 
         this._menu.addSettingsAction(_("Date and Time Settings"), "calendar");
@@ -183,6 +221,55 @@ class P3Desklet extends Desklet.Desklet {
                 );
     }
 
+    save_settings() {
+        var subset = {colors: {}, style: {}, content: {}, countdown: {}};
+        for (let key of color_scheme_keys) {
+            let cs_key = _settings_key_to_color_scheme_key(key)
+            subset.colors[key] = this.color_scheme[cs_key];
+        }
+        for (let key of text_style_keys) {
+            subset.style[key] = this[key];
+        }
+        for (let key of text_content_keys) {
+            subset.content[key] = this[key];
+        }
+        for (let key of countdown_keys) {
+            subset.countdown[key] = this[key];
+        }
+        Util.spawn_async(['python3', `${this.metadata.path}/saveDialog.py`, JSON.stringify(subset)]);
+    }
+
+    load_settings() {
+        Util.spawn_async(
+            ['python3', `${this.metadata.path}/loadDialog.py`],
+            (response) => {
+                if (response) {  // empty response means sth went wrong
+                    let to_load = JSON.parse(response);
+                    if (this.loading_color_scheme_enabled) {
+                        this.color_scheme_name = "the-custom";
+                        this.invert_bottom_colors = false;
+                        Object.assign(this, to_load.colors);
+                        this._onColorSettingsChanged();
+                    }
+                    if (this.loading_text_style_enabled) {
+                        Object.assign(this, to_load.style);
+                        this._onUISettingsChanged();
+                    }
+                    if (this.loading_text_content_enabled) {
+                        Object.assign(this, to_load.content);
+                        this._onFormatSettingsChanged();
+                        this._onUISettingsChanged();
+                        this._onWAPISettingsChanged();
+                    }
+                    if (this.loading_countdown_list_enabled) {
+                        Object.assign(this, to_load.countdown);
+                        this._onSettingsChanged();
+                    }
+                }
+            }
+        );
+    }
+
     updateFormat() {
         let actual_time_format = this.clock_source.time_format_or_default();
         let actual_date_format = this.clock_source.date_format_or_default();
@@ -214,14 +301,10 @@ class P3Desklet extends Desklet.Desklet {
         let custom_scheme = {};
         // just "custom" would have looked too much like some reserved name
         if (this.color_scheme_name == "the-custom") {
-            custom_scheme = {
-                "corner1": this.custom_corner1_color,
-                "corner2": this.custom_corner2_color,
-                "date": this.custom_date_color,
-                "time": this.custom_time_color,
-                "time_shadow": this.custom_time_shadow_color,
-                "bottom": this.custom_bottom_color,
-            };
+            for (let key of color_scheme_keys) {
+                let cs_key = _settings_key_to_color_scheme_key(key);
+                custom_scheme[cs_key] = this[key];
+            }
         }
         this.color_scheme.load_color_scheme(this.color_scheme_name, custom_scheme, this.invert_bottom_colors);
         this._onUISettingsChanged();

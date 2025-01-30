@@ -1,7 +1,7 @@
 {
     "layout": {
         "type": "layout",
-        "pages": ["global-page", "top-page", "middle-page", "bottom-page", "data-page"],
+        "pages": ["global-page", "top-page", "middle-page", "bottom-page", "data-page", "save-load-page"],
 
         "global-page": {
             "type": "page",
@@ -33,6 +33,14 @@
             "sections": [
                 "data-weatherapi-section",
                 "data-countdown-section"
+            ]
+        },
+        "save-load-page": {
+            "type": "page",
+            "title": "Save/Load",
+            "sections": [
+                "save-section",
+                "load-section"
             ]
         },
 
@@ -121,6 +129,27 @@
             "keys": [
                 "custom-countdown-list-widget",
                 "custom-countdown-list-label"
+            ]
+        },
+
+        "save-section": {
+            "type": "section",
+            "title": "Save configuration",
+            "keys": [
+                "save-help",
+                "save-button"
+            ]
+        },
+        "load-section": {
+            "type": "section",
+            "title": "Load configuration",
+            "keys": [
+                "load-help",
+                "load-colors",
+                "load-style",
+                "load-content",
+                "load-countdown-list",
+                "load-button"
             ]
         }
     },
@@ -371,6 +400,45 @@
         "type": "generic",
         "default": [],
         "comment": "Data storage for 'custom-countdown-list-widget'"
+    },
+
+    "save-help": {
+        "type": "label",
+        "description": "Click the button below to save the following settings to a JSON file:\n- color scheme,\n- text style (including font selection, shadow offset, and emoji size),\n- content (including date-time format strings and bottom row selections),\n- countdown dates.\nDoes NOT correspond to a full export of the configuration."
+    },
+    "save-button" : {
+        "type" : "button",
+        "description" : "Save customization",
+        "callback" : "save_settings"
+    },
+    "load-help": {
+        "type": "label",
+        "description": "Choose which options to load from a previous save, then click the button below to select a file to load.\nWARNING: the selected settings will be overwritten, and their original values will be lost! Unselected settings will be left untouched."
+    },
+    "load-colors": {
+        "type": "switch",
+        "default": false,
+        "description": "Load color scheme"
+    },
+    "load-style": {
+        "type": "switch",
+        "default": false,
+        "description": "Load text style"
+    },
+    "load-content": {
+        "type": "switch",
+        "default": false,
+        "description": "Load content"
+    },
+    "load-countdown-list": {
+        "type": "switch",
+        "default": false,
+        "description": "Load countdown dates"
+    },
+    "load-button" : {
+        "type" : "button",
+        "description" : "Load selected options",
+        "callback" : "load_settings"
     },
 
     "first-time": {
