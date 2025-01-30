@@ -73,8 +73,6 @@ else {
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
-    - Spostare molti file di libreria in una cartella "lib", così posso linkare
-        solo quella anziché tutti i file uno per uno
     - Traduzione ita
 */
 
