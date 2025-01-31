@@ -1,15 +1,12 @@
 """
-TODO
-
-Questa sarà l'evoluzione del remove-DEV
+Questa è l'evoluzione del remove-DEV
 Ma anziché toccare roba qui (che poi devo stare attento a non committarla),
-ci copierà direttamente tutto nella directory dove abbiamo il fork di
+ci copia direttamente tutto nella directory dove abbiamo il fork di
 cinnamon-spices-desklets.
 
-TODO mancano le traduzioni, aggiungerle qui dopo averle messe nella repo
-
-Poi faccio seguire il remove-DEV del directory menu commentato,
-come scaletta delle cose da fare
+TODO manca solo l'icona
+Ci sono ancora quelle due righine del remove-DEV del directory menu commentate,
+giusto per ricordarmene.
 """
 
 from pathlib import Path
@@ -26,6 +23,13 @@ with open("files/p3-clock@torchipeppo/metadata-RELEASE.json", "r") as f:
 
 
 VERSION_DIR_PATTERN = re.compile(r"[0123456789.]+")
+
+def copy_replacing_uuid(src, dst):
+    with open(src, "r") as f:
+        content = f.read()
+    content = content.replace(develop_uuid, release_uuid)
+    with open(dst, "w") as f:
+        f.write(content)
 
 def copy_code_dir(src : Path, dst : Path):
     dst.mkdir(exist_ok=True)
@@ -44,11 +48,7 @@ def copy_code_dir(src : Path, dst : Path):
                     dst_file.unlink()
                 shutil.copy(p, dst_file, follow_symlinks=False)
             else:
-                with open(p, "r") as f:
-                    content = f.read()
-                content = content.replace(develop_uuid, release_uuid)
-                with open(dst/p.name, "w") as f:
-                    f.write(content)
+                copy_replacing_uuid(p, dst/p.name)
 
         elif (p.is_dir() and re.match(VERSION_DIR_PATTERN, p.name)):
             copy_code_dir(src / p.name, dst / p.name)
@@ -65,7 +65,15 @@ shutil.copy(src_dir/"README.md", dst_dir)
 
 
 
-# step 2: code
+# step 2: screenshots
+shutil.copy(src_dir/"screenshot.png", dst_dir)
+(dst_dir/"assets").mkdir(exist_ok=True)
+for p in (src_dir/"assets").iterdir():
+    shutil.copy(p, dst_dir/"assets")
+
+
+
+# step 3: code
 
 src_dir = src_dir / "files" / develop_uuid
 dst_dir = dst_dir / "files" / release_uuid
@@ -77,9 +85,16 @@ copy_code_dir(src_dir, dst_dir)
 
 
 
-# step 3: translations
+# step 4: translations
 
-# TODO
+src_dir = src_dir / "po"
+dst_dir = dst_dir / "po"
+dst_dir.mkdir(exist_ok=True)
+
+copy_replacing_uuid(src_dir/f"{develop_uuid}.pot", dst_dir/f"{release_uuid}.pot")
+for p in src_dir.iterdir():
+    if p.suffix == ".po":
+        copy_replacing_uuid(p, dst_dir/p.name)
 
 
 
@@ -90,26 +105,6 @@ copy_code_dir(src_dir, dst_dir)
 ########################################################################
 
 
-
-# # be very restrictive here to avoid accidents
-# po = list(directory.glob("po/*.po"))
-# for fname in po + [directory/"applet.js", directory/"popup_menu.py"]:
-#     with open(fname, "r") as f:
-#         content = f.read()
-#     content = content.replace("directory-menu-DEV", "directory-menu")
-#     content = content.replace("torchipeppo-DEV", "torchipeppo")
-#     with open(fname, "w") as f:
-#         f.write(content)
-
-# # here too, but rename also
-# potfile = directory/"po"/"directory-menu-DEV@torchipeppo-DEV.pot"
-# with open(potfile, "r") as f:
-#     content = f.read()
-# content = content.replace("directory-menu-DEV", "directory-menu")
-# content = content.replace("torchipeppo-DEV", "torchipeppo")
-# with open(directory/"po"/"directory-menu@torchipeppo.pot", "w") as f:
-#     f.write(content)
-# potfile.unlink()
 
 # # reset icon
 # shutil.copy("icon-standard.png", directory/"icon.png")

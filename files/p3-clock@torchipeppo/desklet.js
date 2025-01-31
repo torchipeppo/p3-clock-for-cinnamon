@@ -671,7 +671,7 @@ class P3Desklet extends Desklet.Desklet {
         this._next_label.set_width(scaledWidth);
         this._next_label.set_height(scaledHeight);
         this._next_label.set_position(0, 0);
-        this._next_label.set_text("Next:");
+        this._next_label.set_text(_("Next") + ":");
         this._next_label.set_style(
             SU.get_style_string(
                 this.scale,

@@ -49,7 +49,7 @@ const CAPTION_TYPE_SPECS = {
     },
     "cntdn-full" : {
         caption_label: "",
-        next_label: _("Next:"),
+        next_label: _("Next") + ":",
         countdown_label: "<get>",
         slash_label: "/",
     },
