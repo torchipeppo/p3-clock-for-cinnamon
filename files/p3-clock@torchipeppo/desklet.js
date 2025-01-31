@@ -36,44 +36,15 @@ else {
 }
 
 /*
-    This desklet ships with a default configuration intended to be the most
-    generically useful to computer users, and with a basic default font
-    that is expected to be available anywhere.
-    P3 enthusiasts may follow the suggested configuration to recreate
-    the original look and feel as closely as open-source fonts allow:
-
-    - Global:
-        Set the scale and global offset to your liking.
-        Set one of the first three color schemes.
-    - Top row:
-        Font "Geist ExtraBold 52".
-        Use the default format and enable weekday.
-    - Middle row: 
-        Font "Instrument Sans Medium 70".
-        Use the special format "%!".
-        Enable drop shadow, with offset 8.
-    - Bottom row:
-        Generate the lunar calendar data with the Python scripts in the repo.
-        Set the emoji to "Moon Phase", size 70.
-        Set the caption to "Full moon countdown", font "Onest Bold 50".
-        "Geist" also works well, if you don't feel like downloading another font.
-
-    "Geist", "Instrument Sans" and "Onest" are found on Google Fonts,
-    licensed under the OFL.
-
-    TODO sostituire questo commentone con file importabili
-         tramite la feature import/export.
-         Se proprio ci va, farne uno per ogni stile nello screenshot showcase.
-*/
-
-/*
     TODO
     - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
         all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
         non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
+    - Fare un file importabile per ogni stile nello screenshot showcase, forse.
     - Traduzione ita
+    - Icona
 */
 
 const SOURCE_DISABLED = 0

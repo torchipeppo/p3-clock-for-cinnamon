@@ -30,6 +30,7 @@ A few example customizations achieavable with the desklet's settings. All featur
 <p align="center">
 <img src="assets/screenshot-p3-mode.png" width="400" align="middle"><br>
 Configuration that replicates the inspiration material as closely as possible. The fonts are Geist, Instrument Sans, and Onest, available on Google Fonts.
+<!-- TODO link to the custom compendium in my personal repo -->
 </p>
 
 ## Installation
