@@ -126,7 +126,7 @@ class P3Desklet extends Desklet.Desklet {
         this.file_handler = new FileHandler.FileHandler(this.metadata["uuid"], desklet_id);
         this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
         this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id, this.file_handler);
-        this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock);
+        this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock, this.file_handler);
         this.suncalc_source = new SunCalcSource.SunCalcSource(this.metadata["uuid"], desklet_id);
         this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id, this.file_handler);
 
@@ -185,10 +185,6 @@ class P3Desklet extends Desklet.Desklet {
 
         this._onColorSettingsChanged();
         this.updateUI();
-
-        // suncalc_test();
-        // suncalc_test_2();
-        // this.suncalc_test_3();
     }
 
     emoji_source() {

@@ -10,6 +10,10 @@ class FileHandlerBase {
         // this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
     }
 
+    get_file_text(fname) {
+        return this.byte_array_to_string(GLib.file_get_contents(fname)[1]);
+    }
+
     get_path_to_file(local_path) {
         let absolute_dir = DESKLET_DIR;
         while (absolute_dir) {

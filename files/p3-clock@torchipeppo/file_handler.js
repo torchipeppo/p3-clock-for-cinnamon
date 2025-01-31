@@ -18,7 +18,7 @@ class FileHandler extends FileHandlerBase.FileHandlerBase {
         // this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
     }
 
-    get_file_text(fname) {
-        return ByteArray.toString(GLib.file_get_contents(fname)[1]);
+    byte_array_to_string(ba) {
+        return ByteArray.toString(ba);
     }
 }

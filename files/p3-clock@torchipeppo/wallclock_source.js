@@ -4,6 +4,15 @@
 
 const Settings = imports.ui.settings;
 
+let ShellUtils;
+if (typeof require !== 'undefined') {
+    ShellUtils = require("./shell_utils");
+}
+else {
+    imports.searchPath.push(DESKLET_DIR);
+    ShellUtils = imports.shell_utils;
+}
+
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {
         return _("Late Night");
@@ -44,7 +53,7 @@ function _get_days_left(date_json_string) {
 }
 
 class WallclockSource {
-    constructor(uuid, desklet_id, wallclock) {
+    constructor(uuid, desklet_id, wallclock, file_handler) {
         // share a reference with the main desklet
         this.wallclock = wallclock;
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
@@ -53,13 +62,25 @@ class WallclockSource {
         this.settings.bind("top-format", "date_format", this._onFormatSettingsChanged);
 
         this.settings.bind("custom-countdown-list", "countdown_list");
+
+        // people don't just change their locale all the time,
+        // and I'm pretty sure that even if you change it you have to log out and back in,
+        // so setting this only once is fine
+        let p = new ShellUtils.ShellOutputProcess(["locale", "d_fmt"], file_handler);
+        let d_fmt = p.spawn_sync_and_get_output().trim();
+        // default stylistic choice: remove the year
+        d_fmt = d_fmt.replace(/[^%0-9a-zA-Z]?%[yY][^%0-9a-zA-Z]?/, "");
+        // default stylistic choice: put a little space in the date
+        d_fmt = d_fmt.replace(/[/]/g, " / ");
+        d_fmt = d_fmt.replace(/[-]/g, " - ");
+        this.default_date_format = d_fmt
     }
 
     time_format_or_default() {
         return this.time_format || this.wallclock.get_default_time_format();
     }
     date_format_or_default() {
-        return this.date_format || "%x";
+        return this.date_format || this.default_date_format;
     }
 
     get_time_text() {
@@ -78,13 +99,6 @@ class WallclockSource {
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
         let actual_date_format = this.date_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
         let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
-        if (!this.date_format) {
-            // default stylistic choice: try to remove the year (w/o trying too hard)
-            formatted_date = formatted_date.replace(/.?[0-9]{4}.?/, "");
-            // default stylistic choice: put a little space in the date
-            formatted_date = formatted_date.replace(/[/]/g, " / ");
-            formatted_date = formatted_date.replace(/[-]/g, " - ");
-        }
         return formatted_date;
     }
 
