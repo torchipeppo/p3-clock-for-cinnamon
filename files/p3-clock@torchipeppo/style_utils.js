@@ -15,7 +15,7 @@ function split_font_string(font_string) {
     output.size = Number(a.pop());
     output.style = "normal";
     output.weight = 400;
-    while (true) {
+    while (a.length > 0) {
         let last = a[a.length-1].toLowerCase();
         let match;
         if (CONSTANTS.FONT_STYLES.includes(last)) {
@@ -49,7 +49,7 @@ function get_style_string(scale, align, vpadding, hpadding, font_dict, color) {
         hpadding_dir = "left";
         hpadding = -hpadding;
     }
-    return  "font-family: " + font_dict.family + "; " +
+    return  (font_dict.family ? ("font-family: " + font_dict.family + "; ") : "") +
             "font-size: " + scale*font_dict.size + "px; " +
             "font-weight: " + font_dict.weight + "; " +
             "font-style: " + font_dict.style + "; " +

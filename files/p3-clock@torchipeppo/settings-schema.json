@@ -254,7 +254,7 @@
     },
     "top-font": {
         "type": "fontchooser",
-        "default": "Sans Bold 52",
+        "default": "Bold 52",
         "description": "Font"
     },
     "top-weekday": {
@@ -274,7 +274,7 @@
     },
     "middle-font": {
         "type": "fontchooser",
-        "default": "Sans 70",
+        "default": "Normal 70",
         "description": "Font"
     },
     "middle-shadow": {
@@ -373,7 +373,7 @@
     },
     "bottom-caption-font": {
         "type": "fontchooser",
-        "default": "Sans Bold 50",
+        "default": "Bold 50",
         "description": "Font",
         "dependency": "bottom-caption-type!="
     },
