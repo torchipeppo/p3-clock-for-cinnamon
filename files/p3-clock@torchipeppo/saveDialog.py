@@ -41,6 +41,8 @@ def main():
     response = saver.run()
     if response == Gtk.ResponseType.OK:
         file_path = saver.get_filename()
+        if not file_path.endswith(".json"):
+            file_path += ".json"
         with open(file_path, "w") as f:
             json.dump(to_save, f, indent=4)
 
