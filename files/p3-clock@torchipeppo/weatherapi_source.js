@@ -106,7 +106,6 @@ class WeatherAPISource {
                 // TODO remove this sometime in the near future
                 // let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
                 // return CONSTANTS.MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name];
-                global.logWarning("Shouldn't be used anymore, thanks to suncalc")
                 return "🌚";
             case "weather":
                 let weather_code = resp_json.current.condition.code;
@@ -123,7 +122,6 @@ class WeatherAPISource {
                 // let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
                 // moon_phase_name = CONSTANTS.TRANSLATED_MOON_PHASE_NAMES[moon_phase_name];
                 // return moon_phase_name.replace(" ", "\n");
-                global.logWarning("Shouldn't be used anymore, thanks to suncalc")
                 return "This shouldn't\nappear.";
             case "weather":
                 let weather_code = resp_json.current.condition.code;

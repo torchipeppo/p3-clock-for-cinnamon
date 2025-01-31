@@ -488,8 +488,8 @@ class P3Desklet extends Desklet.Desklet {
                 (es == SOURCE_WEATHERAPI) ? this.set_emoji_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_caption_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_countdown_text : (_)=>{},
-                (cs == SOURCE_WEATHERAPI) ? this.set_next_text : ()=>{},
-                (cs == SOURCE_WEATHERAPI) ? this.set_slash_text : ()=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_next_text : (_)=>{},
+                (cs == SOURCE_WEATHERAPI) ? this.set_slash_text : (_)=>{},
             );
         }
     }

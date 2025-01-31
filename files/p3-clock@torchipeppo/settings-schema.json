@@ -294,23 +294,23 @@
 
     "bottom-requirements-help": {
         "type": "label",
-        "description": "(W) indicates that a valid WeatherAPI key is required. Go to the \"Data\" page to enable it.\n(C) indicates that generating a local lunar calendar is required. See [TODO] for instructions.\n(C/W) indicates that either data source is fine. If both are available, preference will be given to the local data.\n(D) indicates that you must provide one or more important dates to count down to in the \"Data\" page."
+        "description": "(W) - A valid WeatherAPI key is required. Go to the \"Data\" page to enable it.\n(C?) - OPTIONAL: precision can be improved by generating a local lunar calendar. See [TODO: ADD LINK] for instructions.\n(D) - You must provide one or more important dates to count down to in the \"Data\" page."
     },
 
     "wapi-help": {
         "type": "label",
-        "description": "To access weather and moon phase data from WeatherAPI, an API key is required. Sign up on weatherapi.com to get one. Be mindful of your request budget when setting the update frequency or manually requesting updates."
+        "description": "To access weather data from WeatherAPI, an API key is required. Sign up on weatherapi.com to get one. Be mindful of your request budget when setting the update frequency or manually requesting updates."
     },
     "wapi-enable": {
         "type": "switch",
         "default": true,
-        "description": "Enable WeatherAPI for weather and/or moon phase display"
+        "description": "Enable WeatherAPI for weather display"
     },
     "wapi-key": {
         "type": "entry",
         "default": "",
         "description": "WeatherAPI key",
-        "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather and moon phase display.",
+        "tooltip": "Your API key for WeatherAPI. Leave empty to disable weather display.",
         "dependency": "wapi-enable"
     },
     "wapi-query": {
@@ -338,11 +338,11 @@
 
     "bottom-emoji-type": {
         "type": "combobox",
-        "default": "weather",
+        "default": "moon",
         "options": {
             "None": "",
             "Weather (W)": "weather",
-            "Moon phase (C/W)": "moon"
+            "Moon phase (C?)": "moon"
         },
         "description": "Emoji display"
     },
@@ -365,8 +365,8 @@
             "Chance of rain (W)": "rain",
             "Temperature °C (W)": "temp-c",
             "Temperature °F (W)": "temp-f",
-            "Moon phase (C/W)": "moon",
-            "Full moon countdown (C)": "cntdn-full",
+            "Moon phase (C?)": "moon",
+            "Full moon countdown (C?)": "cntdn-full",
             "Custom countdown (D)": "cntdn-cstm"
         },
         "description": "Caption display"
