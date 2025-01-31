@@ -1,12 +1,5 @@
 """
-Questa è l'evoluzione del remove-DEV
-Ma anziché toccare roba qui (che poi devo stare attento a non committarla),
-ci copia direttamente tutto nella directory dove abbiamo il fork di
-cinnamon-spices-desklets.
-
-TODO manca solo l'icona
-Ci sono ancora quelle due righine del remove-DEV del directory menu commentate,
-giusto per ricordarmene.
+Copy all files to release into my fork of cinnamon-spices-desklets.
 """
 
 from pathlib import Path
@@ -81,6 +74,7 @@ dst_dir.mkdir(exist_ok=True, parents=True)
 
 shutil.copy(src_dir/"metadata-RELEASE.json", dst_dir/"metadata.json")
 shutil.copy(src_dir/"p3corner-template.svgtemp", dst_dir)
+shutil.copy(src_dir/"icon.png", dst_dir)
 copy_code_dir(src_dir, dst_dir)
 
 
@@ -95,16 +89,3 @@ copy_replacing_uuid(src_dir/f"{develop_uuid}.pot", dst_dir/f"{release_uuid}.pot"
 for p in src_dir.iterdir():
     if p.suffix == ".po":
         copy_replacing_uuid(p, dst_dir/p.name)
-
-
-
-
-
-
-########################################################################
-########################################################################
-
-
-
-# # reset icon
-# shutil.copy("icon-standard.png", directory/"icon.png")
