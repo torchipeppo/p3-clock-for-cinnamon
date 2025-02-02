@@ -12,7 +12,8 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 
 // imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
 // https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme, FileHandler, SunCalcSource, CONSTANTS;
+let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme,
+    FileHandler, SunCalcSource, Translation, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
     WeatherAPISource = require("./weatherapi_source");
@@ -21,6 +22,7 @@ if (typeof require !== 'undefined') {
     ColorScheme = require("./color_scheme");
     FileHandler = require("./file_handler");
     SunCalcSource = require("./suncalc_source");
+    Translation = require("./translation");
     CONSTANTS = require("./constants");
 }
 else {
@@ -32,8 +34,10 @@ else {
     ColorScheme = imports.color_scheme;
     FileHandler = imports.file_handler;
     SunCalcSource = imports.suncalc_source;
+    Translation = imports.translation;
     CONSTANTS = imports.constants;
 }
+const _ = Translation._;
 
 /*
     TODO

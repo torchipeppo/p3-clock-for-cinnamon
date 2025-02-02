@@ -4,16 +4,19 @@ const ByteArray = imports.byteArray;
 
 const UUID = "p3-clock@torchipeppo";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let SU, CONSTANTS;
+let SU, Translation, CONSTANTS;
 if (typeof require !== 'undefined') {
     SU = require("./style_utils");
+    Translation = require("./translation");
     CONSTANTS = require("./constants");
 }
 else {
     imports.searchPath.push(DESKLET_DIR);
     SU = imports.style_utils;
+    Translation = imports.translation;
     CONSTANTS = imports.constants;
 }
+const _ = Translation._;
 
 // REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
 let _httpSession;

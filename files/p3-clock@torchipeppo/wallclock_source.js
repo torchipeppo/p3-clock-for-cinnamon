@@ -4,14 +4,17 @@
 
 const Settings = imports.ui.settings;
 
-let ShellUtils;
+let ShellUtils, Translation;
 if (typeof require !== 'undefined') {
     ShellUtils = require("./shell_utils");
+    Translation = require("./translation");
 }
 else {
     imports.searchPath.push(DESKLET_DIR);
     ShellUtils = imports.shell_utils;
+    Translation = imports.translation;
 }
+const _ = Translation._;
 
 function hour_to_p3time(hour) {
     if (0<=hour && hour<5) {

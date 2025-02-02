@@ -52,7 +52,7 @@ msgstr "Gibbosa Calante"
 
 #. constants.js:115 5.7/constants.js:115
 msgid "Last Quarter"
-msgstr "Untimo Quarto"
+msgstr "Ultimo Quarto"
 
 #. constants.js:116 5.7/constants.js:116
 msgid "Waning Crescent"
@@ -102,7 +102,6 @@ msgstr ""
 #. desklet.js:155 5.7/desklet.js:155
 msgid "Date and Time Settings"
 msgstr "Impostazioni data e ora"
-# TODO controllare la traduzione dell'applet Calendar (live, cambiando il locale)
 
 #. desklet.js:410 desklet.js:438 5.7/desklet.js:410 5.7/desklet.js:438
 msgid "Limit"
@@ -123,7 +122,6 @@ msgid ""
 msgstr ""
 "Click destro\n"
 "per configurare!"
-# TODO verificare lunghezza
 
 #. metadata.json->name
 #. desklet.js:488 5.7/desklet.js:488
@@ -201,28 +199,27 @@ msgstr "Nome"
 #. settingsWidgets.py:226 settingsWidgets.py:322 5.7/settingsWidgets.py:226
 #. 5.7/settingsWidgets.py:322
 msgid "Add new entry"
-msgstr "Aggiungi nuova riga"
-# TODO Per questa e le seguenti: verificare traduzione ufficiale di questo settings widget
+msgstr "Aggiungi nuova voce"
 
 #. settingsWidgets.py:230 5.7/settingsWidgets.py:230
 msgid "Remove selected entry"
-msgstr "Rimuovi riga selezionata"
+msgstr "Rimuovi la voce selezionata"
 
 #. settingsWidgets.py:235 5.7/settingsWidgets.py:235
 msgid "Edit selected entry"
-msgstr "Modifica riga selezionata"
+msgstr "Modifica la voce selezionata"
 
 #. settingsWidgets.py:240 5.7/settingsWidgets.py:240
 msgid "Move selected entry up"
-msgstr "Sposta riga selezionata in su"
+msgstr "Sposta in alto la voce selezionata"
 
 #. settingsWidgets.py:245 5.7/settingsWidgets.py:245
 msgid "Move selected entry down"
-msgstr "Sposta riga selezionata in giù"
+msgstr "Sposta in basso la voce selezionata"
 
 #. settingsWidgets.py:324 5.7/settingsWidgets.py:324
 msgid "Edit entry"
-msgstr "Modifica riga"
+msgstr "Modifica voce"
 
 #. metadata.json->description
 msgid ""
@@ -259,7 +256,7 @@ msgstr "Riga di mezzo"
 #. settings-schema.json->bottom-page->title
 #. 5.7->settings-schema.json->bottom-page->title
 msgid "Bottom row"
-msgstr "Riga interiore"
+msgstr "Riga inferiore"
 
 #. settings-schema.json->data-page->title
 #. 5.7->settings-schema.json->data-page->title
@@ -305,7 +302,7 @@ msgstr "Aspetto"
 #. settings-schema.json->bottom-requirements-section->title
 #. 5.7->settings-schema.json->bottom-requirements-section->title
 msgid "Requirements"
-msgstr "Requisiti
+msgstr "Requisiti"
 
 #. settings-schema.json->bottom-emoji-section->title
 #. 5.7->settings-schema.json->bottom-emoji-section->title
@@ -519,7 +516,7 @@ msgid ""
 "(D) - You must provide one or more important dates to count down to in the "
 "\"Data\" page."
 msgstr ""
-"(W) - È richiesta una chiave valida per WeatherAPI. Vai alla pagina "Dati" "
+"(W) - È richiesta una chiave valida per WeatherAPI. Vai alla pagina \"Dati\" "
 "per attivare.\n"
 "(C?) - OPZIONALE: puoi migliorare la precisione generando un calendario "
 "lunare locale. Vedi [TODO: AGGIUNGERE LINK] per istruzioni.\n"
@@ -534,9 +531,9 @@ msgid ""
 "the update frequency or manually requesting updates."
 msgstr ""
 "Per accedere ai dati metereologici di WeatherAPI, è necessaria una chiave per "
-"l'API. Registrati su weatherapi.com Per ottenerne una. Tieni a mente il tuo "
+"l'API. Registrati su weatherapi.com per ottenerne una. Tieni a mente il tuo "
 "budget di richieste quando imposti la frequenza di aggiornamento o richiedi "
-"aggiurnamenti manualmente."
+"aggiornamenti manualmente."
 
 #. settings-schema.json->wapi-enable->description
 #. 5.7->settings-schema.json->wapi-enable->description
@@ -629,7 +626,7 @@ msgstr "Conto alla rivescia: Luna piena (C?)"
 #. settings-schema.json->bottom-caption-type->options
 #. 5.7->settings-schema.json->bottom-caption-type->options
 msgid "Custom countdown (D)"
-msgstr "Conto alla rovescia: personalizzato (D)"
+msgstr "Conto alla rovescia: Personalizzato (D)"
 
 #. settings-schema.json->bottom-caption-type->description
 #. 5.7->settings-schema.json->bottom-caption-type->description
@@ -653,7 +650,7 @@ msgid ""
 "\n"
 msgstr ""
 "Inserisci una o più date per fare il conto alla rovescia quando selezioni "
-"\"Conto alla rovescia: personalizzato\" (1 data) e/o \"Mostra più conti alla "
+"\"Conto alla rovescia: Personalizzato\" (1 data) e/o \"Mostra più conti alla "
 "rovescia nel testo secondario\" (fino a 2 date addizionali).\n"
 "L'ordine della lista rappresenta l'ordine di priorità delle date.\n"
 "Disattiva le date per saltarle.\n"
@@ -691,7 +688,7 @@ msgid ""
 "WARNING: the selected settings will be overwritten, and their original "
 "values will be lost! Unselected settings will be left untouched."
 msgstr ""
-"Scegli quali opzioni caricare da un salvataggio precedentte, poi clicca il "
+"Scegli quali opzioni caricare da un salvataggio precedente, poi clicca il "
 "pulsante qui sotto per caricare.\n"
 "ATTENZIONE: le impostazioni selezionate saranno sovrascritte, e i loro valori "
 "originali andranno persi! Le impostazioni non selezionate non verranno "

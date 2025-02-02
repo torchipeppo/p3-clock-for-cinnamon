@@ -2,13 +2,18 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+gi.require_version("GLib", "2.0")
+from gi.repository import Gtk, GLib
 from xapp.SettingsWidgets import *
 from SettingsWidgets import SoundFileChooser, Keybinding, DateChooser
 import sys
 import json
 import datetime
 import traceback
+
+import gettext
+UUID = "p3-clock@torchipeppo"
+gettext.install(UUID, GLib.get_home_dir() + '/.local/share/locale')
 
 VARIABLE_TYPE_MAP = {
     "string"        :   str,
