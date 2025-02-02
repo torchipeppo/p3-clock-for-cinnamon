@@ -18,18 +18,18 @@ A multipurpose display for current date, time, weather, and/or custom important 
 <!-- TODO must become https://cinnamon-spices.linuxmint.com/git/desklets/<UUID>/<REPO-PATH> -->
 
 <p align="center">
-<img src="screenshot.png" width="400" align="middle"><br>
+<img src="screenshot.png" width="600" align="middle"><br>
 Default look after enabling WeatherAPI and setting the fonts Geist, Ubuntu and Onest (all free and open source, available e.g. on Google Fonts).
 </p>
 
 <p align="center">
-<img src="assets/screenshot-customization-showcase.png" width="400" align="middle"><br>
+<img src="assets/screenshot-customization-showcase.png" width="600" align="middle"><br>
 A few example customizations achieavable with the desklet's settings. All featured fonts are free, and either commonly found by default on Linux Mint machines or available on Google Fonts.
 </p>
 
 <p align="center">
-<img src="assets/screenshot-p3-mode.png" width="400" align="middle"><br>
-Configuration that replicates the inspiration material as closely as possible. The fonts are Geist, Instrument Sans, and Onest, available on Google Fonts. [Click here to get this configuration.](https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/custom_compendium)
+<img src="assets/screenshot-p3-mode.png" width="600" align="middle"><br>
+Configuration that replicates the inspiration material as closely as possible. The fonts are Geist, Instrument Sans, and Onest, available on Google Fonts. <a href="https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/custom_compendium">Click here to get this configuration.</a>
 </p>
 
 ## Installation
