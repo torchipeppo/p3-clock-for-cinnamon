@@ -29,17 +29,15 @@ A few example customizations achieavable with the desklet's settings. All featur
 
 <p align="center">
 <img src="assets/screenshot-p3-mode.png" width="400" align="middle"><br>
-Configuration that replicates the inspiration material as closely as possible. The fonts are Geist, Instrument Sans, and Onest, available on Google Fonts.
-<!-- TODO link to the custom compendium in my personal repo -->
+Configuration that replicates the inspiration material as closely as possible. The fonts are Geist, Instrument Sans, and Onest, available on Google Fonts. [Click here to get this configuration.](https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/custom_compendium)
 </p>
 
 ## Installation
 Download or clone this repo, then put the `p3-clock@torchipeppo` directory
 (contained in the `files` directory) into `~/.local/share/cinnamon/desklets/`
 
-<!-- TODO add link once the personal repo goes public -->
-Optional: run the Python script from my personal repo to generate more precise
-data for the moon phases
+[Optional: run the Python script from my personal repo to generate more precise
+data for the moon phases](https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/lunar_calendar_generation)
 
 ### Design goals
 1. Adapt the style of the UI from the video game "Persona 3" into an
