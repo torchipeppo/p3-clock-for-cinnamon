@@ -41,9 +41,6 @@ const _ = Translation._;
 
 /*
     TODO
-    - Passato un mese (quindi a febbraio) fare in modo che un errore nella chiamata
-        all'API fallisca silenziosamente, così se ci disconnettiamo dalla rete o che so io
-        non abbiamo un messaggio d'errore inutile a schermo
     - Anche fare diversi schemi di colore sarebbe carino
         Forse anche un altro verde
     - Fare un file importabile per ogni stile nello screenshot showcase, forse.
@@ -463,6 +460,8 @@ class P3Desklet extends Desklet.Desklet {
                 (cs == SOURCE_WEATHERAPI) ? this.set_countdown_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_next_text : (_)=>{},
                 (cs == SOURCE_WEATHERAPI) ? this.set_slash_text : (_)=>{},
+                (es == SOURCE_WEATHERAPI || cs == SOURCE_WEATHERAPI) ? 
+                    this.set_mini_errormoji_text : (_)=>{},
             );
         }
     }
@@ -481,6 +480,9 @@ class P3Desklet extends Desklet.Desklet {
     }
     set_slash_text(text) {
         this._slash_label.set_text(text);
+    }
+    set_mini_errormoji_text(text) {
+        this._mini_errormoji_label.set_text(text);
     }
 
     createUI() {
@@ -522,6 +524,9 @@ class P3Desklet extends Desklet.Desklet {
         this._clock_actor.add_actor(this._slash_label);
         this._clock_actor.add_actor(this._phase_label);
         this._clock_actor.add_actor(this._secondary_caption_label);
+
+        this._mini_errormoji_label = new St.Label();
+        this._clock_actor.add_actor(this._mini_errormoji_label);
     }
 
     updateUI() {
@@ -561,6 +566,7 @@ class P3Desklet extends Desklet.Desklet {
         let dot_style = SU.split_font_string("serif Bold 82");
         let weekday_style = SU.split_font_string(date_style.family + " 35");
         let emoji_style = SU.split_font_string("sans " + this.emoji_size);
+        let mini_errormoji_style = SU.split_font_string("sans 30");
         // There is a single bottom caption font,
         // but everyone has a different (but related) size
         let caption_style = SU.split_font_string(this.caption_font);
@@ -735,6 +741,20 @@ class P3Desklet extends Desklet.Desklet {
                 124,
                 caption_style,
                 this.color_scheme.bottom
+            )
+        );
+
+        this._mini_errormoji_label.set_width(scaledWidth);
+        this._mini_errormoji_label.set_height(scaledHeight);
+        this._mini_errormoji_label.set_position(0, 0);
+        this._mini_errormoji_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "right",
+                170-mini_errormoji_style.size*0.5,
+                2,
+                mini_errormoji_style,
+                "white"
             )
         );
     }

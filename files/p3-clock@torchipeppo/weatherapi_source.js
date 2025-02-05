@@ -17,6 +17,7 @@ else {
     CONSTANTS = imports.constants;
 }
 const _ = Translation._;
+const OK = -1;
 
 // REST API workflow based on https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/bbcwx%2540oak-wood.co.uk/files/bbcwx%2540oak-wood.co.uk/3.0/desklet.js
 let _httpSession;
@@ -30,6 +31,7 @@ if (Soup.MAJOR_VERSION === undefined || Soup.MAJOR_VERSION === 2) {
 class WeatherAPISource {
     constructor(uuid, desklet_id) {
         this.cached_response = undefined;
+        this.last_error = OK;
         this.reset_time_of_last_weather_update();
 
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
@@ -55,7 +57,7 @@ class WeatherAPISource {
         this.time_of_last_weather_update = new Date(0);  // epoch means "never updated before"
     }
 
-    make_weatherAPI_request(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback) {
+    make_weatherAPI_request(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback, mini_errormoji_callback) {
         let now = new Date();
         const NORMAL_WAIT_TIME = this.wapi_update_period*60*1000;  // from minutes to milliseconds
         const FAST_WAIT_TIME = 20*1000;  // very few seconds in milliseconds
@@ -68,48 +70,54 @@ class WeatherAPISource {
                 "http://api.weatherapi.com/v1/forecast.json?key="+this.wapi_key+"&q="+this.wapi_query,
                 (response, status_code) => {
                     if (response) {
+                        this.last_error = OK;
                         this.cached_response = JSON.parse(response);
                     }
                     else {
-                        this.cached_response = null;
-                        if (status_code == 0) {  // may add more status codes here with ||
+                        this.last_error = status_code;
+                        if (status_code == 0 || status_code == 2) {  // may add more status codes here with ||
                             this.next_weather_update_is_fast = true;
+                            global.log("["+UUID+"] Fast retry activated");
                         }
                     }
-                    this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback);
+                    this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback, mini_errormoji_callback);
                 }
             )
         }
         else {
             // global.log("cached");
-            this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback);
+            this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback, mini_errormoji_callback);
         }
     }
 
-    _call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback) {
+    _call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback, mini_errormoji_callback) {
         if (this.cached_response) {
             emoji_callback.call(back_reference, this._make_emoji_text(this.cached_response));
             caption_callback.call(back_reference, this._make_caption_text(this.cached_response));
             number_callback.call(back_reference, this._make_number_text(this.cached_response));
             head_callback.call(back_reference, this._get_head_text());
             unit_callback.call(back_reference, this._get_unit_text());
+            if (this.last_error == OK) {
+                mini_errormoji_callback.call(back_reference, "");
+            }
+            else {
+                mini_errormoji_callback.call(back_reference, "⚠️");
+            }
         }
-        else if (this.cached_response === null) {
-            emoji_callback.call(back_reference, "⚠️");
-            caption_callback.call(back_reference, _("Error: see log\nSuper + L"));
-            number_callback.call(back_reference, "");
-            head_callback.call(back_reference, "");
-            unit_callback.call(back_reference, "");
+        else {
+            mini_errormoji_callback.call(back_reference, "");
+            if (this.last_error != OK) {
+                emoji_callback.call(back_reference, "⚠️");
+                caption_callback.call(back_reference, _("Error: see log\nSuper + L"));
+                number_callback.call(back_reference, "");
+                head_callback.call(back_reference, "");
+                unit_callback.call(back_reference, "");
+            }
         }
     }
 
     _make_emoji_text(resp_json) {
         switch (this.emoji_type) {
-            case "moon":
-                // TODO remove this sometime in the near future
-                // let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                // return CONSTANTS.MOON_PHASES_BY_WEATHERAPI_NAME[moon_phase_name];
-                return "🌚";
             case "weather":
                 let weather_code = resp_json.current.condition.code;
                 return CONSTANTS.WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
@@ -120,12 +128,6 @@ class WeatherAPISource {
 
     _make_caption_text(resp_json) {
         switch (this.caption_type) {
-            case "moon":
-                // TODO remove this sometime in the near future
-                // let moon_phase_name = resp_json.forecast.forecastday[0].astro.moon_phase;
-                // moon_phase_name = CONSTANTS.TRANSLATED_MOON_PHASE_NAMES[moon_phase_name];
-                // return moon_phase_name.replace(" ", "\n");
-                return "This shouldn't\nappear.";
             case "weather":
                 let weather_code = resp_json.current.condition.code;
                 let weather_emoji = CONSTANTS.WEATHER_EMOJIS_BY_CONDITION_CODE[weather_code];
@@ -191,9 +193,9 @@ class WeatherAPISource {
                         callback.call(here, false, message.status_code);
                     }
                 } else {
-                    global.logWarning("Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
+                    global.logWarning("["+UUID+"] Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
                     if (message.status_code == 0) {
-                        global.logWarning("(You may be disconnected from the network)");
+                        global.logWarning("["+UUID+"] (You may be disconnected from the network)");
                     }
                     callback.call(here, false, message.status_code);
                 }
@@ -211,9 +213,9 @@ class WeatherAPISource {
                         callback.call(here, false, message.get_status());
                     }
                 } else {
-                    global.logWarning("Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
+                    global.logWarning("["+UUID+"] Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
                     if (message.get_status() == 0) {
-                        global.logWarning("(You may be disconnected from the network)");
+                        global.logWarning("["+UUID+"] (You may be disconnected from the network)");
                     }
                     callback.call(here, false, message.get_status());
                 }
