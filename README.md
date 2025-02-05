@@ -40,10 +40,11 @@ Download or clone this repo, then put the `p3-clock@torchipeppo` directory
 data for the moon phases](https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/lunar_calendar_generation)
 
 ### Design goals
-1. Adapt the style of the UI from the video game "Persona 3" into an
-   effectively useful desktop widget
-2. Provide the most value to as many users as possible via customization
-3. Keep the option to stay close to the source material, wherever possible
+1. Combine the style of the UI from the video game "Persona 3" and
+   Linux/Cinnamon conventions into an effectively useful desktop widget
+2. Provide the most value to as many users as possible
+3. Keep the option to stay close to the source material, wherever this doesn't
+   conflict with the above points
 
 ## Bug reports, feature requests, and contributions
 Feel free to open issues or pull requests on the Cinnamon Spices repo

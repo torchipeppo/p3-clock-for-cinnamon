@@ -16,6 +16,9 @@ To submit a new customization here, please open a pull request.
 The closest reproduction of the HUD from the game Persona 3 that OFL fonts
 (and standard emoji) allow, referencing the inspiration of this whole endavor.
 
+You may also be interested in one of the first three color schemes:
+"Blue", "Pink" and "Green".
+
 Instrument Sans, Onest and Geist are available on Google Fonts.
 Onest and Geist can be used in place of each other if you want
 a more cohesive style or less fonts to download.
