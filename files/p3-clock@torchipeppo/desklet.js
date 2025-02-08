@@ -537,24 +537,25 @@ class P3Desklet extends Desklet.Desklet {
 
 
         // background image
-        let bgName = "p3corner-custom.svg"
-        let orig_width, orig_height, fileInfo;
-        [fileInfo, orig_width, orig_height] = GdkPixbuf.Pixbuf.get_file_info(DESKLET_DIR + "/" + bgName);
-
-        const CANON_HEIGHT = 387.0;
-        const CANON_WIDTH = orig_width * CANON_HEIGHT / orig_height;
-
-        let scaledWidth = this.scale * CANON_WIDTH;
-        let scaledHeight = this.scale * CANON_HEIGHT;
+        let svg_data, orig_width, orig_height;
+        [svg_data, orig_width, orig_height] = this.color_scheme.get_svg();
+        let scaledWidth = this.scale * orig_width;
+        let scaledHeight = this.scale * orig_height;
 
 
-        let pixBuf = GdkPixbuf.Pixbuf.new_from_file_at_size(DESKLET_DIR + "/" + bgName, scaledWidth, scaledHeight);
+        let pixbuf_loader = new GdkPixbuf.PixbufLoader();
+        pixbuf_loader.set_size(scaledWidth, scaledHeight);
+        pixbuf_loader.write(svg_data);
+        pixbuf_loader.close();
+        let pixBuf = pixbuf_loader.get_pixbuf();
         this._bg_image.set_data(
             pixBuf.get_pixels(),
             pixBuf.get_has_alpha() ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGBA_888,
             scaledWidth, scaledHeight,
             pixBuf.get_rowstride()
         );
+        pixBuf.unref();
+        pixbuf_loader.unref();
         
         this._bg_actor.set_width(scaledWidth);
         this._bg_actor.set_height(scaledHeight);
