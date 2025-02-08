@@ -554,8 +554,6 @@ class P3Desklet extends Desklet.Desklet {
             scaledWidth, scaledHeight,
             pixBuf.get_rowstride()
         );
-        pixBuf.unref();
-        pixbuf_loader.unref();
         
         this._bg_actor.set_width(scaledWidth);
         this._bg_actor.set_height(scaledHeight);
