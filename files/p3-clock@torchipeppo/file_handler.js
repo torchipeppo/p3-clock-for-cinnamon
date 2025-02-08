@@ -1,6 +1,9 @@
 const GLib = imports.gi.GLib;
 const ByteArray = imports.byteArray;
 
+const UUID = "p3-clock@torchipeppo";
+const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+
 let FileHandlerBase;
 if (typeof require !== 'undefined') {
     FileHandlerBase = require("./file_handler_base");
