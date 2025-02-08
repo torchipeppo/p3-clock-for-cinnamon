@@ -7,6 +7,12 @@ const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 class ColorScheme {
     constructor(uuid, desklet_id, file_handler) {
         this.file_handler = file_handler;
+        this.p3corner_template_svg_data = this.file_handler.get_file_text(
+            this.file_handler.get_path_to_file("p3corner-template.svgtemp")
+        );
+        let svg_attributes = /<svg([^>]*)>/.exec(this.p3corner_template_svg_data)[1];
+        this.p3corner_width = Number(/width="([^"]*)"/.exec(svg_attributes)[1]);
+        this.p3corner_height = Number(/height="([^"]*)"/.exec(svg_attributes)[1]);
     }
 
     load_color_scheme(color_scheme_name, custom_scheme, invert_bottom_colors) {
@@ -26,14 +32,9 @@ class ColorScheme {
     }
 
     get_svg() {
-        let svg_content = this.file_handler.get_file_text(
-            this.file_handler.get_path_to_file("p3corner-template.svgtemp")
-        );
-        let svg_attributes = /<svg([^>]*)>/.exec(svg_content)[1];
-        let width = Number(/width="([^"]*)"/.exec(svg_attributes)[1]);
-        let height = Number(/height="([^"]*)"/.exec(svg_attributes)[1]);
+        let svg_content = this.p3corner_template_svg_data;
         svg_content = svg_content.replace(/%corner1%/g, this.corner1);
         svg_content = svg_content.replace(/%corner2%/g, this.corner2);
-        return [svg_content, width, height];
+        return [svg_content, this.p3corner_width, this.p3corner_height];
     }
 }
