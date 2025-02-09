@@ -41,8 +41,6 @@ const _ = Translation._;
 
 /*
     TODO
-    - Anche fare diversi schemi di colore sarebbe carino
-        Forse anche un altro verde
     - Fare un file importabile per ogni stile nello screenshot showcase, forse.
 */
 

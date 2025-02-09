@@ -39,6 +39,14 @@
         "date": "#400000",
         "bottom": "#FFF0F0"
     },
+    "light-green": {
+        "corner1": "#98fe1e",
+        "corner2": "#000000",
+        "time": "white",
+        "time_shadow": "#79b82b",
+        "date": "#468000",
+        "bottom": "mintcream"
+    },
     "purple": {
         "corner1": "blueviolet",
         "corner2": "#000000",

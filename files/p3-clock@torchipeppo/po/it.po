@@ -385,6 +385,11 @@ msgstr "Rosso"
 
 #. settings-schema.json->global-color-scheme->options
 #. 5.7->settings-schema.json->global-color-scheme->options
+msgid "Light Green"
+msgstr "Verde chiaro"
+
+#. settings-schema.json->global-color-scheme->options
+#. 5.7->settings-schema.json->global-color-scheme->options
 msgid "Purple"
 msgstr "Viola"
 
