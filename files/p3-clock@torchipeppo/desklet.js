@@ -425,22 +425,26 @@ class P3Desklet extends Desklet.Desklet {
         // secondary countdowns
         // (this is the only current use of the secondary label, so no other checks for now)
         let secondary_text = ""
-        if (this.show_secondary_countdowns) {
-            for (let i of [0,1]) {
-                if (this.caption_type == "cntdn-cstm") {
-                    i += 1;
-                }
-                let countdown_item = this.clock_source.get_custom_countdown_item_from_list(i);
-                if (countdown_item) {
-                    let name_text = countdown_item.name ? countdown_item.name : _("Limit");
-                    let number_text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
-                    if (number_text.length < 2) {
-                        number_text = "  " + number_text;
+        // The "caption: none" setting is interpreted as "no text at all",
+        // so the secondar text is also shut off
+        if (this.caption_type) {
+            if (this.show_secondary_countdowns) {
+                for (let i of [0,1]) {
+                    if (this.caption_type == "cntdn-cstm") {
+                        i += 1;
                     }
-                    if (secondary_text.length > 0) {
-                        secondary_text += "\n";
+                    let countdown_item = this.clock_source.get_custom_countdown_item_from_list(i);
+                    if (countdown_item) {
+                        let name_text = countdown_item.name ? countdown_item.name : _("Limit");
+                        let number_text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
+                        if (number_text.length < 2) {
+                            number_text = "  " + number_text;
+                        }
+                        if (secondary_text.length > 0) {
+                            secondary_text += "\n";
+                        }
+                        secondary_text += name_text + ": " + number_text;
                     }
-                    secondary_text += name_text + ": " + number_text;
                 }
             }
         }
