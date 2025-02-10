@@ -126,7 +126,7 @@ msgstr ""
 #. metadata.json->name
 #. desklet.js:488 5.7/desklet.js:488
 msgid "Moonlight Clock"
-msgstr "Orologio Chardiluna"
+msgstr "Orologio Chiardiluna"
 
 #. wallclock_source.js:19 5.7/wallclock_source.js:19
 msgid "Late Night"
