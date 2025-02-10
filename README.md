@@ -19,7 +19,7 @@ A multipurpose display for current date, time, weather, and/or custom important 
 
 <p align="center">
 <img src="screenshot.png" width="600" align="middle"><br>
-Default look after enabling WeatherAPI and setting the fonts Geist, Ubuntu and Onest (all free and open source, available e.g. on Google Fonts).
+Default look after enabling WeatherAPI. The default font depends on your system configuration.
 </p>
 
 <p align="center">
