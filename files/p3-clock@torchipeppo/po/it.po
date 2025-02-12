@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: p3-clock@torchipeppo 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2025-01-31 17:56+0100\n"
+"POT-Creation-Date: 2025-02-12 19:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. constants.js:52 desklet.js:674 5.7/constants.js:52 5.7/desklet.js:674
+#. constants.js:52 desklet.js:683 5.7/constants.js:52 5.7/desklet.js:683
 msgid "Next"
 msgstr "Prossima"
 
@@ -82,8 +82,8 @@ msgstr "Nuvoloso"
 msgid "Fog"
 msgstr "Nebbia"
 
-#. constants.js:183 constants.js:184 weatherapi_source.js:154
-#. 5.7/constants.js:183 5.7/constants.js:184 5.7/weatherapi_source.js:154
+#. constants.js:183 constants.js:184 weatherapi_source.js:164
+#. 5.7/constants.js:183 5.7/constants.js:184 5.7/weatherapi_source.js:164
 msgid "Rain"
 msgstr "Pioggia"
 
@@ -99,11 +99,11 @@ msgstr ""
 "Precip.\n"
 "fredde"
 
-#. desklet.js:155 5.7/desklet.js:155
+#. desklet.js:152 5.7/desklet.js:152
 msgid "Date and Time Settings"
 msgstr "Impostazioni data e ora"
 
-#. desklet.js:410 desklet.js:438 5.7/desklet.js:410 5.7/desklet.js:438
+#. desklet.js:407 desklet.js:438 5.7/desklet.js:407 5.7/desklet.js:438
 msgid "Limit"
 msgstr "Limite"
 
@@ -111,11 +111,11 @@ msgstr "Limite"
 #. settings-schema.json->bottom-caption-type->options
 #. 5.7->settings-schema.json->bottom-emoji-type->options
 #. 5.7->settings-schema.json->bottom-caption-type->options
-#. desklet.js:414 5.7/desklet.js:414
+#. desklet.js:411 5.7/desklet.js:411
 msgid "None"
 msgstr "Nessuno"
 
-#. desklet.js:452 5.7/desklet.js:452
+#. desklet.js:453 5.7/desklet.js:453
 msgid ""
 "Right-click\n"
 "to configure!"
@@ -124,39 +124,47 @@ msgstr ""
 "per configurare!"
 
 #. metadata.json->name
-#. desklet.js:488 5.7/desklet.js:488
+#. desklet.js:494 5.7/desklet.js:494
 msgid "Moonlight Clock"
 msgstr "Orologio Chiardiluna"
 
-#. wallclock_source.js:19 5.7/wallclock_source.js:19
+#. wallclock_source.js:24 5.7/wallclock_source.js:24
 msgid "Late Night"
 msgstr "Tarda notte"
 
-#. wallclock_source.js:22 5.7/wallclock_source.js:22
+#. wallclock_source.js:27 5.7/wallclock_source.js:27
 msgid "Early Morning"
 msgstr "Mattina presto"
 
-#. wallclock_source.js:25 5.7/wallclock_source.js:25
+#. wallclock_source.js:30 5.7/wallclock_source.js:30
 msgid "Morning"
 msgstr "Mattina"
 
-#. wallclock_source.js:28 5.7/wallclock_source.js:28
+#. wallclock_source.js:33 5.7/wallclock_source.js:33
 msgid "Daytime"
 msgstr "Giorno"
 
-#. wallclock_source.js:31 5.7/wallclock_source.js:31
+#. wallclock_source.js:36 5.7/wallclock_source.js:36
 msgid "Afternoon"
 msgstr "Pomeriggio"
 
-#. wallclock_source.js:34 5.7/wallclock_source.js:34
+#. wallclock_source.js:39 5.7/wallclock_source.js:39
 msgid "Evening"
 msgstr "Sera"
 
-#. wallclock_source.js:125 5.7/wallclock_source.js:125
+#. wallclock_source.js:130 5.7/wallclock_source.js:130
 msgid "Today"
 msgstr "Oggi"
 
-#. weatherapi_source.js:96 5.7/weatherapi_source.js:96
+#. weatherapi_source.js:112 5.7/weatherapi_source.js:112
+msgid ""
+"No network,\n"
+"retrying..."
+msgstr ""
+"Rete non disponibile,\n"
+"riprovo..."
+
+#. weatherapi_source.js:115 5.7/weatherapi_source.js:115
 msgid ""
 "Error: see log\n"
 "Super + L"
@@ -164,7 +172,7 @@ msgstr ""
 "Errore: vedi log\n"
 "Super + L"
 
-#. weatherapi_source.js:157 5.7/weatherapi_source.js:157
+#. weatherapi_source.js:167 5.7/weatherapi_source.js:167
 msgid "Temp"
 msgstr "Temp"
 
@@ -180,44 +188,44 @@ msgstr "Carica"
 msgid "Save"
 msgstr "Salva"
 
-#. settingsWidgets.py:122 5.7/settingsWidgets.py:122
+#. settingsWidgets.py:127 5.7/settingsWidgets.py:127
 msgid "Enabled"
 msgstr "Attiva"
 
-#. settingsWidgets.py:123 5.7/settingsWidgets.py:123
+#. settingsWidgets.py:128 5.7/settingsWidgets.py:128
 msgid "Persistent"
 msgstr "Persistente"
 
-#. settingsWidgets.py:124 5.7/settingsWidgets.py:124
+#. settingsWidgets.py:129 5.7/settingsWidgets.py:129
 msgid "Date"
 msgstr "Data"
 
-#. settingsWidgets.py:125 5.7/settingsWidgets.py:125
+#. settingsWidgets.py:130 5.7/settingsWidgets.py:130
 msgid "Name"
 msgstr "Nome"
 
-#. settingsWidgets.py:226 settingsWidgets.py:322 5.7/settingsWidgets.py:226
-#. 5.7/settingsWidgets.py:322
+#. settingsWidgets.py:231 settingsWidgets.py:327 5.7/settingsWidgets.py:231
+#. 5.7/settingsWidgets.py:327
 msgid "Add new entry"
 msgstr "Aggiungi nuova voce"
 
-#. settingsWidgets.py:230 5.7/settingsWidgets.py:230
+#. settingsWidgets.py:235 5.7/settingsWidgets.py:235
 msgid "Remove selected entry"
 msgstr "Rimuovi la voce selezionata"
 
-#. settingsWidgets.py:235 5.7/settingsWidgets.py:235
+#. settingsWidgets.py:240 5.7/settingsWidgets.py:240
 msgid "Edit selected entry"
 msgstr "Modifica la voce selezionata"
 
-#. settingsWidgets.py:240 5.7/settingsWidgets.py:240
+#. settingsWidgets.py:245 5.7/settingsWidgets.py:245
 msgid "Move selected entry up"
 msgstr "Sposta in alto la voce selezionata"
 
-#. settingsWidgets.py:245 5.7/settingsWidgets.py:245
+#. settingsWidgets.py:250 5.7/settingsWidgets.py:250
 msgid "Move selected entry down"
 msgstr "Sposta in basso la voce selezionata"
 
-#. settingsWidgets.py:324 5.7/settingsWidgets.py:324
+#. settingsWidgets.py:329 5.7/settingsWidgets.py:329
 msgid "Edit entry"
 msgstr "Modifica voce"
 
@@ -227,8 +235,8 @@ msgid ""
 "display, and/or tracker of important dates. Based on Persona 3."
 msgstr ""
 "Un desklet estatico e personalizzabile che può funzionare come orologio, "
-"visualizzare il meteo, e/o tenere traccia di date importanti. "
-"Basato su Persona 3."
+"visualizzare il meteo, e/o tenere traccia di date importanti. Basato su "
+"Persona 3."
 
 #. metadata.json->comments
 msgid ""
@@ -453,8 +461,8 @@ msgstr "Inverti colori dell'area inferiore"
 msgid ""
 "May be useful if the bottom caption doesn't stand out against your background"
 msgstr ""
-"Può tornare utile se la didascalia inferiore non risalta a sufficienza contro "
-"il tuo sfondo."
+"Può tornare utile se la didascalia inferiore non risalta a sufficienza "
+"contro il tuo sfondo."
 
 #. settings-schema.json->top-format->description
 #. settings-schema.json->middle-format->description
@@ -471,9 +479,9 @@ msgid ""
 "Leave empty to show a default date according to your locale and settings."
 msgstr ""
 "Il formato è strftime standard, con l'aggiunta della sequenza speciale %! "
-"che mostra una fase approssimativa della giornata (Mattina, Pomeriggio, Sera, "
-"...). Lascia vuoto per mostrare la data odierna in un formato di default "
-"in base alla tua lingua e impostazioni."
+"che mostra una fase approssimativa della giornata (Mattina, Pomeriggio, "
+"Sera, ...). Lascia vuoto per mostrare la data odierna in un formato di "
+"default in base alla tua lingua e impostazioni."
 
 #. settings-schema.json->top-font->description
 #. settings-schema.json->middle-font->description
@@ -497,9 +505,9 @@ msgid ""
 "Leave empty to show a default clock according to your locale and settings."
 msgstr ""
 "Il formato è strftime standard, con l'aggiunta della sequenza speciale %! "
-"che mostra una fase approssimativa della giornata (Mattina, Pomeriggio, Sera, "
-"...). Lascia vuoto per mostrare l'ora corrente in un formato di default "
-"in base alla tua lingua e impostazioni."
+"che mostra una fase approssimativa della giornata (Mattina, Pomeriggio, "
+"Sera, ...). Lascia vuoto per mostrare l'ora corrente in un formato di "
+"default in base alla tua lingua e impostazioni."
 
 #. settings-schema.json->middle-shadow->description
 #. 5.7->settings-schema.json->middle-shadow->description
@@ -535,10 +543,10 @@ msgid ""
 "weatherapi.com to get one. Be mindful of your request budget when setting "
 "the update frequency or manually requesting updates."
 msgstr ""
-"Per accedere ai dati metereologici di WeatherAPI, è necessaria una chiave per "
-"l'API. Registrati su weatherapi.com per ottenerne una. Tieni a mente il tuo "
-"budget di richieste quando imposti la frequenza di aggiornamento o richiedi "
-"aggiornamenti manualmente."
+"Per accedere ai dati metereologici di WeatherAPI, è necessaria una chiave "
+"per l'API. Registrati su weatherapi.com per ottenerne una. Tieni a mente il "
+"tuo budget di richieste quando imposti la frequenza di aggiornamento o "
+"richiedi aggiornamenti manualmente."
 
 #. settings-schema.json->wapi-enable->description
 #. 5.7->settings-schema.json->wapi-enable->description
@@ -552,8 +560,7 @@ msgstr "Chiave WeatherAPI"
 
 #. settings-schema.json->wapi-key->tooltip
 #. 5.7->settings-schema.json->wapi-key->tooltip
-msgid ""
-"Your API key for WeatherAPI. Leave empty to disable weather display."
+msgid "Your API key for WeatherAPI. Leave empty to disable weather display."
 msgstr ""
 "La tua chiave per WeatherAPI. Lascia vuoto per disabilitare la "
 "visualizzazione del meteo."
@@ -659,7 +666,8 @@ msgstr ""
 "rovescia nel testo secondario\" (fino a 2 date addizionali).\n"
 "L'ordine della lista rappresenta l'ordine di priorità delle date.\n"
 "Disattiva le date per saltarle.\n"
-"Anche le date passate vengono saltate, a meno che non siano \"persistenti\".\n"
+"Anche le date passate vengono saltate, a meno che non siano "
+"\"persistenti\".\n"
 "\n"
 
 #. settings-schema.json->save-help->description
@@ -676,7 +684,8 @@ msgstr ""
 "JSON:\n"
 "- combinazione di colori,\n"
 "- stile del testo (inclusi carattere, ombra, dimensione emoji),\n"
-"- contenuto (incluse stringhe di formato data-pra e scelte per la riga inferiore),\n"
+"- contenuto (incluse stringhe di formato data-pra e scelte per la riga "
+"inferiore),\n"
 "- date per il conto alla rovescia.\n"
 "NON corrisponde a un'esportazione completa della condigurazione."
 
@@ -695,9 +704,9 @@ msgid ""
 msgstr ""
 "Scegli quali opzioni caricare da un salvataggio precedente, poi clicca il "
 "pulsante qui sotto per caricare.\n"
-"ATTENZIONE: le impostazioni selezionate saranno sovrascritte, e i loro valori "
-"originali andranno persi! Le impostazioni non selezionate non verranno "
-"toccate."
+"ATTENZIONE: le impostazioni selezionate saranno sovrascritte, e i loro "
+"valori originali andranno persi! Le impostazioni non selezionate non "
+"verranno toccate."
 
 #. settings-schema.json->load-colors->description
 #. 5.7->settings-schema.json->load-colors->description

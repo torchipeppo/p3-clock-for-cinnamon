@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: p3-clock@torchipeppo 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2025-01-31 17:56+0100\n"
+"POT-Creation-Date: 2025-02-12 19:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. constants.js:52 desklet.js:674 5.7/constants.js:52 5.7/desklet.js:674
+#. constants.js:52 desklet.js:683 5.7/constants.js:52 5.7/desklet.js:683
 msgid "Next"
 msgstr ""
 
@@ -81,8 +81,8 @@ msgstr ""
 msgid "Fog"
 msgstr ""
 
-#. constants.js:183 constants.js:184 weatherapi_source.js:154
-#. 5.7/constants.js:183 5.7/constants.js:184 5.7/weatherapi_source.js:154
+#. constants.js:183 constants.js:184 weatherapi_source.js:164
+#. 5.7/constants.js:183 5.7/constants.js:184 5.7/weatherapi_source.js:164
 msgid "Rain"
 msgstr ""
 
@@ -96,11 +96,11 @@ msgid ""
 "precip."
 msgstr ""
 
-#. desklet.js:155 5.7/desklet.js:155
+#. desklet.js:152 5.7/desklet.js:152
 msgid "Date and Time Settings"
 msgstr ""
 
-#. desklet.js:410 desklet.js:438 5.7/desklet.js:410 5.7/desklet.js:438
+#. desklet.js:407 desklet.js:438 5.7/desklet.js:407 5.7/desklet.js:438
 msgid "Limit"
 msgstr ""
 
@@ -108,56 +108,62 @@ msgstr ""
 #. settings-schema.json->bottom-caption-type->options
 #. 5.7->settings-schema.json->bottom-emoji-type->options
 #. 5.7->settings-schema.json->bottom-caption-type->options
-#. desklet.js:414 5.7/desklet.js:414
+#. desklet.js:411 5.7/desklet.js:411
 msgid "None"
 msgstr ""
 
-#. desklet.js:452 5.7/desklet.js:452
+#. desklet.js:453 5.7/desklet.js:453
 msgid ""
 "Right-click\n"
 "to configure!"
 msgstr ""
 
 #. metadata.json->name
-#. desklet.js:488 5.7/desklet.js:488
+#. desklet.js:494 5.7/desklet.js:494
 msgid "Moonlight Clock"
 msgstr ""
 
-#. wallclock_source.js:19 5.7/wallclock_source.js:19
+#. wallclock_source.js:24 5.7/wallclock_source.js:24
 msgid "Late Night"
 msgstr ""
 
-#. wallclock_source.js:22 5.7/wallclock_source.js:22
+#. wallclock_source.js:27 5.7/wallclock_source.js:27
 msgid "Early Morning"
 msgstr ""
 
-#. wallclock_source.js:25 5.7/wallclock_source.js:25
+#. wallclock_source.js:30 5.7/wallclock_source.js:30
 msgid "Morning"
 msgstr ""
 
-#. wallclock_source.js:28 5.7/wallclock_source.js:28
+#. wallclock_source.js:33 5.7/wallclock_source.js:33
 msgid "Daytime"
 msgstr ""
 
-#. wallclock_source.js:31 5.7/wallclock_source.js:31
+#. wallclock_source.js:36 5.7/wallclock_source.js:36
 msgid "Afternoon"
 msgstr ""
 
-#. wallclock_source.js:34 5.7/wallclock_source.js:34
+#. wallclock_source.js:39 5.7/wallclock_source.js:39
 msgid "Evening"
 msgstr ""
 
-#. wallclock_source.js:125 5.7/wallclock_source.js:125
+#. wallclock_source.js:130 5.7/wallclock_source.js:130
 msgid "Today"
 msgstr ""
 
-#. weatherapi_source.js:96 5.7/weatherapi_source.js:96
+#. weatherapi_source.js:112 5.7/weatherapi_source.js:112
+msgid ""
+"No network,\n"
+"retrying..."
+msgstr ""
+
+#. weatherapi_source.js:115 5.7/weatherapi_source.js:115
 msgid ""
 "Error: see log\n"
 "Super + L"
 msgstr ""
 
-#. weatherapi_source.js:157 5.7/weatherapi_source.js:157
+#. weatherapi_source.js:167 5.7/weatherapi_source.js:167
 msgid "Temp"
 msgstr ""
 
@@ -173,44 +179,44 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#. settingsWidgets.py:122 5.7/settingsWidgets.py:122
+#. settingsWidgets.py:127 5.7/settingsWidgets.py:127
 msgid "Enabled"
 msgstr ""
 
-#. settingsWidgets.py:123 5.7/settingsWidgets.py:123
+#. settingsWidgets.py:128 5.7/settingsWidgets.py:128
 msgid "Persistent"
 msgstr ""
 
-#. settingsWidgets.py:124 5.7/settingsWidgets.py:124
+#. settingsWidgets.py:129 5.7/settingsWidgets.py:129
 msgid "Date"
 msgstr ""
 
-#. settingsWidgets.py:125 5.7/settingsWidgets.py:125
+#. settingsWidgets.py:130 5.7/settingsWidgets.py:130
 msgid "Name"
 msgstr ""
 
-#. settingsWidgets.py:226 settingsWidgets.py:322 5.7/settingsWidgets.py:226
-#. 5.7/settingsWidgets.py:322
+#. settingsWidgets.py:231 settingsWidgets.py:327 5.7/settingsWidgets.py:231
+#. 5.7/settingsWidgets.py:327
 msgid "Add new entry"
 msgstr ""
 
-#. settingsWidgets.py:230 5.7/settingsWidgets.py:230
+#. settingsWidgets.py:235 5.7/settingsWidgets.py:235
 msgid "Remove selected entry"
 msgstr ""
 
-#. settingsWidgets.py:235 5.7/settingsWidgets.py:235
+#. settingsWidgets.py:240 5.7/settingsWidgets.py:240
 msgid "Edit selected entry"
 msgstr ""
 
-#. settingsWidgets.py:240 5.7/settingsWidgets.py:240
+#. settingsWidgets.py:245 5.7/settingsWidgets.py:245
 msgid "Move selected entry up"
 msgstr ""
 
-#. settingsWidgets.py:245 5.7/settingsWidgets.py:245
+#. settingsWidgets.py:250 5.7/settingsWidgets.py:250
 msgid "Move selected entry down"
 msgstr ""
 
-#. settingsWidgets.py:324 5.7/settingsWidgets.py:324
+#. settingsWidgets.py:329 5.7/settingsWidgets.py:329
 msgid "Edit entry"
 msgstr ""
 
@@ -518,8 +524,7 @@ msgstr ""
 
 #. settings-schema.json->wapi-key->tooltip
 #. 5.7->settings-schema.json->wapi-key->tooltip
-msgid ""
-"Your API key for WeatherAPI. Leave empty to disable weather display."
+msgid "Your API key for WeatherAPI. Leave empty to disable weather display."
 msgstr ""
 
 #. settings-schema.json->wapi-query->description

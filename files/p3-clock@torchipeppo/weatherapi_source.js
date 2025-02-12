@@ -108,7 +108,12 @@ class WeatherAPISource {
             mini_errormoji_callback.call(back_reference, "");
             if (this.last_error != OK) {
                 emoji_callback.call(back_reference, "⚠️");
-                caption_callback.call(back_reference, _("Error: see log\nSuper + L"));
+                if (this.last_error == 0 || this.last_error == 2) {
+                    caption_callback.call(back_reference, _("No network,\nretrying..."));
+                }
+                else {
+                    caption_callback.call(back_reference, _("Error: see log\nSuper + L"));
+                }
                 number_callback.call(back_reference, "");
                 head_callback.call(back_reference, "");
                 unit_callback.call(back_reference, "");
