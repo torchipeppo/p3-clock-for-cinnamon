@@ -7,6 +7,9 @@ of the desklet.
 
 ## Moon Phases
 
+*Note that changing your system date will update the moon phase accordingly,*
+*so you can easily preview these labels.*
+
 ### "Full moon", "Waxing Crescent", etc.
 These are the eight standard moon phase names.
 
@@ -15,9 +18,15 @@ These also refer to the Moon and its plases, being simple abbreviations for
 "New moon" etc., so please make sure the translation reflects this.
 In particular, in the case of most gendered languages, make sure the grammatical
 gender of the translated word matches with that of your word for "Moon".
+Also note that, unlike the above, these labels really should be kept to a single word
+if possible.
 
 
 ## Weather
+
+*Note that, unlike the Moon phasses above, there is no easy way to manipulate*
+*the weather caption, since it comes directly from WeatherAPI.*
+*You can always temporarily hack the source code for testing.*
 
 ### "Clear"
 This refers to the weather, as in "clear sky", not to other meanings
@@ -26,8 +35,9 @@ of the word "clear".
 ### "Rain"
 Note that this word appears in two distinct points of the desklet:
 as a weather caption, and as the label to the "Chance of rain" display.
-It still refers to its common meaning of "water that falls from the sky" in both cases.,
+It still refers to its common meaning of "water that falls from the sky" in both cases,
 so a unified translation should be possible.
+
 In case this is an irreconcileable problem for your language,
 please open an issue or a pull request.
 
@@ -52,6 +62,10 @@ This is intended as in "Time limit", in case it informs your translation.
 ### "None"
 This appears when "Custom countdown" is selected in the configuration
 but there is no target date set in the "Data" page.
+
+Also note that same word also appears in the dropdown menu for the "Emoji display"
+and "Caption display" settings. If this turns out to be especially jarring for
+your language, please open an issue or a pull request.
 
 ### "Temp"
 This is short for "Temperature".
@@ -96,5 +110,6 @@ For example, Cassia Window List (CassiaWindowList@klangman) uses it multiple tim
 ## Desklet name
 
 ### "Moonlight Clock"
-This is the desklet's name. Feel free to add a little poetic license
-to the general meaning of the words, if you feel so inclined.
+This is the desklet's name. Feel free to add a little poetic license to the
+to the general meaning of the words to make a name that sounds better than a
+literal translation, if you feel so inclined.

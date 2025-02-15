@@ -13,8 +13,8 @@ To submit a new customization here, please open a pull request.
 
 ### persona3.json
 
-The closest reproduction of the HUD from the game Persona 3 that OFL fonts
-(and standard emoji) allow, referencing the inspiration of this whole endavor.
+The closest reproduction of the HUD from the game "Persona 3" that OFL fonts
+and standard emoji allow, referencing the inspiration of this whole endavor.
 
 You may also be interested in one of the first three color schemes:
 "Blue", "Pink" and "Green".
