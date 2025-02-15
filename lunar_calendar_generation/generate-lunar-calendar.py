@@ -5,6 +5,10 @@ import sys
 import json
 from pathlib import Path
 
+# just so that back-compatibility is easier to manage in the extremely unlikely
+# case that I change this
+LLC_VERSION = 1
+
 # skyfield has one that says "Full Moon" etc., but these shorter codes are nicer
 # for my desklet (less time spent comparing strings while still being readable)
 PHASE_CODES = np.array(["new", "fq", "full", "lq"])
@@ -57,7 +61,7 @@ def calculate_year(target_year):
 
     for mp in MOON_PATHS:
         with open(mp / f"{target_year}.json", "w") as f:
-            json.dump({"calendar": lunar_calendar_list, "month_index": month_idx_list}, f)
+            json.dump({"llc_version": LLC_VERSION, "calendar": lunar_calendar_list, "month_index": month_idx_list}, f)
 
 
 
