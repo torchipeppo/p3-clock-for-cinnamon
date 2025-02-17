@@ -93,6 +93,9 @@ class WallclockSource {
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
         let actual_time_format = this.time_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
         let formatted_time = this.wallclock.get_clock_for_format(actual_time_format);
+        if (formatted_time === null) {
+            formatted_time = "!! FORMAT !!";
+        }
         if (!this.time_format) {
             // default stylistic choice: put a little space in the clock
             formatted_time = formatted_time.replace(/[:]/g, " : ");
@@ -105,6 +108,9 @@ class WallclockSource {
         let p3time = hour_to_p3time(Number(this.wallclock.get_clock_for_format("%H")));
         let actual_date_format = this.date_format_or_default().replace(/(?<=(^|[^%])(%%)*)%!/g, p3time);
         let formatted_date = this.wallclock.get_clock_for_format(actual_date_format);
+        if (formatted_date === null) {
+            formatted_date = "!! FORMAT !!";
+        }
         return formatted_date;
     }
 
