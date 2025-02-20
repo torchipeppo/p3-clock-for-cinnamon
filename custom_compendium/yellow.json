@@ -1,0 +1,36 @@
+{
+    "colors": {
+        "custom_corner1_color": "#fbfa0b",
+        "custom_corner2_color": "#000000",
+        "custom_date_color": "#776e03",
+        "custom_time_color": "white",
+        "custom_time_shadow_color": "#b6a906",
+        "custom_bottom_color": "lightyellow"
+    },
+    "style": {
+        "time_font": "Comfortaa Bold Italic 60",
+        "time_shadow_enabled": true,
+        "time_shadow_offset": 5,
+        "date_font": "Comfortaa Medium 52",
+        "emoji_size": 70,
+        "caption_font": "Comfortaa Semi-Bold 50"
+    },
+    "content": {
+        "time_format": "%m / %d",
+        "date_format": "%l : %M %p",
+        "date_weekday_enabled": false,
+        "emoji_type": "weather",
+        "caption_type": "cntdn-cstm",
+        "show_secondary_countdowns": true
+    },
+    "countdown": {
+        "countdown_list": [
+            {
+                "enabled": true,
+                "persistent": false,
+                "date": "{\"y\": 2025, \"m\": 4, \"d\": 6}",
+                "name": "Trip to Iwatodai"
+            }
+        ]
+    }
+}

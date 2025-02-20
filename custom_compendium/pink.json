@@ -1,0 +1,29 @@
+{
+    "colors": {
+        "custom_corner1_color": "#fc99b6",
+        "custom_corner2_color": "#000000",
+        "custom_date_color": "#9f262d",
+        "custom_time_color": "white",
+        "custom_time_shadow_color": "#9f262d",
+        "custom_bottom_color": "lavenderblush"
+    },
+    "style": {
+        "time_font": "Ysabeau Office weight=101 Italic 70",
+        "time_shadow_enabled": true,
+        "time_shadow_offset": 4,
+        "date_font": "Ysabeau weight=101 52",
+        "emoji_size": 70,
+        "caption_font": "Ubuntu weight=255 50"
+    },
+    "content": {
+        "time_format": "%l : %M : %S %p",
+        "date_format": "%A, %b %e",
+        "date_weekday_enabled": false,
+        "emoji_type": "weather",
+        "caption_type": "weather",
+        "show_secondary_countdowns": false
+    },
+    "countdown": {
+        "countdown_list": []
+    }
+}

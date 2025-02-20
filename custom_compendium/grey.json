@@ -1,0 +1,29 @@
+{
+    "colors": {
+        "custom_corner1_color": "lightgrey",
+        "custom_corner2_color": "#000000",
+        "custom_date_color": "dimgrey",
+        "custom_time_color": "white",
+        "custom_time_shadow_color": "grey",
+        "custom_bottom_color": "#f0f0f0"
+    },
+    "style": {
+        "time_font": "Cinzel Medium 70",
+        "time_shadow_enabled": true,
+        "time_shadow_offset": 5,
+        "date_font": "Cinzel 52",
+        "emoji_size": 70,
+        "caption_font": "Cinzel 50"
+    },
+    "content": {
+        "time_format": "%!",
+        "date_format": "%l:%M %P",
+        "date_weekday_enabled": true,
+        "emoji_type": "",
+        "caption_type": "",
+        "show_secondary_countdowns": false
+    },
+    "countdown": {
+        "countdown_list": []
+    }
+}
