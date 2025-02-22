@@ -63,8 +63,8 @@
                 "global-custom-corner2",
                 "global-custom-date",
                 "global-custom-time",
-                "global-custom-time-shadow",
                 "global-custom-bottom",
+                "global-custom-shadow",
                 "global-custom-highlight",
                 "global-color-invert-bottom",
                 "global-color-use-highlight"
@@ -109,6 +109,8 @@
             "keys": [
                 "bottom-caption-type",
                 "bottom-caption-font",
+                "bottom-caption-shadow",
+                "bottom-caption-shadow-offset",
                 "bottom-show-secondary-countdowns"
             ]
         },
@@ -221,10 +223,10 @@
         "description": "Middle row text",
         "dependency": "global-color-scheme=the-custom"
     },
-    "global-custom-time-shadow": {
+    "global-custom-shadow": {
         "type": "colorchooser",
         "default": "#447fab",
-        "description": "Middle row drop shadow",
+        "description": "Text drop shadow",
         "dependency": "global-color-scheme=the-custom"
     },
     "global-custom-date": {
@@ -390,6 +392,21 @@
         "type": "fontchooser",
         "default": "Bold 50",
         "description": "Font",
+        "dependency": "bottom-caption-type!="
+    },
+    "bottom-caption-shadow": {
+        "type": "switch",
+        "default": false,
+        "description": "Drop shadow",
+        "dependency": "bottom-caption-type!="
+    },
+    "bottom-caption-shadow-offset": {
+        "type": "spinbutton",
+        "default": 4,
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "description": "Drop shadow offset",
         "dependency": "bottom-caption-type!="
     },
     "bottom-show-secondary-countdowns": {

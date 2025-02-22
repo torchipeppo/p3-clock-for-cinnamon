@@ -42,9 +42,9 @@ const _ = Translation._;
 /*
     TODO
     - Aggiungere link calendario lunare nelle impostazioni
-    - Mettere ombra facoltativa per bottom (stesso colore dell'altra ombra)
     - Rifare un botto di screenshot :(
     - Rifare tutta la roba salvata in custom_compendium
+    - Aggiornare POT e traduzione
 */
 
 const SOURCE_DISABLED = 0
@@ -58,8 +58,8 @@ const color_scheme_keys = [
     "custom_corner2_color",
     "custom_date_color",
     "custom_time_color",
-    "custom_time_shadow_color",
     "custom_bottom_color",
+    "custom_shadow_color",
     "custom_highlight_color",
 ];
 const text_style_keys = [
@@ -69,6 +69,9 @@ const text_style_keys = [
     "date_font",
     "emoji_size",
     "caption_font",
+    "caption_shadow_enabled",
+    "caption_shadow_offset",
+    "use_highlight_color",
 ];
 const text_content_keys = [
     "time_format",
@@ -120,8 +123,8 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("global-custom-corner2", "custom_corner2_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-date", "custom_date_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-time", "custom_time_color", this._onColorSettingsChanged);
-        this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-bottom", "custom_bottom_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-shadow", "custom_shadow_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-highlight", "custom_highlight_color", this._onColorSettingsChanged);
         this.settings.bind("global-color-invert-bottom", "invert_bottom_colors", this._onColorSettingsChanged);
         this.settings.bind("global-color-use-highlight", "use_highlight_color", this._onColorSettingsChanged);
@@ -144,6 +147,8 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-emoji-size", "emoji_size", this._onUISettingsChanged);
         this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
+        this.settings.bind("bottom-caption-shadow", "caption_shadow_enabled", this._onUISettingsChanged);
+        this.settings.bind("bottom-caption-shadow-offset", "caption_shadow_offset", this._onUISettingsChanged);
         this.settings.bind("bottom-show-secondary-countdowns", "show_secondary_countdowns", this._onUISettingsChanged);
 
         this.settings.bind("custom-countdown-list", "countdown_list", this._onSettingsChanged);
@@ -237,7 +242,8 @@ class P3Desklet extends Desklet.Desklet {
                     }
                     if (this.loading_text_content_enabled) {
                         Object.assign(this, to_load.content);
-                        this._onFormatSettingsChanged();
+                        // this._onFormatSettingsChanged();
+                        this.updateClockFrequency(this.time_format, this.date_format)
                         this._onUISettingsChanged();
                         this._onWAPISettingsChanged();
                     }
@@ -253,7 +259,10 @@ class P3Desklet extends Desklet.Desklet {
     updateFormat() {
         let actual_time_format = this.clock_source.time_format_or_default();
         let actual_date_format = this.clock_source.date_format_or_default();
-        let combined_format = actual_time_format + " " + actual_date_format
+        this.updateClockFrequency(actual_time_format, actual_date_format)
+    }
+    updateClockFrequency(time_format, date_format) {
+        let combined_format = time_format + " " + date_format
         // this regex accounts for %% escaping  https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
         if (/(?<=(^|[^%])(%%)*)%[SLs]/.test(combined_format)) {
             this.wallclock.set_format_string("%S");
@@ -348,29 +357,29 @@ class P3Desklet extends Desklet.Desklet {
         let luncal_exists = this.luncal_source.local_lunar_calendar_exists();
 
         if (es == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) {
-            this._emoji_label.set_text(this.luncal_source.get_emoji_text());
+            this.set_emoji_text(this.luncal_source.get_emoji_text());
         }
         else if (es == SOURCE_SUNCALC) {
-            this._emoji_label.set_text(this.suncalc_source.get_emoji_text());
+            this.set_emoji_text(this.suncalc_source.get_emoji_text());
         }
         else if (es != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
-            this._emoji_label.set_text("");
+            this.set_emoji_text("");
         }
         
         // set labels that are constant (or empty) in this config
         if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].caption_label != "<get>") {
-            this._caption_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].caption_label);
+            this.set_caption_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].caption_label);
         }
         if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].next_label != "<get>") {
-            this._next_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].next_label);
+            this.set_next_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].next_label);
         }
         if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].countdown_label != "<get>") {
-            this._countdown_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].countdown_label);
+            this.set_countdown_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].countdown_label);
         }
         if (CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].slash_label != "<get>") {
-            this._slash_label.set_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].slash_label);
+            this.set_slash_text(CONSTANTS.CAPTION_TYPE_SPECS[this.caption_type].slash_label);
         }
-        this._phase_label.set_text("");
+        this.set_phase_text("");
 
         if ((cs == SOURCE_LOCAL_LUNAR_CALENDAR && luncal_exists) || cs == SOURCE_SUNCALC) {
             let text;
@@ -379,20 +388,20 @@ class P3Desklet extends Desklet.Desklet {
                 case SOURCE_SUNCALC: text = this.suncalc_source.get_label_text(); break;
             }
             if (this.caption_type == "moon") {
-                this._caption_label.set_text(text);
+                this.set_caption_text(text);
             }
             else if (this.caption_type == "cntdn-full") {
                 if (/[0-9 ]+/.test(text)) {  // normal countdown
-                    this._countdown_label.set_text(text);
+                    this.set_countdown_text(text);
                     if (!this.emoji_type) {  // remove the slash if we don't have an emoji, it looks better
-                        this._slash_label.set_text("");
+                        this.set_slash_text("");
                     }
                 }
                 else {  // special moon phase
-                    this._next_label.set_text("");
-                    this._countdown_label.set_text("");
-                    this._slash_label.set_text("");
-                    this._phase_label.set_text(text);
+                    this.set_next_text("");
+                    this.set_countdown_text("");
+                    this.set_slash_text("");
+                    this.set_phase_text(text);
                 }
             }
         }
@@ -402,30 +411,30 @@ class P3Desklet extends Desklet.Desklet {
             if (countdown_item) {
                 let text = this.clock_source.get_custom_countdown_text_from_list_item(countdown_item);
                 text = SU.countdown_formatting(text);
-                this._countdown_label.set_text(text);
+                this.set_countdown_text(text);
                 if (! /[0-9 -]+/.test(text)) {  // remove the slash when not displaying numbers (i.e. "Today")
-                    this._slash_label.set_text("");
+                    this.set_slash_text("");
                 }
                 if (countdown_item.name) {
-                    this._next_label.set_text(countdown_item.name + ":");
+                    this.set_next_text(countdown_item.name + ":");
                 }
                 else {
-                    this._next_label.set_text(_("Limit") + ":");
+                    this.set_next_text(_("Limit") + ":");
                 }
             }
             else {
-                this._next_label.set_text(_("None") + ":")
-                this._countdown_label.set_text("--");
+                this.set_next_text(_("None") + ":")
+                this.set_countdown_text("--");
             }
             if (!this.emoji_type) {  // also remove the slash if we don't have an emoji, it looks better
-                this._slash_label.set_text("");
+                this.set_slash_text("");
             }
         }
         else if (cs != SOURCE_WEATHERAPI) {  // i.e. SOURCE_DISABLED or local source failed
-            this._caption_label.set_text("");
-            this._next_label.set_text("");
-            this._countdown_label.set_text("");
-            this._slash_label.set_text("");
+            this.set_caption_text("");
+            this.set_next_text("");
+            this.set_countdown_text("");
+            this.set_slash_text("");
         }
 
         // secondary countdowns
@@ -458,7 +467,7 @@ class P3Desklet extends Desklet.Desklet {
         if (this.first_time) {
             secondary_text = _("Right-click\nto configure!");
         }
-        this._secondary_caption_label.set_text(secondary_text);
+        this.set_secondary_caption_text(secondary_text);
 
         if (this.weatherapi_is_enabled()) {
             this.wapi_source.make_weatherAPI_request(
@@ -479,15 +488,27 @@ class P3Desklet extends Desklet.Desklet {
     }
     set_caption_text(text) {
         this._caption_label.set_text(text);
+        this._caption_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
     }
     set_countdown_text(text) {
         this._countdown_label.set_text(text);
+        this._countdown_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
     }
     set_next_text(text) {
         this._next_label.set_text(text);
+        this._next_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
     }
     set_slash_text(text) {
         this._slash_label.set_text(text);
+        this._slash_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
+    }
+    set_phase_text(text) {
+        this._phase_label.set_text(text);
+        this._phase_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
+    }
+    set_secondary_caption_text(text) {
+        this._secondary_caption_label.set_text(text);
+        this._secondary_caption_shadow_label.set_text(this.caption_shadow_enabled ? text : "");
     }
     set_mini_errormoji_text(text) {
         this._mini_errormoji_label.set_text(text);
@@ -519,7 +540,9 @@ class P3Desklet extends Desklet.Desklet {
 
         this._emoji_label = new St.Label();
         this._caption_label = new St.Label();
+        this._caption_shadow_label = new St.Label();
         this._clock_actor.add_actor(this._emoji_label);
+        this._clock_actor.add_actor(this._caption_shadow_label);
         this._clock_actor.add_actor(this._caption_label);
 
         this._next_label = new St.Label();
@@ -527,6 +550,16 @@ class P3Desklet extends Desklet.Desklet {
         this._slash_label = new St.Label();
         this._phase_label = new St.Label();
         this._secondary_caption_label = new St.Label();
+        this._next_shadow_label = new St.Label();
+        this._countdown_shadow_label = new St.Label();
+        this._slash_shadow_label = new St.Label();
+        this._phase_shadow_label = new St.Label();
+        this._secondary_caption_shadow_label = new St.Label();
+        this._clock_actor.add_actor(this._next_shadow_label);
+        this._clock_actor.add_actor(this._countdown_shadow_label);
+        this._clock_actor.add_actor(this._slash_shadow_label);
+        this._clock_actor.add_actor(this._phase_shadow_label);
+        this._clock_actor.add_actor(this._secondary_caption_shadow_label);
         this._clock_actor.add_actor(this._next_label);
         this._clock_actor.add_actor(this._countdown_label);
         this._clock_actor.add_actor(this._slash_label);
@@ -608,7 +641,7 @@ class P3Desklet extends Desklet.Desklet {
                 97-time_style.size*0.5+this.time_shadow_offset,
                 31-this.time_shadow_offset,
                 time_style,
-                this.color_scheme.time_shadow
+                this.color_scheme.shadow
             )
         );
 
@@ -682,11 +715,23 @@ class P3Desklet extends Desklet.Desklet {
                 this.color_scheme.bottom
             )
         );
+        this._caption_shadow_label.set_width(scaledWidth);
+        this._caption_shadow_label.set_height(scaledHeight);
+        this._caption_shadow_label.set_position(0, 0);
+        this._caption_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "right",
+                226-caption_style.size*1.25+this.caption_shadow_offset,
+                124-this.caption_shadow_offset,
+                caption_style,
+                this.color_scheme.shadow
+            )
+        );
 
         this._next_label.set_width(scaledWidth);
         this._next_label.set_height(scaledHeight);
         this._next_label.set_position(0, 0);
-        this._next_label.set_text(_("Next") + ":");
         this._next_label.set_style(
             SU.get_style_string(
                 this.scale,
@@ -697,6 +742,20 @@ class P3Desklet extends Desklet.Desklet {
                 this.color_scheme.bottom
             )
         );
+        this._next_shadow_label.set_width(scaledWidth);
+        this._next_shadow_label.set_height(scaledHeight);
+        this._next_shadow_label.set_position(0, 0);
+        this._next_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "right",
+                169-next_style.size*0.5+this.caption_shadow_offset,
+                170-this.caption_shadow_offset,
+                next_style,
+                this.color_scheme.shadow
+            )
+        );
+
         this._countdown_label.set_width(scaledWidth);
         this._countdown_label.set_height(scaledHeight);
         this._countdown_label.set_position(0, 0);
@@ -710,10 +769,23 @@ class P3Desklet extends Desklet.Desklet {
                 this.use_highlight_color ? this.color_scheme.highlight : this.color_scheme.bottom
             )
         );
+        this._countdown_shadow_label.set_width(scaledWidth);
+        this._countdown_shadow_label.set_height(scaledHeight);
+        this._countdown_shadow_label.set_position(0, 0);
+        this._countdown_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "center",
+                223-countdown_style.size*0.5+this.caption_shadow_offset,
+                -170-this.caption_shadow_offset,
+                countdown_style,
+                this.color_scheme.shadow
+            )
+        );
+
         this._slash_label.set_width(scaledWidth);
         this._slash_label.set_height(scaledHeight);
         this._slash_label.set_position(0, 0);
-        this._slash_label.set_text("/");
         this._slash_label.set_style(
             SU.get_style_string(
                 this.scale,
@@ -724,6 +796,20 @@ class P3Desklet extends Desklet.Desklet {
                 this.color_scheme.bottom
             )
         );
+        this._slash_shadow_label.set_width(scaledWidth);
+        this._slash_shadow_label.set_height(scaledHeight);
+        this._slash_shadow_label.set_position(0, 0);
+        this._slash_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "center",
+                223-countdown_style.size*0.5+this.caption_shadow_offset,
+                -310-this.caption_shadow_offset,
+                countdown_style,
+                this.color_scheme.shadow
+            )
+        );
+
         this._phase_label.set_width(scaledWidth);
         this._phase_label.set_height(scaledHeight);
         this._phase_label.set_position(0, 0);
@@ -737,6 +823,20 @@ class P3Desklet extends Desklet.Desklet {
                 this.color_scheme.bottom
             )
         );
+        this._phase_shadow_label.set_width(scaledWidth);
+        this._phase_shadow_label.set_height(scaledHeight);
+        this._phase_shadow_label.set_position(0, 0);
+        this._phase_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "right",
+                208-phase_style.size*0.5+this.caption_shadow_offset,
+                127-this.caption_shadow_offset,
+                phase_style,
+                this.color_scheme.shadow
+            )
+        );
+
         this._secondary_caption_label.set_width(scaledWidth);
         this._secondary_caption_label.set_height(scaledHeight);
         this._secondary_caption_label.set_position(0, 0);
@@ -748,6 +848,19 @@ class P3Desklet extends Desklet.Desklet {
                 124,
                 caption_style,
                 this.color_scheme.bottom
+            )
+        );
+        this._secondary_caption_shadow_label.set_width(scaledWidth);
+        this._secondary_caption_shadow_label.set_height(scaledHeight);
+        this._secondary_caption_shadow_label.set_position(0, 0);
+        this._secondary_caption_shadow_label.set_style(
+            SU.get_style_string(
+                this.scale,
+                "right",
+                295-caption_style.size*0.5+this.caption_shadow_offset,
+                124-this.caption_shadow_offset,
+                caption_style,
+                this.color_scheme.shadow
             )
         );
 
