@@ -17,7 +17,7 @@
         "caption_font": "New Rocker 50",
         "caption_shadow_enabled": true,
         "caption_shadow_offset": 7,
-        "use_highlight_color": false
+        "use_highlight_color": true
     },
     "content": {
         "time_format": "%!",

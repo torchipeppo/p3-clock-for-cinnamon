@@ -52,7 +52,7 @@ class SunCalcSource {
                 return moon_phase_name.replace(" ", "\n");
             case "cntdn-full":
                 return this._get_full_moon_countdown_str();
-            case "":
+            default:
                 return "";
         }
     }

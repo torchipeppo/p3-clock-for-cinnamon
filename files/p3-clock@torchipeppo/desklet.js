@@ -775,7 +775,7 @@ class P3Desklet extends Desklet.Desklet {
                 this.scale,
                 "center",
                 223-countdown_style.size*0.5+this.caption_shadow_offset,
-                -170-this.caption_shadow_offset,
+                -170-this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
                 countdown_style,
                 this.color_scheme.shadow
             )
@@ -802,7 +802,7 @@ class P3Desklet extends Desklet.Desklet {
                 this.scale,
                 "center",
                 223-countdown_style.size*0.5+this.caption_shadow_offset,
-                -310-this.caption_shadow_offset,
+                -310-this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
                 countdown_style,
                 this.color_scheme.shadow
             )
