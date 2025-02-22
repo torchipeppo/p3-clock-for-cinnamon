@@ -4,8 +4,9 @@
         "custom_corner2_color": "#000000",
         "custom_date_color": "#3b0066",
         "custom_time_color": "lavender",
-        "custom_time_shadow_color": "indigo",
-        "custom_bottom_color": "lavender"
+        "custom_bottom_color": "lavender",
+        "custom_shadow_color": "indigo",
+        "custom_highlight_color": "mediumpurple"
     },
     "style": {
         "time_font": "Lobster Two Italic 70",
@@ -13,7 +14,10 @@
         "time_shadow_offset": 4,
         "date_font": "Ysabeau Bold 50",
         "emoji_size": 70,
-        "caption_font": "Ysabeau Office Semi-Bold 50"
+        "caption_font": "Ysabeau Office Semi-Bold 50",
+        "caption_shadow_enabled": false,
+        "caption_shadow_offset": 4,
+        "use_highlight_color": false
     },
     "content": {
         "time_format": "%A",

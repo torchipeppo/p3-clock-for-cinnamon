@@ -4,8 +4,9 @@
         "custom_corner2_color": "#000000",
         "custom_date_color": "dimgrey",
         "custom_time_color": "white",
-        "custom_time_shadow_color": "grey",
-        "custom_bottom_color": "#f0f0f0"
+        "custom_bottom_color": "#f0f0f0",
+        "custom_shadow_color": "grey",
+        "custom_highlight_color": "#999999"
     },
     "style": {
         "time_font": "Cinzel Medium 70",
@@ -13,7 +14,10 @@
         "time_shadow_offset": 5,
         "date_font": "Cinzel 52",
         "emoji_size": 70,
-        "caption_font": "Cinzel 50"
+        "caption_font": "Cinzel 50",
+        "caption_shadow_enabled": false,
+        "caption_shadow_offset": 4,
+        "use_highlight_color": true
     },
     "content": {
         "time_format": "%!",

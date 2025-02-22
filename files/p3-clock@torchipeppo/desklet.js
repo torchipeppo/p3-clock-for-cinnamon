@@ -43,7 +43,6 @@ const _ = Translation._;
     TODO
     - Aggiungere link calendario lunare nelle impostazioni
     - Rifare un botto di screenshot :(
-    - Rifare tutta la roba salvata in custom_compendium
     - Aggiornare POT e traduzione
 */
 

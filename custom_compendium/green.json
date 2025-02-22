@@ -4,8 +4,9 @@
         "custom_corner2_color": "#000000",
         "custom_date_color": "#052808",
         "custom_time_color": "mintcream",
-        "custom_time_shadow_color": "#052808",
-        "custom_bottom_color": "mintcream"
+        "custom_bottom_color": "mintcream",
+        "custom_shadow_color": "#052808",
+        "custom_highlight_color": "#74ff8c"
     },
     "style": {
         "time_font": "Monospace Bold 60",
@@ -13,7 +14,10 @@
         "time_shadow_offset": 8,
         "date_font": "Instrument Sans Condensed, Medium Condensed 52",
         "emoji_size": 70,
-        "caption_font": "Ubuntu Bold 50"
+        "caption_font": "Ubuntu Bold 50",
+        "caption_shadow_enabled": true,
+        "caption_shadow_offset": 5,
+        "use_highlight_color": true
     },
     "content": {
         "time_format": "%H:%M:%S",
