@@ -41,7 +41,6 @@ const _ = Translation._;
 
 /*
     TODO
-    - Aggiungere link calendario lunare nelle impostazioni
     - Rifare un botto di screenshot :(
     - Aggiornare POT e traduzione
 */

@@ -311,7 +311,7 @@
 
     "bottom-requirements-help": {
         "type": "label",
-        "description": "(W) - A valid WeatherAPI key is required. Go to the \"Data\" page to enable it.\n(C?) - OPTIONAL: precision can be improved by generating a local lunar calendar. See [TODO: ADD LINK] for instructions.\n(D) - You must provide one or more important dates to count down to in the \"Data\" page."
+        "description": "(W) - A valid WeatherAPI key is required. Go to the \"Data\" page to enable it.\n(C?) - OPTIONAL: precision can be improved by generating a local lunar calendar. See https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/lunar_calendar_generation for instructions.\n(D) - You must provide one or more important dates to count down to in the \"Data\" page."
     },
 
     "wapi-help": {
