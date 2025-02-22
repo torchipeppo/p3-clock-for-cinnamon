@@ -65,7 +65,9 @@
                 "global-custom-time",
                 "global-custom-time-shadow",
                 "global-custom-bottom",
-                "global-color-invert-bottom"
+                "global-custom-highlight",
+                "global-color-invert-bottom",
+                "global-color-use-highlight"
             ]
         },
 
@@ -237,11 +239,23 @@
         "description": "Bottom row text",
         "dependency": "global-color-scheme=the-custom"
     },
+    "global-custom-highlight": {
+        "type": "colorchooser",
+        "default": "#7bffff",
+        "description": "Highlight color",
+        "dependency": "global-color-scheme=the-custom"
+    },
     "global-color-invert-bottom": {
         "type": "switch",
         "default": false,
         "description": "Invert bottom colors",
         "tooltip": "May be useful if the bottom caption doesn't stand out against your background"
+    },
+    "global-color-use-highlight": {
+        "type": "switch",
+        "default": true,
+        "description": "Highlight bottom number display",
+        "tooltip": "Affects: rain chance display, temperature display, countdown displays"
     },
 
     "top-format": {

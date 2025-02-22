@@ -41,7 +41,10 @@ const _ = Translation._;
 
 /*
     TODO
-    - Fare un file importabile per ogni stile nello screenshot showcase, forse.
+    - Aggiungere link calendario lunare nelle impostazioni
+    - Mettere ombra facoltativa per bottom (stesso colore dell'altra ombra)
+    - Rifare un botto di screenshot :(
+    - Rifare tutta la roba salvata in custom_compendium
 */
 
 const SOURCE_DISABLED = 0
@@ -57,6 +60,7 @@ const color_scheme_keys = [
     "custom_time_color",
     "custom_time_shadow_color",
     "custom_bottom_color",
+    "custom_highlight_color",
 ];
 const text_style_keys = [
     "time_font",
@@ -118,7 +122,9 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("global-custom-time", "custom_time_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-time-shadow", "custom_time_shadow_color", this._onColorSettingsChanged);
         this.settings.bind("global-custom-bottom", "custom_bottom_color", this._onColorSettingsChanged);
+        this.settings.bind("global-custom-highlight", "custom_highlight_color", this._onColorSettingsChanged);
         this.settings.bind("global-color-invert-bottom", "invert_bottom_colors", this._onColorSettingsChanged);
+        this.settings.bind("global-color-use-highlight", "use_highlight_color", this._onColorSettingsChanged);
 
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
@@ -701,7 +707,7 @@ class P3Desklet extends Desklet.Desklet {
                 223-countdown_style.size*0.5,
                 -170,
                 countdown_style,
-                this.color_scheme.bottom
+                this.use_highlight_color ? this.color_scheme.highlight : this.color_scheme.bottom
             )
         );
         this._slash_label.set_width(scaledWidth);

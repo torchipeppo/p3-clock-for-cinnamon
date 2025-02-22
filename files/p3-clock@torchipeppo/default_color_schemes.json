@@ -5,7 +5,8 @@
         "time": "white",
         "time_shadow": "#447fab",
         "date": "#226182",
-        "bottom": "aliceblue"
+        "bottom": "aliceblue",
+        "highlight": "#7bffff"
     },
     "pink": {
         "corner1": "#fc99b6",
@@ -13,7 +14,8 @@
         "time": "white",
         "time_shadow": "#9f262d",
         "date": "#9f262d",
-        "bottom": "lavenderblush"
+        "bottom": "lavenderblush",
+        "highlight": "#ffa4d8"
     },
     "green": {
         "corner1": "#3ba960",
@@ -21,7 +23,8 @@
         "time": "mintcream",
         "time_shadow": "#052808",
         "date": "#052808",
-        "bottom": "mintcream"
+        "bottom": "mintcream",
+        "highlight": "#74ff8c"
     },
     "yellow": {
         "corner1": "#fbfa0b",
@@ -29,7 +32,8 @@
         "time": "white",
         "time_shadow": "#b6a906",
         "date": "#776e03",
-        "bottom": "lightyellow"
+        "bottom": "lightyellow",
+        "highlight": "#ffff80"
     },
     "red": {
         "corner1": "#ee1600",
@@ -37,7 +41,8 @@
         "time": "white",
         "time_shadow": "#400000",
         "date": "#400000",
-        "bottom": "#FFF0F0"
+        "bottom": "#FFF0F0",
+        "highlight": "#fe0000"
     },
     "light-green": {
         "corner1": "#98fe1e",
@@ -45,7 +50,8 @@
         "time": "white",
         "time_shadow": "#79b82b",
         "date": "#468000",
-        "bottom": "mintcream"
+        "bottom": "mintcream",
+        "highlight": "#c2ff7a"
     },
     "purple": {
         "corner1": "blueviolet",
@@ -53,7 +59,8 @@
         "time": "lavender",
         "time_shadow": "indigo",
         "date": "#3b0066",
-        "bottom": "lavender"
+        "bottom": "lavender",
+        "highlight": "mediumpurple"
     },
     "dark-blue": {
         "corner1": "#0000b0",
@@ -61,7 +68,8 @@
         "time": "white",
         "time_shadow": "#000040",
         "date": "#000020",
-        "bottom": "aliceblue"
+        "bottom": "aliceblue",
+        "highlight": "#0000ff"
     },
     "grey": {
         "corner1": "lightgrey",
@@ -69,6 +77,7 @@
         "time": "white",
         "time_shadow": "grey",
         "date": "dimgrey",
-        "bottom": "#f0f0f0"
+        "bottom": "#f0f0f0",
+        "highlight": "#999999"
     }
 }
