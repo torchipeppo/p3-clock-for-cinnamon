@@ -55,6 +55,7 @@ dst_dir = src_dir.parent / "cinnamon repo forks/cinnamon-spices-desklets" / rele
 dst_dir.mkdir(exist_ok=True)
 
 shutil.copy(src_dir/"README.md", dst_dir)
+shutil.copy(src_dir/"info.json", dst_dir)
 
 
 
