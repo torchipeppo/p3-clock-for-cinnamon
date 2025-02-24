@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: p3-clock@torchipeppo 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2025-02-12 19:09+0100\n"
+"POT-Creation-Date: 2025-02-24 09:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. constants.js:52 desklet.js:683 5.7/constants.js:52 5.7/desklet.js:683
+#. constants.js:52 5.7/constants.js:52
 msgid "Next"
 msgstr "Prossima"
 
@@ -99,11 +99,11 @@ msgstr ""
 "Precip.\n"
 "fredde"
 
-#. desklet.js:152 5.7/desklet.js:152
+#. desklet.js:161 5.7/desklet.js:161
 msgid "Date and Time Settings"
 msgstr "Impostazioni data e ora"
 
-#. desklet.js:407 desklet.js:438 5.7/desklet.js:407 5.7/desklet.js:438
+#. desklet.js:420 desklet.js:451 5.7/desklet.js:420 5.7/desklet.js:451
 msgid "Limit"
 msgstr "Limite"
 
@@ -111,11 +111,11 @@ msgstr "Limite"
 #. settings-schema.json->bottom-caption-type->options
 #. 5.7->settings-schema.json->bottom-emoji-type->options
 #. 5.7->settings-schema.json->bottom-caption-type->options
-#. desklet.js:411 5.7/desklet.js:411
+#. desklet.js:424 5.7/desklet.js:424
 msgid "None"
 msgstr "Nessuno"
 
-#. desklet.js:453 5.7/desklet.js:453
+#. desklet.js:466 5.7/desklet.js:466
 msgid ""
 "Right-click\n"
 "to configure!"
@@ -124,7 +124,7 @@ msgstr ""
 "per configurare!"
 
 #. metadata.json->name
-#. desklet.js:494 5.7/desklet.js:494
+#. desklet.js:519 5.7/desklet.js:519
 msgid "Moonlight Clock"
 msgstr "Orologio Chiardiluna"
 
@@ -152,7 +152,7 @@ msgstr "Pomeriggio"
 msgid "Evening"
 msgstr "Sera"
 
-#. wallclock_source.js:130 5.7/wallclock_source.js:130
+#. wallclock_source.js:136 5.7/wallclock_source.js:136
 msgid "Today"
 msgstr "Oggi"
 
@@ -436,10 +436,10 @@ msgstr "Colore principale 2"
 msgid "Middle row text"
 msgstr "Testo riga di mezzo"
 
-#. settings-schema.json->global-custom-time-shadow->description
-#. 5.7->settings-schema.json->global-custom-time-shadow->description
-msgid "Middle row drop shadow"
-msgstr "Ombra testo riga di mezzo"
+#. settings-schema.json->global-custom-shadow->description
+#. 5.7->settings-schema.json->global-custom-shadow->description
+msgid "Text drop shadow"
+msgstr "Ombra del testo"
 
 #. settings-schema.json->global-custom-date->description
 #. 5.7->settings-schema.json->global-custom-date->description
@@ -450,6 +450,11 @@ msgstr "Testo riga superiore"
 #. 5.7->settings-schema.json->global-custom-bottom->description
 msgid "Bottom row text"
 msgstr "Testo riga inferiore"
+
+#. settings-schema.json->global-custom-highlight->description
+#. 5.7->settings-schema.json->global-custom-highlight->description
+msgid "Highlight color"
+msgstr "Colore di enfasi"
 
 #. settings-schema.json->global-color-invert-bottom->description
 #. 5.7->settings-schema.json->global-color-invert-bottom->description
@@ -463,6 +468,18 @@ msgid ""
 msgstr ""
 "Può tornare utile se la didascalia inferiore non risalta a sufficienza "
 "contro il tuo sfondo."
+
+#. settings-schema.json->global-color-use-highlight->description
+#. 5.7->settings-schema.json->global-color-use-highlight->description
+msgid "Highlight bottom number display"
+msgstr "Enfatizza numero dell'area inferiore"
+
+#. settings-schema.json->global-color-use-highlight->tooltip
+#. 5.7->settings-schema.json->global-color-use-highlight->tooltip
+msgid "Affects: rain chance display, temperature display, countdown displays"
+msgstr ""
+"Ha effetto sulle seguenti modalità: probabilità di pioggia,"
+"temperatura, conti alla rovescia"
 
 #. settings-schema.json->top-format->description
 #. settings-schema.json->middle-format->description
@@ -510,12 +527,16 @@ msgstr ""
 "default in base alla tua lingua e impostazioni."
 
 #. settings-schema.json->middle-shadow->description
+#. settings-schema.json->bottom-caption-shadow->description
 #. 5.7->settings-schema.json->middle-shadow->description
+#. 5.7->settings-schema.json->bottom-caption-shadow->description
 msgid "Drop shadow"
 msgstr "Ombra del testo"
 
 #. settings-schema.json->middle-shadow-offset->description
+#. settings-schema.json->bottom-caption-shadow-offset->description
 #. 5.7->settings-schema.json->middle-shadow-offset->description
+#. 5.7->settings-schema.json->bottom-caption-shadow-offset->description
 msgid "Drop shadow offset"
 msgstr "Spostamento dell'ombra"
 
@@ -525,14 +546,16 @@ msgid ""
 "(W) - A valid WeatherAPI key is required. Go to the \"Data\" page to enable "
 "it.\n"
 "(C?) - OPTIONAL: precision can be improved by generating a local lunar "
-"calendar. See [TODO: ADD LINK] for instructions.\n"
+"calendar. See https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/"
+"master/lunar_calendar_generation for instructions.\n"
 "(D) - You must provide one or more important dates to count down to in the "
 "\"Data\" page."
 msgstr ""
 "(W) - È richiesta una chiave valida per WeatherAPI. Vai alla pagina \"Dati\" "
 "per attivare.\n"
 "(C?) - OPZIONALE: puoi migliorare la precisione generando un calendario "
-"lunare locale. Vedi [TODO: AGGIUNGERE LINK] per istruzioni.\n"
+"lunare locale. Vedi https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/"
+"master/lunar_calendar_generation per istruzioni.\n"
 "(D) - Devi fornire una o più date importanti per fare il conto alla rovescia "
 "nella pagina \"Dati\"."
 
