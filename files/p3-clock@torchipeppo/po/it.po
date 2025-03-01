@@ -7,7 +7,6 @@
 # Please read the associated README for context guidance.
 #
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: p3-clock@torchipeppo 0.1.0\n"
@@ -234,7 +233,7 @@ msgid ""
 "An aesthetic and customizable desklet that can function as clock, weather "
 "display, and/or tracker of important dates. Based on Persona 3."
 msgstr ""
-"Un desklet estatico e personalizzabile che può funzionare come orologio, "
+"Un desklet estetico e personalizzabile che può funzionare come orologio, "
 "visualizzare il meteo, e/o tenere traccia di date importanti. Basato su "
 "Persona 3."
 
@@ -349,7 +348,7 @@ msgid ""
 "precisely into your top right corner."
 msgstr ""
 "Imposta la compensazione rispetto alla tua griglia dei desklet in modo che "
-"il desklet si allinei precisamente con l'angolo in alto a destra."
+"questo desklet si allinei precisamente con l'angolo in alto a destra."
 
 #. settings-schema.json->global-h-offset->description
 #. 5.7->settings-schema.json->global-h-offset->description
