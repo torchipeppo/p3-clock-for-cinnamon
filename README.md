@@ -17,8 +17,6 @@ A multipurpose display for current date, time, weather, and/or custom important 
 ## Screenshots
 <!-- TODO must become https://cinnamon-spices.linuxmint.com/git/desklets/<UUID>/<REPO-PATH> -->
 
-<a href="https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/custom_compendium">Click here to get any of the shown configurations.</a> All featured fonts are free, and either commonly found by default on Linux Mint machines or available on Google Fonts. 
-
 <p align="center">
 <img src="screenshot.png" align="middle"><br>
 Default look after enabling WeatherAPI. The default font depends on your system configuration.
@@ -26,13 +24,15 @@ Default look after enabling WeatherAPI. The default font depends on your system 
 
 <p align="center">
 <img src="assets/screenshot-customization-showcase.png" align="middle"><br>
-A few example customizations achieavable with the desklet's settings.
+A few example customizations that can be made with the desklet's settings.
 </p>
 
 <p align="center">
 <img src="assets/screenshot-p3-mode.png" align="middle"><br>
 Configuration that replicates the inspiration material as closely as possible.
 </p>
+
+[Click here to get any of the configurations shown above.](https://github.com/torchipeppo/p3-clock-for-cinnamon/tree/master/custom_compendium) All featured fonts are free, and either commonly found by default on Linux Mint machines or available on Google Fonts. 
 
 ## Installation
 Download or clone this repo, then put the `p3-clock@torchipeppo` directory
@@ -44,7 +44,7 @@ data for the moon phases](https://github.com/torchipeppo/p3-clock-for-cinnamon/t
 ### Design goals
 1. Combine the style of the UI from the video game "Persona 3" and
    Linux/Cinnamon conventions into an effectively useful desktop widget
-2. Provide the most value to as many users as possible
+2. Provide value to as many users as possible
 3. Keep the option to stay close to the source material, wherever this doesn't
    conflict with the above points
 

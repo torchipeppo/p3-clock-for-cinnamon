@@ -29,7 +29,7 @@ the shortest-term ephemeris table from among those published by the
 NASA Jet Propulsion Laboratory, which **weighs about 32 MB**
 and allows to calculate moon phases in the **year range 2000-2148**.
 The ephemeris file will be stored in the same directory you run the script from,
-so you may reuse them again.
+so you may reuse it again.
 For more information and to select a different ephemeris table,
 see around the beginning of the script.
 
@@ -40,7 +40,7 @@ and put the generated data there, inside a directory called `local_lunar_calenda
 ## How to run
 
 Start by creating a Python virtual environment and installing the `skyfield`
-library, which is geared for high-precision astronomical calculations:
+library:
 ```bash
 python3 -m venv venv
 source venv/bin/activate

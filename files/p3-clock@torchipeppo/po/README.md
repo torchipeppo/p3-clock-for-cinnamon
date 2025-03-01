@@ -14,7 +14,7 @@ of the desklet.
 These are the eight standard moon phase names.
 
 ### "New", "Full", "Half"
-These also refer to the Moon and its plases, being simple abbreviations for
+These also refer to the Moon and its phases, being simple abbreviations for
 "New moon" etc., so please make sure the translation reflects this.
 In particular, in the case of most gendered languages, make sure the grammatical
 gender of the translated word matches with that of your word for "Moon".
@@ -24,7 +24,7 @@ if possible.
 
 ## Weather
 
-*Note that, unlike the Moon phasses above, there is no easy way to manipulate*
+*Note that, unlike the Moon phases above, there is no easy way to manipulate*
 *the weather caption, since it comes directly from WeatherAPI.*
 *You can always temporarily hack the source code for testing.*
 
@@ -83,7 +83,7 @@ This message appears twice in very similar forms, but it's not a duplicate:
 their final sentences are actually different.
 
 ### Drop shadow
-Most who read this probably know this already, but "drop shadow" is just
+At the cost of maybe pointing out the obvious, "drop shadow" is just
 the name of the graphical effect. Nothing is being literally let go of
 and falling to the ground. In case of difficulty, please translate as though
 this read "Shadow" or "Text shadow".
@@ -95,8 +95,9 @@ guides the choice of grammatical gender for languages where it matters.
 
 ## Coherence with Cinnamon
 
-A few messages also appear in default applets, desklets and settinsg widgets
-in Cinnamon. It may be best for these translations to align with Cinnamon's for
+A few messages also appear in default applets, desklets and settings widgets
+in Cinnamon, and thus already have "upstream" translations.
+It may be best for the translations in this desklet to align with Cinnamon's for
 the sake of coherence, if possible.
 
 ### "Date and Time Settings"
@@ -111,5 +112,5 @@ For example, Cassia Window List (CassiaWindowList@klangman) uses it multiple tim
 
 ### "Moonlight Clock"
 This is the desklet's name. Feel free to add a little poetic license to the
-to the general meaning of the words to make a name that sounds better than a
+general meaning of the words to make a name that sounds better than a
 literal translation, if you feel so inclined.

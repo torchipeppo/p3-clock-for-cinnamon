@@ -39,12 +39,6 @@ else {
 }
 const _ = Translation._;
 
-/*
-    TODO
-    - Rifare un botto di screenshot :(
-    - Aggiornare POT e traduzione
-*/
-
 const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
 const SOURCE_LOCAL_LUNAR_CALENDAR = 2

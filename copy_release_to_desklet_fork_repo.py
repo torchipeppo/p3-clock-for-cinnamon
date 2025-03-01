@@ -51,10 +51,10 @@ def copy_code_dir(src : Path, dst : Path):
 # step 1: files here
 
 src_dir = Path(__file__).resolve().parent
-dst_dir = src_dir.parent / "cinnamon repo forks/cinnamon-spices-desklets" / release_uuid
+dst_dir = src_dir.parent.parent / "cinnamon repo forks/cinnamon-spices-desklets" / release_uuid
 dst_dir.mkdir(exist_ok=True)
 
-shutil.copy(src_dir/"README.md", dst_dir)
+copy_replacing_uuid(src_dir/"README.md", dst_dir/"README.md")
 shutil.copy(src_dir/"info.json", dst_dir)
 
 
