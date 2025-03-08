@@ -18,14 +18,6 @@ const Translation = require("./translation");
 const CONSTANTS = require("./constants");
 const _ = Translation._;
 
-/*
-    TODO
-    - Memo: nella prossima PR, chiedere a claudiux se il problema si ripresenta,
-        perché non ho accesso a VM in questo momento
-    - Aggiungere opzione offset verticale font
-        - Aggiornare POT e PO
-*/
-
 const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
 const SOURCE_LOCAL_LUNAR_CALENDAR = 2
