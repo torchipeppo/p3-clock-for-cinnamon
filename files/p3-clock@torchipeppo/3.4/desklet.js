@@ -20,10 +20,11 @@ const _ = Translation._;
 
 /*
     TODO
-    - Non mettere roba in toplevel se uso cartelle di versione
-      (in tal caso, capire che nome dare alla cartella della versione precedente)
-    - Investigare il problema di claudiux (su VM?)
-    - Aggiungere opzione offset verticale font? (Diventa versione 1.0)
+    - Memo: nella prossima PR, chiedere a claudiux se il problema si ripresenta,
+        perché non ho accesso a VM in questo momento
+    - Aggiungere opzione offset verticale font (Diventa versione 1.0)
+        - Aggiornare custom-compendium
+        - Aggiornare POT e PO
 */
 
 const SOURCE_DISABLED = 0
@@ -43,11 +44,14 @@ const color_scheme_keys = [
 ];
 const text_style_keys = [
     "time_font",
+    "time_v_offset",
     "time_shadow_enabled",
     "time_shadow_offset",
     "date_font",
+    "date_v_offset",
     "emoji_size",
     "caption_font",
+    "caption_v_offset",
     "caption_shadow_enabled",
     "caption_shadow_offset",
     "use_highlight_color",
@@ -111,11 +115,13 @@ class P3Desklet extends Desklet.Desklet {
 
         this.settings.bind("middle-format", "time_format", this._onFormatSettingsChanged);
         this.settings.bind("middle-font", "time_font", this._onUISettingsChanged);
+        this.settings.bind("middle-v-offset", "time_v_offset", this._onUISettingsChanged);
         this.settings.bind("middle-shadow", "time_shadow_enabled", this._onUISettingsChanged);
         this.settings.bind("middle-shadow-offset", "time_shadow_offset", this._onUISettingsChanged);
 
         this.settings.bind("top-format", "date_format", this._onFormatSettingsChanged);
         this.settings.bind("top-font", "date_font", this._onUISettingsChanged);
+        this.settings.bind("top-v-offset", "date_v_offset", this._onUISettingsChanged);
         this.settings.bind("top-weekday", "date_weekday_enabled", this._onUISettingsChanged);
 
         this.settings.bind("wapi-enable", "wapi_enabled_switch", this._onWAPISettingsChanged);
@@ -127,6 +133,7 @@ class P3Desklet extends Desklet.Desklet {
         this.settings.bind("bottom-emoji-size", "emoji_size", this._onUISettingsChanged);
         this.settings.bind("bottom-caption-type", "caption_type", this._onWAPISettingsChanged);
         this.settings.bind("bottom-caption-font", "caption_font", this._onUISettingsChanged);
+        this.settings.bind("bottom-caption-v-offset", "caption_v_offset", this._onUISettingsChanged);
         this.settings.bind("bottom-caption-shadow", "caption_shadow_enabled", this._onUISettingsChanged);
         this.settings.bind("bottom-caption-shadow-offset", "caption_shadow_offset", this._onUISettingsChanged);
         this.settings.bind("bottom-show-secondary-countdowns", "show_secondary_countdowns", this._onUISettingsChanged);
@@ -605,7 +612,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                97-time_style.size*0.5,
+                97 - time_style.size*0.5 + this.time_v_offset,
                 31,
                 time_style,
                 this.color_scheme.time
@@ -618,8 +625,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                97-time_style.size*0.5+this.time_shadow_offset,
-                31-this.time_shadow_offset,
+                97 - time_style.size*0.5 + this.time_v_offset + this.time_shadow_offset,
+                31 - this.time_shadow_offset,
                 time_style,
                 this.color_scheme.shadow
             )
@@ -634,7 +641,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                41-date_style.size*0.5,
+                41 - date_style.size*0.5 + this.date_v_offset,
                 date_padding_right,
                 date_style,
                 this.color_scheme.date
@@ -642,7 +649,10 @@ class P3Desklet extends Desklet.Desklet {
         );
         this._dot_label.set_width(scaledWidth);
         this._dot_label.set_height(scaledHeight);
-        this._dot_label.set_position(this.scale*(-103), this.scale*(-20));  // necessary, can't be at 0,0 b/c it's an ordinary dot
+        this._dot_label.set_position(  // necessary, can't be at 0,0 b/c it's an ordinary dot
+            this.scale*(-103),
+            this.scale*(-20 + this.date_v_offset)
+        );
         this._dot_label.set_text(this.date_weekday_enabled ? "." : "");
         this._dot_label.set_style(
             SU.get_style_string(
@@ -661,7 +671,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                27,
+                27 + this.date_v_offset,
                 -502,
                 weekday_style,
                 this.color_scheme.date
@@ -676,7 +686,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                226-emoji_style.size*0.5,
+                226 - emoji_style.size*0.5,
                 -496,
                 emoji_style,
                 "white"
@@ -689,7 +699,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                226-caption_style.size*1.25,
+                226 - caption_style.size*1.25 + this.caption_v_offset,
                 124,
                 caption_style,
                 this.color_scheme.bottom
@@ -702,8 +712,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                226-caption_style.size*1.25+this.caption_shadow_offset,
-                124-this.caption_shadow_offset,
+                226 - caption_style.size*1.25 + this.caption_v_offset + this.caption_shadow_offset,
+                124 - this.caption_shadow_offset,
                 caption_style,
                 this.color_scheme.shadow
             )
@@ -716,7 +726,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                169-next_style.size*0.5,
+                169 - next_style.size*0.5 + this.caption_v_offset,
                 170,
                 next_style,
                 this.color_scheme.bottom
@@ -729,8 +739,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                169-next_style.size*0.5+this.caption_shadow_offset,
-                170-this.caption_shadow_offset,
+                169 - next_style.size*0.5 + this.caption_v_offset + this.caption_shadow_offset,
+                170 - this.caption_shadow_offset,
                 next_style,
                 this.color_scheme.shadow
             )
@@ -743,7 +753,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                223-countdown_style.size*0.5,
+                223 - countdown_style.size*0.5 + this.caption_v_offset,
                 -170,
                 countdown_style,
                 this.use_highlight_color ? this.color_scheme.highlight : this.color_scheme.bottom
@@ -756,8 +766,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                223-countdown_style.size*0.5+this.caption_shadow_offset,
-                -170-this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
+                223 - countdown_style.size*0.5 + this.caption_v_offset + this.caption_shadow_offset,
+                -170 - this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
                 countdown_style,
                 this.color_scheme.shadow
             )
@@ -770,7 +780,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                223-countdown_style.size*0.5,
+                223 - countdown_style.size*0.5 + this.caption_v_offset,
                 -310,
                 countdown_style,
                 this.color_scheme.bottom
@@ -783,8 +793,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "center",
-                223-countdown_style.size*0.5+this.caption_shadow_offset,
-                -310-this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
+                223 - countdown_style.size*0.5 + this.caption_v_offset + this.caption_shadow_offset,
+                -310 - this.caption_shadow_offset*2,  // do I need to doule b/c it's centered...?
                 countdown_style,
                 this.color_scheme.shadow
             )
@@ -797,7 +807,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                208-phase_style.size*0.5,
+                208 - phase_style.size*0.5 + this.caption_v_offset,
                 127,
                 phase_style,
                 this.color_scheme.bottom
@@ -810,8 +820,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                208-phase_style.size*0.5+this.caption_shadow_offset,
-                127-this.caption_shadow_offset,
+                208 - phase_style.size*0.5 + this.caption_v_offset + this.caption_shadow_offset,
+                127 - this.caption_shadow_offset,
                 phase_style,
                 this.color_scheme.shadow
             )
@@ -824,7 +834,7 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                295-caption_style.size*0.5,
+                295 - caption_style.size*0.5 + this.caption_v_offset,
                 124,
                 caption_style,
                 this.color_scheme.bottom
@@ -837,8 +847,8 @@ class P3Desklet extends Desklet.Desklet {
             SU.get_style_string(
                 this.scale,
                 "right",
-                295-caption_style.size*0.5+this.caption_shadow_offset,
-                124-this.caption_shadow_offset,
+                295 - caption_style.size*0.5 + this.caption_v_offset + this.caption_shadow_offset,
+                124 - this.caption_shadow_offset,
                 caption_style,
                 this.color_scheme.shadow
             )

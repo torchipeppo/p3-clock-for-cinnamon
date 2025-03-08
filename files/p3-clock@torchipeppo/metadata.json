@@ -4,7 +4,7 @@
     "description": "An aesthetic and customizable desklet that can function as clock, weather display, and/or tracker of important dates. Based on Persona 3.",
     "comments": "Best placed in the top right corner on the screen. Use the \"offset\" configuration for precise alignment.\n\nThis is the version from the author's personal repo. Please do check out the stable version on Cinnamon Spices, named \"Moonlight Clock\".",
     "author": "torchipeppo",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "prevent-decorations": true,
     "multiversion": true
 }

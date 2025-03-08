@@ -79,7 +79,7 @@
         "top-appearance-section": {
             "type": "section",
             "title": "Appearance",
-            "keys": ["top-font", "top-weekday"]
+            "keys": ["top-font", "top-v-offset", "top-weekday"]
         },
 
         "middle-format-section": {
@@ -90,7 +90,12 @@
         "middle-appearance-section": {
             "type": "section",
             "title": "Appearance",
-            "keys": ["middle-font", "middle-shadow", "middle-shadow-offset"]
+            "keys": [
+                "middle-font",
+                "middle-v-offset",
+                "middle-shadow",
+                "middle-shadow-offset"
+            ]
         },
 
         "bottom-requirements-section": {
@@ -109,6 +114,7 @@
             "keys": [
                 "bottom-caption-type",
                 "bottom-caption-font",
+                "bottom-caption-v-offset",
                 "bottom-caption-shadow",
                 "bottom-caption-shadow-offset",
                 "bottom-show-secondary-countdowns"
@@ -274,6 +280,15 @@
         "default": "Bold 52",
         "description": "Font"
     },
+    "top-v-offset": {
+        "type": "spinbutton",
+        "default": 0,
+        "min": -50,
+        "max": 50,
+        "step": 1,
+        "description": "Vertical offset",
+        "tooltip": "Can help conpensate for the varying vertical alignment of different fonts."
+    },
     "top-weekday": {
         "type": "switch",
         "default": true,
@@ -293,6 +308,15 @@
         "type": "fontchooser",
         "default": "Normal 70",
         "description": "Font"
+    },
+    "middle-v-offset": {
+        "type": "spinbutton",
+        "default": 0,
+        "min": -50,
+        "max": 50,
+        "step": 1,
+        "description": "Vertical offset",
+        "tooltip": "Can help conpensate for the varying vertical alignment of different fonts."
     },
     "middle-shadow": {
         "type": "switch",
@@ -393,6 +417,15 @@
         "default": "Bold 50",
         "description": "Font",
         "dependency": "bottom-caption-type!="
+    },
+    "bottom-caption-v-offset": {
+        "type": "spinbutton",
+        "default": 0,
+        "min": -50,
+        "max": 50,
+        "step": 1,
+        "description": "Vertical offset",
+        "tooltip": "Can help conpensate for the varying vertical alignment of different fonts."
     },
     "bottom-caption-shadow": {
         "type": "switch",
