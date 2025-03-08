@@ -1,13 +1,4 @@
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let Translation;
-if (typeof require !== 'undefined') {
-    Translation = require("./translation");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    Translation = imports.translation;
-}
+const Translation = require("./translation");
 const _ = Translation._;
 
 const CAPTION_TYPE_SPECS = {

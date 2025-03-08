@@ -4,19 +4,8 @@
 
 const Settings = imports.ui.settings;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-
-let ShellUtils, Translation;
-if (typeof require !== 'undefined') {
-    ShellUtils = require("./shell_utils");
-    Translation = require("./translation");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    ShellUtils = imports.shell_utils;
-    Translation = imports.translation;
-}
+const ShellUtils = require("./shell_utils");
+const Translation = require("./translation");
 const _ = Translation._;
 
 function hour_to_p3time(hour) {

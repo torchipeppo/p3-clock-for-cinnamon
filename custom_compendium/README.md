@@ -30,8 +30,9 @@ machine, is easily replaceable by any other generic monospace font.
 The closest reproduction of the HUD from the game "Persona 3" that OFL fonts
 and standard emoji allow, referencing the inspiration of this whole endavor.
 
-You may also be interested in one of the first three color schemes:
-"Blue", "Pink" and "Green", as well as potentially activating the bottom shadow.
+You may also be interested in one of the first three color schemes
+found in the desklet settings ("Blue", "Pink" and "Green"), 
+as well as potentially activating the bottom shadow.
 
 Instrument Sans, Onest and Geist are available on Google Fonts.
 Onest and Geist can be used in place of each other if you want

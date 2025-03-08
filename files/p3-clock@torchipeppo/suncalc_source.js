@@ -1,20 +1,8 @@
 const Settings = imports.ui.settings;
-const GLib = imports.gi.GLib;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let SU, CONSTANTS, SunCalc;
-if (typeof require !== 'undefined') {
-    SU = require("./style_utils");
-    CONSTANTS = require("./constants");
-    SunCalc = require("./suncalc");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    SU = imports.style_utils;
-    CONSTANTS = imports.constants;
-    SunCalc = imports.suncalc;
-}
+const SU = require("./style_utils");
+const CONSTANTS = require("./constants");
+const SunCalc = require("./suncalc");
 
 // get day-only date from full ISO string
 // works also with Date objects actually

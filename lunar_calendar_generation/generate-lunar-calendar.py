@@ -27,6 +27,8 @@ CINNAMON_DESKLETS_PATH = Path.home() / ".local/share/cinnamon/desklets"
 # this double search allows me to update both versions while being completely
 # transparent to users, who should only have one.
 UUIDS = ["p3-clock@torchipeppo", "moonlight-clock@torchipeppo"]
+# adding also the possibility of people using the test-spice script
+UUIDS.extend(["devtest-"+uuid for uuid in UUIDS])
 candidate_paths = [CINNAMON_DESKLETS_PATH / uuid for uuid in UUIDS]
 base_moon_paths = [path for path in candidate_paths if path.exists()]
 assert len(base_moon_paths), "The installation directory of the desklet doesn't seem to exist. Either Cinnamon changed the path for desklets, or something is wrong with your installation. Please correct either your installation path or the CINNAMON_DESKLETS_PATH variable in this script accordingly."

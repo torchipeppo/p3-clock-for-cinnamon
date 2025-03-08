@@ -1,9 +1,6 @@
 const Settings = imports.ui.settings;
 const GLib = imports.gi.GLib;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-
 class ColorScheme {
     constructor(uuid, desklet_id, file_handler) {
         this.file_handler = file_handler;

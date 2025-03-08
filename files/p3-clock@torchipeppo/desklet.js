@@ -7,37 +7,28 @@ const Cogl = imports.gi.Cogl;
 const CinnamonDesktop = imports.gi.CinnamonDesktop;
 const Util = imports.misc.util;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-
-// imports changed b/w Cinnamon 5 and Cinnamon 6: see the following example
-// https://github.com/linuxmint/cinnamon-spices-desklets/blob/master/devTools%40scollins/files/devTools%40scollins/desklet.js#L26
-let SU, WeatherAPISource, LunarCalendarSource, WallclockSource, ColorScheme,
-    FileHandler, SunCalcSource, Translation, CONSTANTS;
-if (typeof require !== 'undefined') {
-    SU = require("./style_utils");
-    WeatherAPISource = require("./weatherapi_source");
-    LunarCalendarSource = require("./lunar_calendar_source");
-    WallclockSource = require("./wallclock_source");
-    ColorScheme = require("./color_scheme");
-    FileHandler = require("./file_handler");
-    SunCalcSource = require("./suncalc_source");
-    Translation = require("./translation");
-    CONSTANTS = require("./constants");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    SU = imports.style_utils;
-    WeatherAPISource = imports.weatherapi_source;
-    LunarCalendarSource = imports.lunar_calendar_source;
-    WallclockSource = imports.wallclock_source;
-    ColorScheme = imports.color_scheme;
-    FileHandler = imports.file_handler;
-    SunCalcSource = imports.suncalc_source;
-    Translation = imports.translation;
-    CONSTANTS = imports.constants;
-}
+const SU = require("./style_utils");
+const WeatherAPISource = require("./weatherapi_source");
+const LunarCalendarSource = require("./lunar_calendar_source");
+const WallclockSource = require("./wallclock_source");
+const ColorScheme = require("./color_scheme");
+const FileHandler = require("./file_handler");
+const SunCalcSource = require("./suncalc_source");
+const Translation = require("./translation");
+const CONSTANTS = require("./constants");
 const _ = Translation._;
+
+/*
+    TODO
+    - Eliminare vecchio sistema di import (ma controllare se rompe su Cinnamon 5 / Mint 20)
+    - Eliminare UUID hardcodati (almeno tutti quelli che danno fastidio a test-spice)
+    - La cartella di versione meglio che sia 5.6 o 5.8
+    - Non mettere roba in toplevel se uso cartelle di versione
+      (in tal caso, capire che nome dare alla cartella della versione precedente)
+    - Investigare il problema di claudiux (su VM?)
+    - Cartella lib vuota? (AlienPappi)
+    - Aggiungere opzione offset verticale font? (Diventa versione 1.0)
+*/
 
 const SOURCE_DISABLED = 0
 const SOURCE_WEATHERAPI = 1
@@ -90,21 +81,22 @@ class P3Desklet extends Desklet.Desklet {
         this.wallclock = new CinnamonDesktop.WallClock();
         this.clock_notify_id = 0;
 
-        this.file_handler = new FileHandler.FileHandler(this.metadata["uuid"], desklet_id);
-        this.wapi_source = new WeatherAPISource.WeatherAPISource(this.metadata["uuid"], desklet_id);
-        this.luncal_source = new LunarCalendarSource.LunarCalendarSource(this.metadata["uuid"], desklet_id, this.file_handler);
-        this.clock_source = new WallclockSource.WallclockSource(this.metadata["uuid"], desklet_id, this.wallclock, this.file_handler);
-        this.suncalc_source = new SunCalcSource.SunCalcSource(this.metadata["uuid"], desklet_id);
-        this.color_scheme = new ColorScheme.ColorScheme(this.metadata["uuid"], desklet_id, this.file_handler);
+        let uuid = this.metadata["uuid"];
+        this.file_handler = new FileHandler.FileHandler(uuid, desklet_id);
+        this.wapi_source = new WeatherAPISource.WeatherAPISource(uuid, desklet_id);
+        this.luncal_source = new LunarCalendarSource.LunarCalendarSource(uuid, desklet_id, this.file_handler);
+        this.clock_source = new WallclockSource.WallclockSource(uuid, desklet_id, this.wallclock, this.file_handler);
+        this.suncalc_source = new SunCalcSource.SunCalcSource(uuid, desklet_id);
+        this.color_scheme = new ColorScheme.ColorScheme(uuid, desklet_id, this.file_handler);
 
         if (this.luncal_source.local_lunar_calendar_exists()) {
-            global.log("["+UUID+"] Local lunar calendar found, using high-precision data.")
+            global.log("["+uuid+"] Local lunar calendar found, using high-precision data.")
         }
         else {
-            global.log("["+UUID+"] Local lunar calendar NOT found, defaulting to suncalc.")
+            global.log("["+uuid+"] Local lunar calendar NOT found, defaulting to suncalc.")
         }
 
-        this.settings = new Settings.DeskletSettings(this, this.metadata["uuid"], desklet_id);
+        this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
 
         this.settings.bind("global-h-offset", "h_offset", this._onUISettingsChanged);
         this.settings.bind("global-v-offset", "v_offset", this._onUISettingsChanged);

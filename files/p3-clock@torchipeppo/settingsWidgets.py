@@ -12,6 +12,8 @@ import datetime
 import traceback
 
 import gettext
+# hardcoded UUID for translation purposes only,
+# fails silently w/ no ill effects if not exists
 UUID = "p3-clock@torchipeppo"
 gettext.install(UUID, GLib.get_home_dir() + '/.local/share/locale')
 

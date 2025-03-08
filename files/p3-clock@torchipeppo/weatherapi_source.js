@@ -2,20 +2,9 @@ const Settings = imports.ui.settings;
 const Soup = imports.gi.Soup;
 const ByteArray = imports.byteArray;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let SU, Translation, CONSTANTS;
-if (typeof require !== 'undefined') {
-    SU = require("./style_utils");
-    Translation = require("./translation");
-    CONSTANTS = require("./constants");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    SU = imports.style_utils;
-    Translation = imports.translation;
-    CONSTANTS = imports.constants;
-}
+const SU = require("./style_utils");
+const Translation = require("./translation");
+const CONSTANTS = require("./constants");
 const _ = Translation._;
 const OK = -1;
 
@@ -33,6 +22,7 @@ class WeatherAPISource {
         this.cached_response = undefined;
         this.last_error = OK;
         this.reset_time_of_last_weather_update();
+        this.uuid = uuid;
 
         this.settings = new Settings.DeskletSettings(this, uuid, desklet_id);
 
@@ -77,7 +67,7 @@ class WeatherAPISource {
                         this.last_error = status_code;
                         if (status_code == 0 || status_code == 2) {  // may add more status codes here with ||
                             this.next_weather_update_is_fast = true;
-                            global.log("["+UUID+"] Fast retry activated");
+                            global.log("["+this.uuid+"] Fast retry activated");
                         }
                     }
                     this._call_callbacks(back_reference, emoji_callback, caption_callback, number_callback, head_callback, unit_callback, mini_errormoji_callback);
@@ -198,9 +188,9 @@ class WeatherAPISource {
                         callback.call(here, false, message.status_code);
                     }
                 } else {
-                    global.logWarning("["+UUID+"] Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
+                    global.logWarning("["+here.uuid+"] Error retrieving address " + url + ". Status: " + message.status_code + ": " + message.reason_phrase);
                     if (message.status_code == 0) {
-                        global.logWarning("["+UUID+"] (You may be disconnected from the network)");
+                        global.logWarning("["+here.uuid+"] (You may be disconnected from the network)");
                     }
                     callback.call(here, false, message.status_code);
                 }
@@ -218,9 +208,9 @@ class WeatherAPISource {
                         callback.call(here, false, message.get_status());
                     }
                 } else {
-                    global.logWarning("["+UUID+"] Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
+                    global.logWarning("["+here.uuid+"] Error retrieving address " + url + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
                     if (message.get_status() == 0) {
-                        global.logWarning("["+UUID+"] (You may be disconnected from the network)");
+                        global.logWarning("["+here.uuid+"] (You may be disconnected from the network)");
                     }
                     callback.call(here, false, message.get_status());
                 }

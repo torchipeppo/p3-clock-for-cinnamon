@@ -1,18 +1,8 @@
 const Settings = imports.ui.settings;
 const GLib = imports.gi.GLib;
 
-const UUID = "p3-clock@torchipeppo";
-const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
-let SU, CONSTANTS;
-if (typeof require !== 'undefined') {
-    SU = require("./style_utils");
-    CONSTANTS = require("./constants");
-}
-else {
-    imports.searchPath.push(DESKLET_DIR);
-    SU = imports.style_utils;
-    CONSTANTS = imports.constants;
-}
+const SU = require("./style_utils");
+const CONSTANTS = require("./constants");
 
 // get day-only date from full ISO string
 function new_midnight_date(isostring) {
