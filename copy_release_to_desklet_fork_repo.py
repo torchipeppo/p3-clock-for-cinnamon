@@ -17,10 +17,12 @@ with open("files/p3-clock@torchipeppo/metadata-RELEASE.json", "r") as f:
 
 VERSION_DIR_PATTERN = re.compile(r"[0123456789.]+")
 
-def copy_replacing_uuid(src, dst):
+def copy_replacing_uuid(src, dst, additional_content_processing=None):
     with open(src, "r") as f:
         content = f.read()
     content = content.replace(develop_uuid, release_uuid)
+    if additional_content_processing is not None:
+        content = additional_content_processing(content)
     with open(dst, "w") as f:
         f.write(content)
 
@@ -54,7 +56,14 @@ src_dir = Path(__file__).resolve().parent
 dst_dir = src_dir.parent.parent / "cinnamon repo forks/cinnamon-spices-desklets" / release_uuid
 dst_dir.mkdir(exist_ok=True)
 
-copy_replacing_uuid(src_dir/"README.md", dst_dir/"README.md")
+copy_replacing_uuid(
+    src_dir/"README.md",
+    dst_dir/"README.md",
+    lambda content: content.replace(
+        '<img src="',
+        f'<img src="https://cinnamon-spices.linuxmint.com/git/desklets/{release_uuid}/'
+    )
+)
 shutil.copy(src_dir/"info.json", dst_dir)
 
 
