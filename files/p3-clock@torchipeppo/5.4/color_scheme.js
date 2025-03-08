@@ -1,1 +1,1 @@
-../color_scheme.js
+../3.4/color_scheme.js

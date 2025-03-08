@@ -1,1 +1,1 @@
-../desklet.js
+../3.4/desklet.js

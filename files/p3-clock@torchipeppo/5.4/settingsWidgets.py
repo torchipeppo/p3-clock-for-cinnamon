@@ -1,1 +1,1 @@
-../settingsWidgets.py
+../3.4/settingsWidgets.py
