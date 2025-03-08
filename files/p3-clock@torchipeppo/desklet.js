@@ -20,13 +20,9 @@ const _ = Translation._;
 
 /*
     TODO
-    - Eliminare vecchio sistema di import (ma controllare se rompe su Cinnamon 5 / Mint 20)
-    - Eliminare UUID hardcodati (almeno tutti quelli che danno fastidio a test-spice)
-    - La cartella di versione meglio che sia 5.6 o 5.8
     - Non mettere roba in toplevel se uso cartelle di versione
       (in tal caso, capire che nome dare alla cartella della versione precedente)
     - Investigare il problema di claudiux (su VM?)
-    - Cartella lib vuota? (AlienPappi)
     - Aggiungere opzione offset verticale font? (Diventa versione 1.0)
 */
 
