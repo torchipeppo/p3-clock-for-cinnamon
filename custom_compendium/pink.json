@@ -10,11 +10,14 @@
     },
     "style": {
         "time_font": "Ysabeau Office weight=101 Italic 70",
+        "time_v_offset": 0,
         "time_shadow_enabled": true,
         "time_shadow_offset": 4,
         "date_font": "Ysabeau weight=101 52",
+        "date_v_offset": -10,
         "emoji_size": 70,
         "caption_font": "Ubuntu weight=255 50",
+        "caption_v_offset": 0,
         "caption_shadow_enabled": true,
         "caption_shadow_offset": 3,
         "use_highlight_color": true

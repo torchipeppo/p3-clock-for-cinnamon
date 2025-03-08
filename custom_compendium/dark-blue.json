@@ -10,11 +10,14 @@
     },
     "style": {
         "time_font": "Chakra Petch Bold 46",
+        "time_v_offset": 0,
         "time_shadow_enabled": false,
         "time_shadow_offset": 5,
         "date_font": "Chakra Petch Medium 44",
+        "date_v_offset": 0,
         "emoji_size": 70,
         "caption_font": "Chakra Petch 50",
+        "caption_v_offset": 0,
         "caption_shadow_enabled": false,
         "caption_shadow_offset": 4,
         "use_highlight_color": false

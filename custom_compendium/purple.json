@@ -10,11 +10,14 @@
     },
     "style": {
         "time_font": "Lobster Two Italic 70",
+        "time_v_offset": 0,
         "time_shadow_enabled": true,
         "time_shadow_offset": 4,
         "date_font": "Ysabeau Bold 50",
+        "date_v_offset": 0,
         "emoji_size": 70,
         "caption_font": "Ysabeau Office Semi-Bold 50",
+        "caption_v_offset": 0,
         "caption_shadow_enabled": false,
         "caption_shadow_offset": 4,
         "use_highlight_color": false

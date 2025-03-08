@@ -10,11 +10,14 @@
     },
     "style": {
         "time_font": "Monospace Bold 60",
+        "time_v_offset": 5,
         "time_shadow_enabled": true,
         "time_shadow_offset": 8,
         "date_font": "Instrument Sans Condensed, Medium Condensed 52",
+        "date_v_offset": 0,
         "emoji_size": 70,
         "caption_font": "Ubuntu Bold 50",
+        "caption_v_offset": -4,
         "caption_shadow_enabled": true,
         "caption_shadow_offset": 5,
         "use_highlight_color": true

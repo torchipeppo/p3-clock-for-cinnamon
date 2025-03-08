@@ -22,8 +22,7 @@ const _ = Translation._;
     TODO
     - Memo: nella prossima PR, chiedere a claudiux se il problema si ripresenta,
         perché non ho accesso a VM in questo momento
-    - Aggiungere opzione offset verticale font (Diventa versione 1.0)
-        - Aggiornare custom-compendium
+    - Aggiungere opzione offset verticale font
         - Aggiornare POT e PO
 */
 
