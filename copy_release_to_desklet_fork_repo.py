@@ -65,6 +65,7 @@ copy_replacing_uuid(
     )
 )
 shutil.copy(src_dir/"info.json", dst_dir)
+shutil.copy(src_dir/"TRANSLATORS.md", dst_dir)
 
 
 
